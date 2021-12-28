@@ -29,8 +29,8 @@ joinfaces:
     serialize-server-state: true
 
 ravendb:
-  url: http://dell-4290.local:5050
-#  url: http://raven-all.raven:8080
+#  url: http://dell-4290.local:5050
+  url: http://raven-all.raven:8080
 
 logging:
     level:
