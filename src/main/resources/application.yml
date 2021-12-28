@@ -12,8 +12,8 @@ spring:
       client:
         url: http://svc.sba-k8s:8099
         auto-deregistration: true
-#        instance:
-#          service-url: https://pf.gpc4j.org
+        instance:
+          management-base-url: http://main.watch.local
   servlet:
     multipart:
       max-file-size: 1000MB
@@ -29,7 +29,6 @@ joinfaces:
     serialize-server-state: true
 
 ravendb:
-#  url: http://dell-4290.local:5050
   url: http://raven-all.raven:8080
 
 logging:
