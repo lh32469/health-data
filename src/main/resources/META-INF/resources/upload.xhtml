@@ -1,0 +1,35 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+>
+
+<h:head>
+  <title>Upload</title>
+  <meta name="description"
+        content="Upload Data"/>
+</h:head>
+<h:body>
+  <f:view transient="true">
+
+    <h:form id="iForm">
+      <p:growl id="growl" showDetail="true" skipDetailIfEqualsSummary="true"/>
+
+      <p:panelGrid columns="1" style="margin: auto; width: 80%">
+
+        <p:fileUpload listener="#{uploadBean.handleFileUpload}"
+                      mode="advanced"
+                      update="growl"
+                      auto="true"
+                      fileLimit="1000000000"
+                      sizeLimit="1000000000"
+                      allowTypes="/(\.|\/)(gif|jpe?g|png|xml)$/"/>
+
+      </p:panelGrid>
+    </h:form>
+  </f:view>
+</h:body>
+</html>
