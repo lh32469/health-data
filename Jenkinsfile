@@ -52,7 +52,6 @@ pipeline {
         // Cleanup previous images
         sh "docker image prune -af \
               --filter label=job.name=$JOB_NAME"
-        sh "cp Dockerfile.jenkins Dockerfile"
         sh "docker build -t dell-0114.local:32000/${project}:${branch} \
               --build-arg PROFILE=jenkins,${branch} \
               --label job.name=$JOB_NAME ."
