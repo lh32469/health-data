@@ -1,0 +1,80 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+>
+
+<h:head>
+  <title>SwimYears</title>
+  <meta name="description"
+        content="Graph of swim data"/>
+</h:head>
+<h:body>
+  <f:view transient="true">
+    <h:form id="iForm">
+      <p:growl id="growl" showDetail="true" skipDetailIfEqualsSummary="true"/>
+
+      <p:panelGrid columns="1" style="margin: auto; width: 80%">
+        <p:dataTable var="month"
+                     value="#{workoutYearBean.months}"
+                     style="margin-left: 5%; margin-right: 2%"
+                     selectionMode="single"
+                     selection="#{workoutYearBean.selectedMonth}"
+                     rowKey="#{month.month}"
+                     size="small"
+                     stripedRows="true">
+
+          <f:facet name="header">
+            Swimming Data per Month for #{workoutYearBean.year}
+          </f:facet>
+
+          <p:ajax event="rowSelect"
+                  listener="#{workoutYearBean.onRowSelect}"
+                  update=":iForm:growl"/>
+
+          <p:column headerText="Month">
+            <h:outputText value="#{month.name}"/>
+          </p:column>
+
+          <p:column headerText="Distance">
+            <h:outputText value="#{month.distance}">
+              <f:convertNumber type="number" minFractionDigits="2" pattern="#0.00"/>
+            </h:outputText>
+          </p:column>
+
+          <p:column headerText="Calories">
+            <h:outputText value="#{month.calories}">
+              <f:convertNumber type="number" minFractionDigits="2" pattern="#0.00"/>
+            </h:outputText>
+          </p:column>
+
+          <p:column headerText="Hours">
+            <h:outputText value="#{month.hours}">
+              <f:convertNumber type="number" minFractionDigits="2" pattern="#0.00"/>
+            </h:outputText>
+          </p:column>
+
+          <p:column headerText="Number of Workouts">
+            <h:outputText value="#{month.workouts.size()}">
+            </h:outputText>
+          </p:column>
+
+        </p:dataTable>
+
+
+        <p:chart type="line"
+                 model="#{workoutYearBean.monthsGraph}"
+                 style="width:100%;height:600px;border: 20px">
+          <p:ajax event="itemSelect"
+                  listener="#{workoutYearBean.itemSelect}"
+                  update="growl"/>
+        </p:chart>
+
+      </p:panelGrid>
+    </h:form>
+  </f:view>
+</h:body>
+</html>

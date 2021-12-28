@@ -1,0 +1,143 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+>
+
+<h:head>
+  <title>SwimYears</title>
+  <meta name="description"
+        content="Graph of swim data"/>
+</h:head>
+<h:body>
+  <f:view transient="true">
+
+    <h:form id="iForm">
+      <p:growl id="growl" showDetail="true" skipDetailIfEqualsSummary="true"/>
+
+      <p:panelGrid columns="1" style="margin: auto; width: 80%">
+
+        <p:dataTable var="year"
+                     value="#{workoutBean.years}"
+                     selectionMode="single"
+                     selection="#{workoutBean.selectedYear}"
+                     rowKey="#{year.year}"
+                     stripedRows="true">
+
+          <f:facet name="header">
+            Swimming Distance per Year by Month
+          </f:facet>
+
+          <p:ajax event="rowSelect"
+                  listener="#{workoutBean.onRowSelect}"
+                  update=":iForm:growl"/>
+
+          <p:column headerText="Year">
+            <h:outputText value="#{year.year}"/>
+          </p:column>
+
+          <p:column headerText="Jan">
+            <h:outputText value="#{year.get(1).distance}">
+              <f:convertNumber type="number" minFractionDigits="2" pattern="#0.00"/>
+            </h:outputText>
+          </p:column>
+
+          <p:column headerText="Feb">
+            <h:outputText value="#{year.get(2).distance}">
+              <f:convertNumber type="number" minFractionDigits="2" pattern="#0.00"/>
+            </h:outputText>
+          </p:column>
+
+          <p:column headerText="Mar">
+            <h:outputText value="#{year.get(3).distance}">
+              <f:convertNumber type="number" minFractionDigits="2" pattern="#0.00"/>
+            </h:outputText>
+          </p:column>
+
+          <p:column headerText="Apr">
+            <h:outputText value="#{year.get(4).distance}">
+              <f:convertNumber type="number" minFractionDigits="2" pattern="#0.00"/>
+            </h:outputText>
+          </p:column>
+
+          <p:column headerText="May">
+            <h:outputText value="#{year.get(5).distance}">
+              <f:convertNumber type="number" minFractionDigits="2" pattern="#0.00"/>
+            </h:outputText>
+          </p:column>
+
+          <p:column headerText="Jun">
+            <h:outputText value="#{year.get(6).distance}">
+              <f:convertNumber type="number" minFractionDigits="2" pattern="#0.00"/>
+            </h:outputText>
+          </p:column>
+
+          <p:column headerText="Jul">
+            <h:outputText value="#{year.get(7).distance}">
+              <f:convertNumber type="number" minFractionDigits="2" pattern="#0.00"/>
+            </h:outputText>
+          </p:column>
+
+          <p:column headerText="Aug">
+            <h:outputText value="#{year.get(8).distance}">
+              <f:convertNumber type="number" minFractionDigits="2" pattern="#0.00"/>
+            </h:outputText>
+          </p:column>
+
+          <p:column headerText="Sep">
+            <h:outputText value="#{year.get(9).distance}">
+              <f:convertNumber type="number" minFractionDigits="2" pattern="#0.00"/>
+            </h:outputText>
+          </p:column>
+
+          <p:column headerText="Oct">
+            <h:outputText value="#{year.get(10).distance}">
+              <f:convertNumber type="number" minFractionDigits="2" pattern="#0.00"/>
+            </h:outputText>
+          </p:column>
+
+          <p:column headerText="Nov">
+            <h:outputText value="#{year.get(11).distance}">
+              <f:convertNumber type="number" minFractionDigits="2" pattern="#0.00"/>
+            </h:outputText>
+          </p:column>
+
+          <p:column headerText="Dec">
+            <h:outputText value="#{year.get(12).distance}">
+              <f:convertNumber type="number" minFractionDigits="2" pattern="#0.00"/>
+            </h:outputText>
+          </p:column>
+
+          <p:column headerText="Total">
+            <h:outputText value="#{year.distance}">
+              <f:convertNumber type="number" minFractionDigits="2" pattern="#0.00"/>
+            </h:outputText>
+          </p:column>
+
+        </p:dataTable>
+
+        <p:chart type="line"
+                 model="#{workoutBean.yearsGraph}"
+                 style="width:100%;height:700px;border: 20px">
+          <p:ajax event="itemSelect"
+                  listener="#{workoutBean.itemSelect}"
+                  update="growl"/>
+        </p:chart>
+
+        <p:fileUpload listener="#{uploadBean.handleFileUpload}"
+                      mode="advanced"
+                      update="growl"
+                      auto="true"
+                      fileLimit="1000000000"
+                      sizeLimit="1000000000"
+                      allowTypes="/(\.|\/)(gif|jpe?g|png|xml)$/"/>
+
+
+      </p:panelGrid>
+    </h:form>
+  </f:view>
+</h:body>
+</html>

@@ -1,0 +1,92 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: PROJECT-app
+  name: PROJECT
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: PROJECT-app
+  strategy: { }
+  template:
+    metadata:
+      labels:
+        app: PROJECT-app
+    spec:
+      containers:
+        - name: PROJECT
+          image: localhost:32000/PROJECT:BRANCH
+          imagePullPolicy: "Always"
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 5000
+            initialDelaySeconds: 60
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 5000
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          resources:
+            limits:
+              cpu: "1"
+              memory: 1Gi
+            requests:
+              cpu: ".25"
+              memory: 500Mi
+
+---
+
+kind: Service
+apiVersion: v1
+metadata:
+  name: PROJECT
+spec:
+  selector:
+    app: PROJECT-app
+  ports:
+    - port: 5000 # Default port for image
+
+---
+
+kind: Service
+apiVersion: v1
+metadata:
+  name: java-debug
+spec:
+  type: NodePort
+  selector:
+    app: PROJECT-app
+  ports:
+    - port: 5005 # Debug port for image
+
+---
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: PROJECT-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+spec:
+  tls:
+    - hosts:
+        - BRANCH.PROJECT.lth.guru
+      secretName: tls-secret
+  rules:
+    - host: BRANCH.PROJECT.lth.guru
+      http:
+        paths:
+          - pathType: Prefix
+            path: /
+            backend:
+              service:
+                name: PROJECT
+                port:
+                  number: 5000
+

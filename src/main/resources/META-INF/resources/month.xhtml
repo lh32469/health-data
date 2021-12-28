@@ -1,0 +1,74 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+>
+
+<h:head>
+  <title>SwimYears</title>
+  <meta name="description"
+        content="Graph of swim data"/>
+</h:head>
+<h:body>
+  <f:view transient="true">
+    <h:form id="iForm">
+      <p:growl id="growl" showDetail="true" skipDetailIfEqualsSummary="true"/>
+
+      <p:panelGrid columns="1" style="margin: auto; width: 80%">
+        <p:dataTable var="day"
+                     value="#{workoutMonthBean.days}"
+                     style="margin-left: 5%; margin-right: 2%"
+                     selectionMode="single"
+                     selection="#{workoutMonthBean.selectedDay}"
+                     rowKey="#{day.day}"
+                     size="small"
+                     stripedRows="true">
+
+          <f:facet name="header">
+            Swimming Data per Day for #{workoutMonthBean.month},  #{workoutMonthBean.year}
+          </f:facet>
+
+          <p:ajax event="rowSelect"
+                  listener="#{workoutMonthBean.onRowSelect}"
+                  update=":iForm:growl"/>
+
+          <p:column headerText="Day">
+            <h:outputText value="#{day.day}"/>
+          </p:column>
+
+          <p:column headerText="Distance"
+                    footerText="#{workoutMonthBean.distance}">
+            <h:outputText value="#{day.distance}">
+              <f:convertNumber type="number" minFractionDigits="2" pattern="#0.00"/>
+            </h:outputText>
+          </p:column>
+
+          <p:column headerText="Calories"
+                    footerText="#{workoutMonthBean.calories}">
+            <h:outputText value="#{day.calories}">
+              <f:convertNumber type="number" minFractionDigits="2" pattern="#0.00"/>
+            </h:outputText>
+          </p:column>
+
+          <p:column headerText="Hours">
+            <h:outputText value="#{day.hours}">
+              <f:convertNumber type="number" minFractionDigits="2" pattern="#0.00"/>
+            </h:outputText>
+          </p:column>
+
+          <p:column headerText="Number of Workouts">
+            <h:outputText value="#{day.workouts.size()}">
+            </h:outputText>
+          </p:column>
+
+        </p:dataTable>
+
+
+      </p:panelGrid>
+    </h:form>
+  </f:view>
+</h:body>
+</html>

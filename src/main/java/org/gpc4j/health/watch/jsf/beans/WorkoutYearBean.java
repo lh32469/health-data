@@ -1,0 +1,169 @@
+package org.gpc4j.health.watch.jsf.beans;
+
+import lombok.extern.slf4j.Slf4j;
+import net.ravendb.client.documents.session.IDocumentSession;
+import org.gpc4j.health.watch.db.RavenBean;
+import org.gpc4j.health.watch.db.dto.WorkoutMonth;
+import org.gpc4j.health.watch.xml.Workout;
+import org.primefaces.event.ItemSelectEvent;
+import org.primefaces.event.SelectEvent;
+import org.primefaces.model.chart.Axis;
+import org.primefaces.model.chart.AxisType;
+import org.primefaces.model.chart.BarChartSeries;
+import org.primefaces.model.chart.CategoryAxis;
+import org.primefaces.model.chart.LineChartModel;
+import org.primefaces.model.chart.LineChartSeries;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.web.context.annotation.RequestScope;
+
+import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
+import javax.faces.context.ExternalContext;
+import javax.faces.context.FacesContext;
+import javax.servlet.http.Cookie;
+import java.io.IOException;
+import java.text.DateFormatSymbols;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.stream.Collectors;
+
+@RequestScope
+@Component("workoutYearBean")
+@Slf4j
+public class WorkoutYearBean implements Constants {
+
+  @Autowired
+  RavenBean ravenBean;
+
+  /**
+   * Get Year from Session passed in via redirect from workouts.xhtml page.
+   */
+  private int year;
+
+  private List<WorkoutMonth> months;
+  private WorkoutMonth selectedMonth;
+
+  public LineChartModel getMonthsGraph() {
+    return monthsGraph;
+  }
+
+  /**
+   * Workouts by month graph.
+   */
+  LineChartModel monthsGraph;
+
+  @PostConstruct
+  public void postConstruct() {
+    log.info("WorkoutYearBean.postConstruct");
+
+    ExternalContext externalContext =
+        FacesContext.getCurrentInstance().getExternalContext();
+
+    Cookie cookie = (Cookie) externalContext.getRequestCookieMap().get(YEAR_COOKIE_KEY);
+    year = Integer.parseInt(cookie.getValue());
+    log.info("year = {}", year);
+
+    IDocumentSession session = ravenBean.getSession();
+
+    // Get all the Workouts for this year
+    List<Workout> workoutsForTheYear = session.query(Workout.class)
+        .search("startDate", year + "-*")
+        .andAlso()
+        .whereEquals("workoutActivityType", SWIMMING_WORKOUT)
+        .selectFields(Workout.class, "duration", "totalDistance",
+            "startDate", "totalEnergyBurned")
+        .toList();
+
+    double totalMiles = workoutsForTheYear.stream()
+        .mapToDouble(Workout::getTotalDistance)
+        .sum();
+
+    monthsGraph = new LineChartModel();
+    monthsGraph.setTitle("Swimming Distance by Month for " + year);
+    monthsGraph.setLegendPosition("n");
+    monthsGraph.getAxes().put(AxisType.X, new CategoryAxis("Months"));
+
+    Axis yAxis = monthsGraph.getAxis(AxisType.Y);
+    yAxis.setLabel("Miles");
+    yAxis.setMin(0);
+    long max = Math.max(150, Math.round((totalMiles / 10.0) + 1.25) * 10);
+    yAxis.setMax(max);
+    yAxis.setTickInterval("10");
+
+    LineChartSeries lineGraph = new LineChartSeries();
+    BarChartSeries barGraph = new BarChartSeries();
+    barGraph.setLabel("Monthly Distance");
+    lineGraph.setLabel("Cumulative Distance");
+
+    // This order is important otherwise barchart data is off by one.  Dunno..
+    monthsGraph.addSeries(barGraph);
+    monthsGraph.addSeries(lineGraph);
+
+    // Divide into WorkoutMonths
+    months = new LinkedList<>();
+
+    // Running runningTotal for this year
+    double runningTotal = 0;
+
+    for (int month = 1; month <= 12; month++) {
+      String prefix = String.format("%d-%02d", year, month);
+      log.debug("prefix = {}", prefix);
+
+      List<Workout> workoutsForTheMonth = workoutsForTheYear.stream()
+          .filter(workout -> workout.getStartDate().startsWith(prefix))
+          .collect(Collectors.toList());
+
+      WorkoutMonth workoutMonth = new WorkoutMonth(month, workoutsForTheMonth);
+      months.add(workoutMonth);
+
+      runningTotal += workoutMonth.getDistance();
+      String monthString = new DateFormatSymbols().getMonths()[month - 1];
+
+      log.debug("{} = {}", monthString, workoutMonth.getDistance());
+
+      lineGraph.set(monthString, runningTotal);
+      barGraph.set(monthString, workoutMonth.getDistance());
+
+      selectedMonth = months.get(0);
+    }
+
+  }
+
+  public List<WorkoutMonth> getMonths() {
+    return months;
+  }
+
+  public void setSelectedMonth(WorkoutMonth selectedMonth) {
+    this.selectedMonth = selectedMonth;
+  }
+
+  public WorkoutMonth getSelectedMonth() {
+    return selectedMonth;
+  }
+
+  public int getYear() {
+    return year;
+  }
+
+  public void onRowSelect(SelectEvent<WorkoutMonth> event) throws IOException {
+
+    ExternalContext externalContext =
+        FacesContext.getCurrentInstance().getExternalContext();
+
+    String monthSelected = String.valueOf(event.getObject().getMonth());
+    log.info("monthSelected = {}", monthSelected);
+
+    externalContext.addResponseCookie(MONTH_COOKIE_KEY, monthSelected, null);
+
+    externalContext.redirect("month.xhtml");
+  }
+
+  public void itemSelect(ItemSelectEvent event) {
+    FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Item selected",
+        "Item Index: " + event.getItemIndex() + ", DataSet Index:" + event.getDataSetIndex());
+
+    FacesContext.getCurrentInstance().addMessage(null, msg);
+  }
+
+}
