@@ -37,7 +37,10 @@ pipeline {
         docker {
           reuseNode true
           image 'maven:latest'
-          args '--dns=172.17.0.1 -u root -v /var/lib/jenkins/.m2:/root/.m2'
+          args '--dns=172.17.0.1 -u root \
+                  -e PROJ=watch \
+                  -e BRNCH=junit \
+                  -v /var/lib/jenkins/.m2:/root/.m2'
         }
       }
       steps {

@@ -55,15 +55,5 @@ public class WorkoutDay {
     return distance;
   }
 
-  /**
-   * Get total number of workouts.
-   */
-  public double getNumWorkouts() {
-    double distance = workouts.stream()
-        .mapToDouble(Workout::getDuration)
-        .sum() / 60;
-    log.debug("month/hours = {}/{}", day, distance);
-    return distance;
-  }
 
 }

@@ -99,7 +99,7 @@ public class WorkoutMonthBean implements Constants {
     YearMonth yearMonthObject = YearMonth.of(year, month);
     int daysInMonth = yearMonthObject.lengthOfMonth();
 
-    for (int day = 1; day < daysInMonth; day++) {
+    for (int day = 1; day <= daysInMonth; day++) {
       String prefix = String.format("%d-%02d-%02d", year, month, day);
 
       List<Workout> workoutsForTheDay = workoutsForTheMonth.stream()
@@ -108,7 +108,9 @@ public class WorkoutMonthBean implements Constants {
       log.info("{} = {}", prefix, workoutsForTheDay.size());
 
       WorkoutDay workoutDay = new WorkoutDay(day, workoutsForTheDay);
-      days.add(workoutDay);
+      if (!workoutDay.getWorkouts().isEmpty()) {
+        days.add(workoutDay);
+      }
     }
 
   }

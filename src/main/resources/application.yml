@@ -6,14 +6,23 @@ server:
   tomcat:
     redirect-context-root: false
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
 spring:
+  application:
+    name: ${PROJ}-${BRNCH}
   boot:
     admin:
       client:
         url: http://svc.sba-k8s:8099
         auto-deregistration: true
         instance:
-          management-base-url: http://${BRNCH}.${PROJ}.local
+#          management-base-url: https://${BRNCH}.${PROJ}.lth.guru
+          service-url: https://${BRNCH}.${PROJ}.lth.guru
   servlet:
     multipart:
       max-file-size: 1000MB
