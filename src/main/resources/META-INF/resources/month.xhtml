@@ -53,10 +53,8 @@
             </h:outputText>
           </p:column>
 
-          <p:column headerText="Hours">
-            <h:outputText value="#{day.hours}">
-              <f:convertNumber type="number" minFractionDigits="2" pattern="#0.00"/>
-            </h:outputText>
+          <p:column headerText="Minutes">
+            <h:outputText value="#{day.minutes}"/>
           </p:column>
 
           <p:column headerText="Number of Workouts">

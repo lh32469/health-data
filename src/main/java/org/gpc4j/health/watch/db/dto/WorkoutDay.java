@@ -48,12 +48,18 @@ public class WorkoutDay {
    * Get total hours spent working out.
    */
   public double getHours() {
-    double distance = workouts.stream()
-        .mapToDouble(Workout::getDuration)
-        .sum() / 60;
-    log.debug("month/hours = {}/{}", day, distance);
-    return distance;
+    return getMinutes() / 60.0;
   }
 
+  /**
+   * Get total hours spent working out.
+   */
+  public long getMinutes() {
+    double distance = workouts.stream()
+        .mapToDouble(Workout::getDuration)
+        .sum();
+    log.debug("month/minutes = {}/{}", day, distance);
+    return Math.round(distance);
+  }
 
 }
