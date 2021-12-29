@@ -13,7 +13,7 @@ spring:
         url: http://svc.sba-k8s:8099
         auto-deregistration: true
         instance:
-          management-base-url: http://main.watch.local
+          management-base-url: http://${env.PROJ}.${env.PROJ}-${env.BRNCH}:5000
   servlet:
     multipart:
       max-file-size: 1000MB

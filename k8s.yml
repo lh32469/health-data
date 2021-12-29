@@ -18,6 +18,11 @@ spec:
       containers:
         - name: PROJECT
           image: localhost:32000/PROJECT:BRANCH
+          env:
+            - name: PROJ
+              value: PROJECT
+            - name: BRNCH
+              value: BRANCH
           imagePullPolicy: "Always"
           livenessProbe:
             httpGet:
