@@ -7,7 +7,12 @@ import org.gpc4j.health.watch.db.dto.WorkoutDay;
 import org.gpc4j.health.watch.xml.Workout;
 import org.primefaces.event.ItemSelectEvent;
 import org.primefaces.event.SelectEvent;
+import org.primefaces.model.chart.Axis;
+import org.primefaces.model.chart.AxisType;
+import org.primefaces.model.chart.BarChartSeries;
+import org.primefaces.model.chart.CategoryAxis;
 import org.primefaces.model.chart.LineChartModel;
+import org.primefaces.model.chart.LineChartSeries;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.annotation.RequestScope;
@@ -42,18 +47,18 @@ public class WorkoutMonthBean implements Constants {
   /**
    * Totals  for the month.
    */
-  private double distance;
+  private double totalMiles;
   private double calories;
 
   private List<WorkoutDay> days;
   private WorkoutDay selectedDay;
 
-  public LineChartModel getMonthsGraph() {
+  public LineChartModel getDaysGraph() {
     return monthsGraph;
   }
 
   /**
-   * Workouts by month graph.
+   * Workouts by day graph.
    */
   LineChartModel monthsGraph;
 
@@ -83,7 +88,7 @@ public class WorkoutMonthBean implements Constants {
             "startDate", "totalEnergyBurned")
         .toList();
 
-    distance = workoutsForTheMonth.stream()
+    totalMiles = workoutsForTheMonth.stream()
         .mapToDouble(Workout::getTotalDistance)
         .sum();
 
@@ -93,8 +98,36 @@ public class WorkoutMonthBean implements Constants {
 
     log.info("{}-{} = {}", year, month, workoutsForTheMonth.size());
 
+    String monthString = new DateFormatSymbols().getMonths()[month - 1];
+
+    monthsGraph = new LineChartModel();
+    monthsGraph.setTitle("Swimming Distance by Day for " +
+        monthString + ", " + year);
+    monthsGraph.setLegendPosition("n");
+    monthsGraph.getAxes().put(AxisType.X, new CategoryAxis("Months"));
+
+    Axis yAxis = monthsGraph.getAxis(AxisType.Y);
+    yAxis.setLabel("Miles");
+    yAxis.setMin(0);
+    long max = Math.max(20, Math.round((totalMiles / 10.0) + 1.25) * 10);
+    yAxis.setMax(max);
+    yAxis.setTickInterval("10");
+
+    LineChartSeries lineGraph = new LineChartSeries();
+    BarChartSeries barGraph = new BarChartSeries();
+    barGraph.setLabel("Monthly Distance");
+    lineGraph.setLabel("Cumulative Distance");
+    lineGraph.setShowMarker(false);
+
+    // This order is important otherwise barchart data is off by one.  Dunno..
+    monthsGraph.addSeries(barGraph);
+    monthsGraph.addSeries(lineGraph);
+
     // Divide into WorkoutDays
     days = new LinkedList<>();
+
+    // Running runningTotal for this month
+    double runningTotal = 0;
 
     YearMonth yearMonthObject = YearMonth.of(year, month);
     int daysInMonth = yearMonthObject.lengthOfMonth();
@@ -105,12 +138,17 @@ public class WorkoutMonthBean implements Constants {
       List<Workout> workoutsForTheDay = workoutsForTheMonth.stream()
           .filter(workout -> workout.getStartDate().startsWith(prefix))
           .collect(Collectors.toList());
-      log.info("{} = {}", prefix, workoutsForTheDay.size());
+      log.debug("{} = {}", prefix, workoutsForTheDay.size());
 
       WorkoutDay workoutDay = new WorkoutDay(day, workoutsForTheDay);
       if (!workoutDay.getWorkouts().isEmpty()) {
         days.add(workoutDay);
       }
+
+      runningTotal += workoutDay.getDistance();
+
+      lineGraph.set(day, runningTotal);
+      barGraph.set(day, workoutDay.getDistance());
     }
 
   }
@@ -124,7 +162,7 @@ public class WorkoutMonthBean implements Constants {
   }
 
   public String getDistance() {
-    return String.format("%4.2f", distance);
+    return String.format("%4.2f", totalMiles);
   }
 
   public String getCalories() {
