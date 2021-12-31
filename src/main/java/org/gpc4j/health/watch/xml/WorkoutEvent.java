@@ -18,6 +18,7 @@ public class WorkoutEvent {
   @XmlAttribute
   private String date;
 
+  // TODO: refactor to double.
   @XmlAttribute
   private String duration;
 

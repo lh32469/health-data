@@ -39,13 +39,15 @@
             <h:outputText value="#{month.name}"/>
           </p:column>
 
-          <p:column headerText="Distance">
+          <p:column headerText="Distance"
+                    footerText="#{workoutYearBean.totalMilesAsString}">
             <h:outputText value="#{month.distance}">
               <f:convertNumber type="number" minFractionDigits="2" pattern="#0.00"/>
             </h:outputText>
           </p:column>
 
-          <p:column headerText="Calories">
+          <p:column headerText="Calories"
+                    footerText="#{workoutYearBean.totalCaloriesAsString}">
             <h:outputText value="#{month.calories}">
               <f:convertNumber type="number" minFractionDigits="2" pattern="#0.00"/>
             </h:outputText>

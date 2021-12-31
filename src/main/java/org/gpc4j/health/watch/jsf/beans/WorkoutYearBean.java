@@ -41,6 +41,12 @@ public class WorkoutYearBean implements Constants {
    */
   private int year;
 
+  /**
+   * Totals for the Year.
+   */
+  private double totalMiles;
+  private double totalCalories;
+
   private List<WorkoutMonth> months;
   private WorkoutMonth selectedMonth;
 
@@ -67,7 +73,7 @@ public class WorkoutYearBean implements Constants {
     IDocumentSession session = ravenBean.getSession();
 
     // Get all the Workouts for this year
-    List<Workout> workoutsForTheYear = session.query(Workout.class)
+    List<Workout> workouts = session.query(Workout.class)
         .search("startDate", year + "-*")
         .andAlso()
         .whereEquals("workoutActivityType", SWIMMING_WORKOUT)
@@ -75,9 +81,10 @@ public class WorkoutYearBean implements Constants {
             "startDate", "totalEnergyBurned")
         .toList();
 
-    double totalMiles = workoutsForTheYear.stream()
-        .mapToDouble(Workout::getTotalDistance)
-        .sum();
+    workouts.forEach(workout -> {
+      totalMiles += workout.getTotalDistance();
+      totalCalories += workout.getTotalEnergyBurned();
+    });
 
     monthsGraph = new LineChartModel();
     monthsGraph.setTitle("Swimming Distance by Month for " + year);
@@ -110,7 +117,7 @@ public class WorkoutYearBean implements Constants {
       String prefix = String.format("%d-%02d", year, month);
       log.debug("prefix = {}", prefix);
 
-      List<Workout> workoutsForTheMonth = workoutsForTheYear.stream()
+      List<Workout> workoutsForTheMonth = workouts.stream()
           .filter(workout -> workout.getStartDate().startsWith(prefix))
           .collect(Collectors.toList());
 
@@ -164,6 +171,18 @@ public class WorkoutYearBean implements Constants {
         "Item Index: " + event.getItemIndex() + ", DataSet Index:" + event.getDataSetIndex());
 
     FacesContext.getCurrentInstance().addMessage(null, msg);
+  }
+
+  public double getTotalMiles() {
+    return totalMiles;
+  }
+
+  public String getTotalCaloriesAsString() {
+    return String.format("%.2f", totalCalories);
+  }
+
+  public String getTotalMilesAsString() {
+    return String.format("%.2f", totalMiles);
   }
 
 }

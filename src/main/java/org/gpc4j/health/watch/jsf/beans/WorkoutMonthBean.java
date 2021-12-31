@@ -39,13 +39,13 @@ public class WorkoutMonthBean implements Constants {
   RavenBean ravenBean;
 
   /**
-   * Get Year and Month from Session passed in via redirect from year.xhtml page.
+   * Get Year and Month from Cookies passed in via redirect from year.xhtml page.
    */
   private int year;
   private int month;
 
   /**
-   * Totals  for the month.
+   * Totals for the Month.
    */
   private double totalMiles;
   private double calories;
@@ -80,7 +80,7 @@ public class WorkoutMonthBean implements Constants {
 
     // Get all the Workouts for this year and month
     String queryString = String.format("%d-%02d-*", year, month);
-    List<Workout> workoutsForTheMonth = session.query(Workout.class)
+    List<Workout> workouts = session.query(Workout.class)
         .search("startDate", queryString)
         .andAlso()
         .whereEquals("workoutActivityType", SWIMMING_WORKOUT)
@@ -88,15 +88,12 @@ public class WorkoutMonthBean implements Constants {
             "startDate", "totalEnergyBurned")
         .toList();
 
-    totalMiles = workoutsForTheMonth.stream()
-        .mapToDouble(Workout::getTotalDistance)
-        .sum();
+    workouts.forEach(workout -> {
+      totalMiles += workout.getTotalDistance();
+      calories += workout.getTotalEnergyBurned();
+    });
 
-    calories = workoutsForTheMonth.stream()
-        .mapToDouble(Workout::getTotalEnergyBurned)
-        .sum();
-
-    log.info("{}-{} = {}", year, month, workoutsForTheMonth.size());
+    log.info("{}-{} = {}", year, month, workouts.size());
 
     String monthString = new DateFormatSymbols().getMonths()[month - 1];
 
@@ -135,7 +132,7 @@ public class WorkoutMonthBean implements Constants {
     for (int day = 1; day <= daysInMonth; day++) {
       String prefix = String.format("%d-%02d-%02d", year, month, day);
 
-      List<Workout> workoutsForTheDay = workoutsForTheMonth.stream()
+      List<Workout> workoutsForTheDay = workouts.stream()
           .filter(workout -> workout.getStartDate().startsWith(prefix))
           .collect(Collectors.toList());
       log.debug("{} = {}", prefix, workoutsForTheDay.size());
@@ -186,12 +183,12 @@ public class WorkoutMonthBean implements Constants {
     ExternalContext externalContext =
         FacesContext.getCurrentInstance().getExternalContext();
 
-    String monthSelected = String.valueOf(event.getObject().getDay());
-    log.info("monthSelected = {}", monthSelected);
+    String daySelected = String.valueOf(event.getObject().getDay());
+    log.info("daySelected = {}", daySelected);
 
-    externalContext.addResponseCookie(MONTH_COOKIE_KEY, monthSelected, null);
+    externalContext.addResponseCookie(DAY_COOKIE_KEY, daySelected, null);
 
-    externalContext.redirect("month.xhtml");
+    externalContext.redirect("day.xhtml");
   }
 
   public void itemSelect(ItemSelectEvent event) {

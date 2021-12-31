@@ -11,8 +11,8 @@ pipeline {
     // Don't build the same branch concurrently
     disableConcurrentBuilds()
 
-    // Cleanup orphaned branch Docker container
-    branchTearDownExecutor 'CleanupDocker'
+    // Cleanup orphaned branch Kubernetes namespace
+    branchTearDownExecutor 'CleanupKubernetes'
   }
 
   agent any
