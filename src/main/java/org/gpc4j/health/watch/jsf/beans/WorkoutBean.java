@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.ravendb.client.documents.session.IDocumentSession;
 import org.gpc4j.health.watch.db.RavenBean;
 import org.gpc4j.health.watch.db.dto.WorkoutYear;
+import org.gpc4j.health.watch.security.UserProvider;
 import org.gpc4j.health.watch.xml.Workout;
 import org.primefaces.event.ItemSelectEvent;
 import org.primefaces.event.SelectEvent;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.context.annotation.RequestScope;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
@@ -39,6 +41,11 @@ public class WorkoutBean implements Constants {
   @Autowired
   RavenBean ravenBean;
 
+  IDocumentSession session;
+
+  @Autowired
+  private UserProvider userProvider;
+
   List<WorkoutYear> workoutYears;
 
   WorkoutYear selectedYear;
@@ -52,11 +59,13 @@ public class WorkoutBean implements Constants {
   public void postConstruct() {
     log.info("WorkoutBean.postConstruct");
 
+    log.info("userProvider = {}", userProvider);
+
     ExternalContext externalContext =
         FacesContext.getCurrentInstance().getExternalContext();
     log.info("SessionMap = {}", externalContext.getSessionMap());
 
-    IDocumentSession session = ravenBean.getSession();
+    session = ravenBean.getSession();
 
     workoutYears = new LinkedList<>();
 
@@ -70,6 +79,7 @@ public class WorkoutBean implements Constants {
     yAxis.setMin(0);
 
     List<Workout> workouts = session.query(Workout.class)
+        .whereEquals("user", userProvider.getUser().getUsername())
         .whereEquals("workoutActivityType", SWIMMING_WORKOUT)
         .selectFields(Workout.class, "duration", "totalDistance",
             "startDate", "totalEnergyBurned")
@@ -99,34 +109,14 @@ public class WorkoutBean implements Constants {
 
     });
 
-//    for (int year = 2018; year < 2022; year++) {
-//
-//      List<Workout> workouts = session.query(Workout.class)
-//          .search("startDate", year + "-*")
-//          .andAlso()
-//          .whereEquals("workoutActivityType", SWIMMING_WORKOUT)
-////          .selectFields(sdas,) TODO: just get top level fields
-//          .selectFields(Workout.class, "duration", "totalDistance",
-//              "startDate", "totalEnergyBurned")
-//          .toList();
-//
-//      WorkoutYear workoutYear = new WorkoutYear(year, workouts);
-//      workoutYears.add(workoutYear);
-//
-//      LineChartSeries now = new LineChartSeries();
-//      now.setLabel(String.valueOf(year));
-//
-//      double total = 0;
-//      for (int i = 0; i < 12; i++) {
-//        total += workoutYear.get(i + 1).getDistance();
-//        String month = new DateFormatSymbols().getMonths()[i];
-//        now.set(month, total);
-//      }
-//
-//      yearsGraph.addSeries(now);
-//    }
+    if (!workouts.isEmpty()) {
+      selectedYear = workoutYears.get(0);
+    }
+  }
 
-    selectedYear = workoutYears.get(0);
+  @PreDestroy
+  public void preDestroy() {
+    session.close();
   }
 
   public List<WorkoutYear> getYears() {

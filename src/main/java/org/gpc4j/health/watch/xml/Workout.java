@@ -14,6 +14,8 @@ import java.util.List;
 @Data
 public class Workout {
 
+  private String user;
+
   @XmlAttribute
   private String workoutActivityType;
   @XmlAttribute

@@ -16,11 +16,15 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import static org.gpc4j.health.watch.xml.Record.DTF;
 
 @Slf4j
 class LoadData {
@@ -51,6 +55,14 @@ class LoadData {
     log.info("swimmingRecords.get(8) = {}", swimmingRecords.get(8));
 
   }
+
+  @Test
+  void parseCreationDate() {
+    String date = "2021-12-12 12:30:49 -0800";
+    LocalDateTime start = LocalDateTime.parse(date, DTF);
+    log.info("start = {}", start);
+    long foo = start.toEpochSecond(ZoneOffset.UTC);
+    log.info("foo = {}", foo);  }
 
   @Test
   void loadWorkouts() {

@@ -1,5 +1,10 @@
 package org.gpc4j.health.watch.jsf.beans;
 
+import java.time.format.DateTimeFormatter;
+
+/**
+ * Application-wide shared constants.
+ */
 public interface Constants {
 
   /**
@@ -15,5 +20,10 @@ public interface Constants {
    * Marker type in WorkoutEvent which separates sets.
    */
   String SEGMENT = "HKWorkoutEventTypeSegment";
+
+  /**
+   * Common Date Format
+   */
+  DateTimeFormatter DTF = DateTimeFormatter.ofPattern("yyyy-MM-dd k:mm:ss Z");
 
 }

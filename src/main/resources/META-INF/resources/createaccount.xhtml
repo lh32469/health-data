@@ -1,0 +1,46 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+>
+
+<h:head>
+  <title>Create Account</title>
+  <meta name="description"
+        content="Create Account"/>
+</h:head>
+<h:body>
+  <f:view transient="true">
+
+    <h:form id="iForm">
+      <p:growl id="growl" showDetail="true" skipDetailIfEqualsSummary="true"/>
+
+      <p:panelGrid columns="1" styleClass="ui-fluid center ui-noborder">
+        <h2>Create Account</h2>
+
+        <h5>Username</h5>
+        <p:inputText id="username"
+                     valueChangeListener="#{createAccountBean.username}"
+                     placeholder="User name"/>
+
+        <h5>Password</h5>
+        <p:password id="toggle"
+                    valueChangeListener="#{createAccountBean.password}"
+                    toggleMask="true"
+                    redisplay="true"/>
+
+        <p:commandButton value="Login"
+                         actionListener="#{createAccountBean.submit}"
+                         ajax="false"
+        />
+
+      </p:panelGrid>
+
+    </h:form>
+  </f:view>
+
+</h:body>
+</html>

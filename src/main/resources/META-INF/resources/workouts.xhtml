@@ -18,6 +18,15 @@
     <h:form id="iForm">
       <p:growl id="growl" showDetail="true" skipDetailIfEqualsSummary="true"/>
 
+      <p:menubar binding="#{menuBarBean.menubar}">
+        <f:facet name="options">
+          <p:button value="Logout"
+                    href="logout"
+                    icon="pi pi-fw pi-sign-out"
+                    styleClass="ui-button-info"/>
+        </f:facet>
+      </p:menubar>
+
       <p:panelGrid columns="1" style="margin: auto; width: 80%">
 
         <p:dataTable var="year"
