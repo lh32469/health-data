@@ -60,7 +60,7 @@ public class CreateAccountBean {
     } else {
 
       AppGrantedAuthority basic = new AppGrantedAuthority();
-      basic.setAuthority("ROLE_BASIC");
+      basic.setAuthority("ROLE_USER");
 
       user = new User();
       user.setId(username);

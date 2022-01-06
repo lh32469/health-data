@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.ravendb.client.documents.session.IDocumentSession;
 import org.gpc4j.health.watch.db.RavenBean;
 import org.gpc4j.health.watch.db.dto.WorkoutDay;
+import org.gpc4j.health.watch.security.UserProvider;
 import org.gpc4j.health.watch.xml.Workout;
 import org.gpc4j.health.watch.xml.WorkoutEvent;
 import org.primefaces.event.SelectEvent;
@@ -20,7 +21,6 @@ import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.Cookie;
 import java.io.IOException;
-import java.text.DateFormatSymbols;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
@@ -41,6 +41,9 @@ public class WorkoutDayBean {
 
   @Autowired
   RavenBean ravenBean;
+
+  @Autowired
+  private UserProvider userProvider;
 
   /**
    * Get Year and Month from Cookies passed in via redirect from year.xhtml page.
@@ -67,7 +70,7 @@ public class WorkoutDayBean {
 
   @PostConstruct
   public void postConstruct() {
-    log.info("WorkoutDayBean.postConstruct");
+    log.debug("WorkoutDayBean.postConstruct");
 
     ExternalContext externalContext =
         FacesContext.getCurrentInstance().getExternalContext();
@@ -83,12 +86,12 @@ public class WorkoutDayBean {
 
     IDocumentSession session = ravenBean.getSession();
 
-    // Get all the Workouts for this year and month
-    String queryString = String.format("%d-%02d-%02d*", year, month, day);
-    log.info("queryString = {}", queryString);
+    // Get fully populated Workouts for this day and User
+    String queryString = String.format("%d-%02d-%02d", year, month, day);
+    log.debug("queryString = {}", queryString);
     workouts = session.query(Workout.class)
-        .search("startDate", queryString)
-        .andAlso()
+        .whereEquals("user", userProvider.getUser().getUsername())
+        .whereStartsWith("startDate", queryString)
         .whereEquals("workoutActivityType", SWIMMING_WORKOUT)
         .toList();
 
@@ -101,8 +104,6 @@ public class WorkoutDayBean {
         .sum();
 
     log.info("{}-{}-{} = {}", year, month, day, workouts.size());
-
-    String monthString = new DateFormatSymbols().getMonths()[month - 1];
 
     dayGraph = new LineChartModel();
     dayGraph.setTitle("Segments/Sets");

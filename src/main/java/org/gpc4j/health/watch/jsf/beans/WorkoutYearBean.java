@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.ravendb.client.documents.session.IDocumentSession;
 import org.gpc4j.health.watch.db.RavenBean;
 import org.gpc4j.health.watch.db.dto.WorkoutMonth;
+import org.gpc4j.health.watch.security.UserProvider;
 import org.gpc4j.health.watch.xml.Workout;
 import org.primefaces.event.ItemSelectEvent;
 import org.primefaces.event.SelectEvent;
@@ -36,6 +37,9 @@ public class WorkoutYearBean implements Constants {
   @Autowired
   RavenBean ravenBean;
 
+  @Autowired
+  private UserProvider userProvider;
+
   /**
    * Get Year from Session passed in via redirect from workouts.xhtml page.
    */
@@ -61,7 +65,7 @@ public class WorkoutYearBean implements Constants {
 
   @PostConstruct
   public void postConstruct() {
-    log.info("WorkoutYearBean.postConstruct");
+    log.debug("WorkoutYearBean.postConstruct");
 
     ExternalContext externalContext =
         FacesContext.getCurrentInstance().getExternalContext();
@@ -72,14 +76,16 @@ public class WorkoutYearBean implements Constants {
 
     IDocumentSession session = ravenBean.getSession();
 
-    // Get all the Workouts for this year
+    // Get all the Workouts for this year for current User
     List<Workout> workouts = session.query(Workout.class)
-        .search("startDate", year + "-*")
-        .andAlso()
+        .whereEquals("user", userProvider.getUser().getUsername())
+        .whereStartsWith("startDate", year + "-")
         .whereEquals("workoutActivityType", SWIMMING_WORKOUT)
-        .selectFields(Workout.class, "duration", "totalDistance",
+        .selectFields(Workout.class, "user", "duration", "totalDistance",
             "startDate", "totalEnergyBurned")
         .toList();
+
+    log.info("workouts for the year = {}", workouts.size());
 
     workouts.forEach(workout -> {
       totalMiles += workout.getTotalDistance();

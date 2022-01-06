@@ -28,14 +28,14 @@ public class MenuBarBean {
 
   @PostConstruct
   public void postConstruct() {
-    log.info("MenuBarBean.postConstruct");
+    log.debug("MenuBarBean.postConstruct");
 
     adminUser = userProvider.getUser().getAuthorities().stream()
         .map(auth -> auth.getAuthority())
         .collect(Collectors.toList())
         .contains("ROLE_ADMIN");
 
-    log.info("adminUser = {}", adminUser);
+    log.debug("adminUser = {}", adminUser);
 
     menubar.getElements().add(getFileMenu());
     menubar.getElements().add(getUsersMenu());

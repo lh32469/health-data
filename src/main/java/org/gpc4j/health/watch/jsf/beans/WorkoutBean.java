@@ -31,8 +31,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static org.gpc4j.health.watch.xml.Record.DTF;
-
 @RequestScope
 @Component("workoutBean")
 @Slf4j
@@ -57,9 +55,7 @@ public class WorkoutBean implements Constants {
 
   @PostConstruct
   public void postConstruct() {
-    log.info("WorkoutBean.postConstruct");
-
-    log.info("userProvider = {}", userProvider);
+    log.debug("WorkoutBean.postConstruct");
 
     ExternalContext externalContext =
         FacesContext.getCurrentInstance().getExternalContext();

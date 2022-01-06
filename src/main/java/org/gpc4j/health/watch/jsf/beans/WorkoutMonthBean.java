@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.ravendb.client.documents.session.IDocumentSession;
 import org.gpc4j.health.watch.db.RavenBean;
 import org.gpc4j.health.watch.db.dto.WorkoutDay;
+import org.gpc4j.health.watch.security.UserProvider;
 import org.gpc4j.health.watch.xml.Workout;
 import org.primefaces.event.ItemSelectEvent;
 import org.primefaces.event.SelectEvent;
@@ -38,6 +39,9 @@ public class WorkoutMonthBean implements Constants {
   @Autowired
   RavenBean ravenBean;
 
+  @Autowired
+  private UserProvider userProvider;
+
   /**
    * Get Year and Month from Cookies passed in via redirect from year.xhtml page.
    */
@@ -64,7 +68,7 @@ public class WorkoutMonthBean implements Constants {
 
   @PostConstruct
   public void postConstruct() {
-    log.info("WorkoutMonthBean.postConstruct");
+    log.debug("WorkoutMonthBean.postConstruct");
 
     ExternalContext externalContext =
         FacesContext.getCurrentInstance().getExternalContext();
@@ -78,11 +82,11 @@ public class WorkoutMonthBean implements Constants {
 
     IDocumentSession session = ravenBean.getSession();
 
-    // Get all the Workouts for this year and month
-    String queryString = String.format("%d-%02d-*", year, month);
+    // Get all the Workouts for this year, month and user
+    String queryString = String.format("%d-%02d-", year, month);
     List<Workout> workouts = session.query(Workout.class)
-        .search("startDate", queryString)
-        .andAlso()
+        .whereEquals("user", userProvider.getUser().getUsername())
+        .whereStartsWith("startDate", queryString)
         .whereEquals("workoutActivityType", SWIMMING_WORKOUT)
         .selectFields(Workout.class, "duration", "totalDistance",
             "startDate", "totalEnergyBurned")

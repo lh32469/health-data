@@ -20,7 +20,7 @@ public class UserProvider {
 
   @PostConstruct
   public void postConstruct() {
-    log.info("UserProvider.postConstruct");
+    log.debug("UserProvider.postConstruct");
 
     user = (User) SecurityContextHolder
         .getContext()
@@ -32,7 +32,7 @@ public class UserProvider {
 
   @PreDestroy
   public void preDestroy() {
-    log.info("UserProvider.preDestroy");
+    log.debug("UserProvider.preDestroy");
   }
 
 }
