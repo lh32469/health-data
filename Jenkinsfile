@@ -2,6 +2,7 @@
 def project = "watch"
 def branch = BRANCH_NAME.toLowerCase()
 def port = "9020"
+k8sYml = ""
 
 pipeline {
 
@@ -38,12 +39,13 @@ pipeline {
           reuseNode true
           image 'maven:latest'
           args '--dns=172.17.0.1 -u root \
-                  -e PROJ=watch \
-                  -e BRNCH=junit \
+                  -e PROJECT=watch \
+                  -e BRANCH=junit \
                   -v /var/lib/jenkins/.m2:/root/.m2'
         }
       }
       steps {
+        sh 'ls -l'
         sh 'mvn -B package'
         junit '**/target/surefire-reports/TEST-*.xml'
       }
@@ -62,6 +64,25 @@ pipeline {
       }
     }
 
+
+    stage('Templating') {
+      steps {
+        script {
+          def file = readFile "k8s.yml"
+
+          def binding = [
+              project: project,
+              branch : branch
+          ]
+
+          def engine = new groovy.text.SimpleTemplateEngine()
+          def template = engine.createTemplate(file).make(binding)
+
+          k8sYml = template.toString()
+        }
+      }
+    }
+
     stage('Deploy') {
       steps {
         script {
@@ -75,9 +96,8 @@ pipeline {
 
           if (result.trim().isEmpty()) {
             sh "kubectl create namespace $namespace"
-              sh "sed s/PROJECT/$project/ k8s.yml | \
-                  sed s/BRANCH/$branch/ | \
-                  kubectl -n ${namespace} create -f -"
+            writeFile file: 'k8s-out.yml', text: k8sYml
+            sh "kubectl -n ${namespace} create -f k8s-out.yml"
           } else {
             echo "$namespace namespace exists"
             sh "kubectl -n ${namespace} rollout restart deployment/${project}"

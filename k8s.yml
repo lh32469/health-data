@@ -2,27 +2,27 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: PROJECT-app
-  name: PROJECT
+    app: ${project}-app
+  name: ${project}
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: PROJECT-app
+      app: ${project}-app
   strategy: { }
   template:
     metadata:
       labels:
-        app: PROJECT-app
+        app: ${project}-app
     spec:
       containers:
-        - name: PROJECT
-          image: localhost:32000/PROJECT:BRANCH
+        - name: ${project}
+          image: localhost:32000/${project}:${branch}
           env:
-            - name: PROJ
-              value: PROJECT
-            - name: BRNCH
-              value: BRANCH
+            - name: PROJECT
+              value: ${project}
+            - name: BRANCH
+              value: ${branch}
           imagePullPolicy: "Always"
           livenessProbe:
             httpGet:
@@ -49,10 +49,10 @@ spec:
 kind: Service
 apiVersion: v1
 metadata:
-  name: PROJECT
+  name: ${project}
 spec:
   selector:
-    app: PROJECT-app
+    app: ${project}-app
   ports:
     - port: 5000 # Default port for image
 
@@ -65,7 +65,7 @@ metadata:
 spec:
   type: NodePort
   selector:
-    app: PROJECT-app
+    app: ${project}-app
   ports:
     - port: 5005 # Debug port for image
 
@@ -74,7 +74,7 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: PROJECT-ingress
+  name: ${project}-ingress
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /
     nginx.ingress.kubernetes.io/proxy-body-size: "0"
@@ -82,17 +82,17 @@ metadata:
 spec:
   tls:
     - hosts:
-        - BRANCH.PROJECT.lth.guru
+        - ${branch}.${project}.lth.guru
       secretName: tls-secret
   rules:
-    - host: BRANCH.PROJECT.lth.guru
+    - host: ${branch}.${project}.lth.guru
       http:
         paths:
           - pathType: Prefix
             path: /
             backend:
               service:
-                name: PROJECT
+                name: ${project}
                 port:
                   number: 5000
 
@@ -101,20 +101,20 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: PROJECT-local
+  name: ${project}-local
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /
     nginx.ingress.kubernetes.io/proxy-body-size: "0"
 spec:
   rules:
-    - host: BRANCH.PROJECT.local
+    - host: ${branch}.${project}.local
       http:
         paths:
           - pathType: Prefix
             path: /
             backend:
               service:
-                name: PROJECT
+                name: ${project}
                 port:
                   number: 5000
 

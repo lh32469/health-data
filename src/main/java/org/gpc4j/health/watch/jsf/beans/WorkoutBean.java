@@ -25,6 +25,7 @@ import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import java.io.IOException;
 import java.text.DateFormatSymbols;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.List;
@@ -91,17 +92,24 @@ public class WorkoutBean implements Constants {
 
       workoutYears.add(workoutYear);
 
-      LineChartSeries _year = new LineChartSeries();
-      _year.setLabel(String.valueOf(year));
+      LineChartSeries yearChart = new LineChartSeries();
+      yearChart.setLabel(String.valueOf(year));
 
       double total = 0;
-      for (int i = 0; i < 12; i++) {
-        total += workoutYear.get(i + 1).getDistance();
-        String month = new DateFormatSymbols().getMonths()[i];
-        _year.set(month, total);
+      for (int i = 1; i <= 12; i++) {
+
+        LocalDate date = LocalDate.of(year, i, 1);
+        if (date.isAfter(LocalDate.now())) {
+          break;
+        }
+
+        total += workoutYear.get(i).getDistance();
+        String month = new DateFormatSymbols().getMonths()[i - 1];
+        yearChart.set(month, total);
+
       }
 
-      yearsGraph.addSeries(_year);
+      yearsGraph.addSeries(yearChart);
 
     });
 

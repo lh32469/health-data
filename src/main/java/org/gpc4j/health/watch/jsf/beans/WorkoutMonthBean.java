@@ -25,6 +25,7 @@ import javax.faces.context.FacesContext;
 import javax.servlet.http.Cookie;
 import java.io.IOException;
 import java.text.DateFormatSymbols;
+import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.LinkedList;
 import java.util.List;
@@ -105,7 +106,7 @@ public class WorkoutMonthBean implements Constants {
     monthsGraph.setTitle("Swimming Distance by Day for " +
         monthString + ", " + year);
     monthsGraph.setLegendPosition("n");
-    monthsGraph.getAxes().put(AxisType.X, new CategoryAxis("Months"));
+    monthsGraph.getAxes().put(AxisType.X, new CategoryAxis("Days"));
 
     Axis yAxis = monthsGraph.getAxis(AxisType.Y);
     yAxis.setLabel("Miles");
@@ -135,6 +136,11 @@ public class WorkoutMonthBean implements Constants {
 
     for (int day = 1; day <= daysInMonth; day++) {
       String prefix = String.format("%d-%02d-%02d", year, month, day);
+
+      LocalDate date = LocalDate.of(year, month, day);
+      if(date.isAfter(LocalDate.now())) {
+        break;
+      }
 
       List<Workout> workoutsForTheDay = workouts.stream()
           .filter(workout -> workout.getStartDate().startsWith(prefix))

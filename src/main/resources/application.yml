@@ -14,15 +14,15 @@ management:
 
 spring:
   application:
-    name: ${PROJ}-${BRNCH}
+    name: ${PROJECT}-${BRANCH}
   boot:
     admin:
       client:
         url: http://svc.sba-k8s:8099
         auto-deregistration: true
         instance:
-#          management-base-url: https://${BRNCH}.${PROJ}.lth.guru
-          service-url: https://${BRNCH}.${PROJ}.lth.guru
+#          management-base-url: https://${BRANCH}.${PROJECT}.lth.guru
+          service-url: https://${BRANCH}.${PROJECT}.lth.guru
   servlet:
     multipart:
       max-file-size: 1000MB

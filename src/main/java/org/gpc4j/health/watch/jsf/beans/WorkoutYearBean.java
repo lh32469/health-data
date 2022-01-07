@@ -25,6 +25,7 @@ import javax.faces.context.FacesContext;
 import javax.servlet.http.Cookie;
 import java.io.IOException;
 import java.text.DateFormatSymbols;
+import java.time.LocalDate;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -104,14 +105,14 @@ public class WorkoutYearBean implements Constants {
     yAxis.setMax(max);
     yAxis.setTickInterval("10");
 
-    LineChartSeries lineGraph = new LineChartSeries();
+    LineChartSeries cumulativeChart = new LineChartSeries();
     BarChartSeries barGraph = new BarChartSeries();
     barGraph.setLabel("Monthly Distance");
-    lineGraph.setLabel("Cumulative Distance");
+    cumulativeChart.setLabel("Cumulative Distance");
 
     // This order is important otherwise barchart data is off by one.  Dunno..
     monthsGraph.addSeries(barGraph);
-    monthsGraph.addSeries(lineGraph);
+    monthsGraph.addSeries(cumulativeChart);
 
     // Divide into WorkoutMonths
     months = new LinkedList<>();
@@ -122,6 +123,11 @@ public class WorkoutYearBean implements Constants {
     for (int month = 1; month <= 12; month++) {
       String prefix = String.format("%d-%02d", year, month);
       log.debug("prefix = {}", prefix);
+
+      LocalDate date = LocalDate.of(year, month, 1);
+      if(date.isAfter(LocalDate.now())) {
+        break;
+      }
 
       List<Workout> workoutsForTheMonth = workouts.stream()
           .filter(workout -> workout.getStartDate().startsWith(prefix))
@@ -135,7 +141,7 @@ public class WorkoutYearBean implements Constants {
 
       log.debug("{} = {}", monthString, workoutMonth.getDistance());
 
-      lineGraph.set(monthString, runningTotal);
+      cumulativeChart.set(monthString, runningTotal);
       barGraph.set(monthString, workoutMonth.getDistance());
 
       selectedMonth = months.get(0);
