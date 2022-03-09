@@ -24,7 +24,7 @@ pipeline {
       agent {
         docker {
           reuseNode true
-          image 'maven:latest'
+          image 'maven:3.8-jdk-11'
           args '-u root -v /var/lib/jenkins/.m2:/root/.m2'
         }
       }
@@ -37,7 +37,7 @@ pipeline {
       agent {
         docker {
           reuseNode true
-          image 'maven:latest'
+          image 'maven:3.8-jdk-11'
           args '--dns=172.17.0.1 -u root \
                   -e PROJECT=watch \
                   -e BRANCH=junit \
