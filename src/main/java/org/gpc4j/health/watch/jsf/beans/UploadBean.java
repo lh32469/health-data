@@ -56,7 +56,7 @@ public class UploadBean {
           uploadedFile.getInputStream(), HealthData.class);
 
       session = ravenBean.getSession();
-      log.info("got session");
+      log.info("got session1");
 
       final String user = userProvider.getUser().getUsername();
 
@@ -72,6 +72,27 @@ public class UploadBean {
 
       session.saveChanges();
       log.info("data.getWorkouts().size() = {}", data.getWorkouts().size());
+      session.close();
+
+      /*
+       * Start new Session to upload Records.
+       */
+      session = ravenBean.getSession();
+      log.info("got session2");
+
+      data.getRecords().stream()
+          .peek(record -> record.setUser(user))
+          .forEach(record -> {
+                LocalDateTime created = LocalDateTime.parse(record.getCreationDate(), DTF);
+                log.info("created = {}", created);
+                long second = created.toEpochSecond(ZoneOffset.UTC);
+                session.store(record, user + "." + second);
+              }
+          );
+
+      session.saveChanges();
+      log.info("data.getRecords().size() = {}", data.getRecords().size());
+
     }
 
     FacesMessage message = new FacesMessage("Successful",

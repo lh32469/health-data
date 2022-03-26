@@ -85,6 +85,11 @@
       <artifactId>spring-boot-admin-starter-client</artifactId>
       <version>2.4.3</version>
     </dependency>
+    <!-- Micrometer Prometheus registry  -->
+    <dependency>
+      <groupId>io.micrometer</groupId>
+      <artifactId>micrometer-registry-prometheus</artifactId>
+    </dependency>
     <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>

@@ -50,6 +50,9 @@ kind: Service
 apiVersion: v1
 metadata:
   name: ${project}
+  annotations:
+    prometheus.io/scrape: 'true'
+    prometheus.io/path: '/actuator/prometheus'
 spec:
   selector:
     app: ${project}-app

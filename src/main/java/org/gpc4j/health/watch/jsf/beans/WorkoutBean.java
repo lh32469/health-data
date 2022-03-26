@@ -23,6 +23,7 @@ import javax.annotation.PreDestroy;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+import javax.servlet.http.Cookie;
 import java.io.IOException;
 import java.text.DateFormatSymbols;
 import java.time.LocalDate;
@@ -45,6 +46,9 @@ public class WorkoutBean implements Constants {
   @Autowired
   private UserProvider userProvider;
 
+  @Autowired
+  CookieBean cookieBean;
+
   List<WorkoutYear> workoutYears;
 
   WorkoutYear selectedYear;
@@ -54,20 +58,33 @@ public class WorkoutBean implements Constants {
    */
   LineChartModel yearsGraph;
 
+  /**
+   * Type of workout (Swimming/Walking) for Titles, Labels, etc..
+   */
+  private String workout;
+
   @PostConstruct
   public void postConstruct() {
     log.debug("WorkoutBean.postConstruct");
 
+    log.info("cookieBean = {}", cookieBean);
+
     ExternalContext externalContext =
         FacesContext.getCurrentInstance().getExternalContext();
     log.info("SessionMap = {}", externalContext.getSessionMap());
+
+    Cookie workoutCookie = (Cookie) externalContext
+        .getRequestCookieMap()
+        .get(WORKOUT_COOKIE_KEY);
+
+    workout = cookieBean.getWorkout();
 
     session = ravenBean.getSession();
 
     workoutYears = new LinkedList<>();
 
     yearsGraph = new LineChartModel();
-    yearsGraph.setTitle("Swimming Distance per Year by Month");
+    yearsGraph.setTitle(workout + " Distance per Year by Month");
     yearsGraph.setLegendPosition("n");
     yearsGraph.getAxes().put(AxisType.X, new CategoryAxis("Months"));
 
@@ -77,7 +94,7 @@ public class WorkoutBean implements Constants {
 
     List<Workout> workouts = session.query(Workout.class)
         .whereEquals("user", userProvider.getUser().getUsername())
-        .whereEquals("workoutActivityType", SWIMMING_WORKOUT)
+        .whereEquals("workoutActivityType", WORKOUT_MAP.get(workout))
         .selectFields(Workout.class, "duration", "totalDistance",
             "startDate", "totalEnergyBurned")
         .toList();
@@ -180,6 +197,10 @@ public class WorkoutBean implements Constants {
 
     log.info("years = {}", years);
     return years;
+  }
+
+  public String getWorkout() {
+    return workout;
   }
 
 }

@@ -22,14 +22,12 @@ import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
-import javax.servlet.http.Cookie;
 import java.io.IOException;
 import java.text.DateFormatSymbols;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @RequestScope
@@ -43,6 +41,8 @@ public class WorkoutMonthBean implements Constants {
   @Autowired
   private UserProvider userProvider;
 
+  @Autowired
+  CookieBean cookieBean;
   /**
    * Get Year and Month from Cookies passed in via redirect from year.xhtml page.
    */
@@ -71,15 +71,8 @@ public class WorkoutMonthBean implements Constants {
   public void postConstruct() {
     log.debug("WorkoutMonthBean.postConstruct");
 
-    ExternalContext externalContext =
-        FacesContext.getCurrentInstance().getExternalContext();
-
-    Map<String, Object> cookieMap = externalContext.getRequestCookieMap();
-
-    Cookie cookie = (Cookie) cookieMap.get(YEAR_COOKIE_KEY);
-    year = Integer.parseInt(cookie.getValue());
-    Cookie monthCookie = (Cookie) cookieMap.get(MONTH_COOKIE_KEY);
-    month = Integer.parseInt(monthCookie.getValue());
+    year = cookieBean.getYear();
+    month = cookieBean.getMonth();
 
     IDocumentSession session = ravenBean.getSession();
 
@@ -88,7 +81,7 @@ public class WorkoutMonthBean implements Constants {
     List<Workout> workouts = session.query(Workout.class)
         .whereEquals("user", userProvider.getUser().getUsername())
         .whereStartsWith("startDate", queryString)
-        .whereEquals("workoutActivityType", SWIMMING_WORKOUT)
+        .whereEquals("workoutActivityType", WORKOUT_MAP.get(cookieBean.getWorkout()))
         .selectFields(Workout.class, "duration", "totalDistance",
             "startDate", "totalEnergyBurned")
         .toList();
@@ -138,7 +131,7 @@ public class WorkoutMonthBean implements Constants {
       String prefix = String.format("%d-%02d-%02d", year, month, day);
 
       LocalDate date = LocalDate.of(year, month, day);
-      if(date.isAfter(LocalDate.now())) {
+      if (date.isAfter(LocalDate.now())) {
         break;
       }
 

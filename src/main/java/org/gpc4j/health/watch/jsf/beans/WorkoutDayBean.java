@@ -19,25 +19,17 @@ import org.springframework.web.context.annotation.RequestScope;
 import javax.annotation.PostConstruct;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
-import javax.servlet.http.Cookie;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
-
-import static org.gpc4j.health.watch.jsf.beans.Constants.DAY_COOKIE_KEY;
-import static org.gpc4j.health.watch.jsf.beans.Constants.MONTH_COOKIE_KEY;
-import static org.gpc4j.health.watch.jsf.beans.Constants.SEGMENT;
-import static org.gpc4j.health.watch.jsf.beans.Constants.SWIMMING_WORKOUT;
-import static org.gpc4j.health.watch.jsf.beans.Constants.YEAR_COOKIE_KEY;
 
 @RequestScope
 @Component("workoutDayBean")
 @Slf4j
-public class WorkoutDayBean {
+public class WorkoutDayBean implements Constants {
 
   @Autowired
   RavenBean ravenBean;
@@ -45,6 +37,8 @@ public class WorkoutDayBean {
   @Autowired
   private UserProvider userProvider;
 
+  @Autowired
+  CookieBean cookieBean;
   /**
    * Get Year and Month from Cookies passed in via redirect from year.xhtml page.
    */
@@ -75,14 +69,9 @@ public class WorkoutDayBean {
     ExternalContext externalContext =
         FacesContext.getCurrentInstance().getExternalContext();
 
-    Map<String, Object> cookieMap = externalContext.getRequestCookieMap();
-
-    Cookie cookie = (Cookie) cookieMap.get(YEAR_COOKIE_KEY);
-    year = Integer.parseInt(cookie.getValue());
-    Cookie monthCookie = (Cookie) cookieMap.get(MONTH_COOKIE_KEY);
-    month = Integer.parseInt(monthCookie.getValue());
-    Cookie dayCookie = (Cookie) cookieMap.get(DAY_COOKIE_KEY);
-    day = Integer.parseInt(dayCookie.getValue());
+    year = cookieBean.getYear();
+    month = cookieBean.getMonth();
+    day = cookieBean.getDay();
 
     IDocumentSession session = ravenBean.getSession();
 
@@ -92,7 +81,7 @@ public class WorkoutDayBean {
     workouts = session.query(Workout.class)
         .whereEquals("user", userProvider.getUser().getUsername())
         .whereStartsWith("startDate", queryString)
-        .whereEquals("workoutActivityType", SWIMMING_WORKOUT)
+        .whereEquals("workoutActivityType", WORKOUT_MAP.get(cookieBean.getWorkout()))
         .toList();
 
     totalMiles = workouts.stream()

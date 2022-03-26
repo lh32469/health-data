@@ -5,73 +5,74 @@
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:p="http://primefaces.org/ui"
       xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
 >
 
-<h:head>
-  <title>SwimYears</title>
-  <meta name="description"
-        content="Graph of swim data"/>
-</h:head>
-<h:body>
-  <f:view transient="true">
-    <h:form id="iForm">
-      <p:growl id="growl" showDetail="true" skipDetailIfEqualsSummary="true"/>
+<ui:composition template="template.xhtml">
 
-      <p:panelGrid columns="1" style="margin: auto; width: 80%">
-        <p:dataTable var="day"
-                     value="#{workoutMonthBean.days}"
-                     style="margin-left: 5%; margin-right: 2%"
-                     selectionMode="single"
-                     selection="#{workoutMonthBean.selectedDay}"
-                     rowKey="#{day.day}"
-                     size="small"
-                     stripedRows="true">
+  <ui:define name="center">
 
-          <f:facet name="header">
-            Swimming Data per Day for #{workoutMonthBean.month},  #{workoutMonthBean.year}
-          </f:facet>
+    <p:panelGrid columns="1" style="margin: auto; width: 100%">
 
-          <p:ajax event="rowSelect"
-                  listener="#{workoutMonthBean.onRowSelect}"
-                  update=":iForm:growl"/>
+      <p:breadCrumb style="font: xx-small">
+        <p:menuitem value="Home" outcome="workouts.xhtml"/>
+        <p:menuitem value="#{workoutYearBean.year}" outcome="year.xhtml"/>
+        <p:menuitem value="#{workoutMonthBean.month}" outcome="month.xhtml"/>
+      </p:breadCrumb>
 
-          <p:column headerText="Day">
-            <h:outputText value="#{day.day}"/>
-          </p:column>
+      <p:dataTable var="day"
+                   value="#{workoutMonthBean.days}"
+                   selectionMode="single"
+                   selection="#{workoutMonthBean.selectedDay}"
+                   rowKey="#{day.day}"
+                   size="small"
+                   stripedRows="true">
 
-          <p:column headerText="Distance"
-                    footerText="#{workoutMonthBean.distance}">
-            <h:outputText value="#{day.distance}">
-              <f:convertNumber type="number" minFractionDigits="2" pattern="#0.00"/>
-            </h:outputText>
-          </p:column>
+        <f:facet name="header">
+          #{cookieBean.workout} Data per Day for #{workoutMonthBean.month},  #{workoutMonthBean.year}
+        </f:facet>
 
-          <p:column headerText="Calories"
-                    footerText="#{workoutMonthBean.calories}">
-            <h:outputText value="#{day.calories}">
-              <f:convertNumber type="number" minFractionDigits="2" pattern="#0.00"/>
-            </h:outputText>
-          </p:column>
+        <p:ajax event="rowSelect"
+                listener="#{workoutMonthBean.onRowSelect}"
+                update=":iForm:growl"/>
 
-          <p:column headerText="Minutes">
-            <h:outputText value="#{day.minutes}"/>
-          </p:column>
+        <p:column headerText="Day">
+          <h:outputText value="#{day.day}"/>
+        </p:column>
 
-          <p:column headerText="Number of Workouts">
-            <h:outputText value="#{day.workouts.size()}">
-            </h:outputText>
-          </p:column>
+        <p:column headerText="Distance"
+                  footerText="#{workoutMonthBean.distance}">
+          <h:outputText value="#{day.distance}">
+            <f:convertNumber type="number" minFractionDigits="2" pattern="#0.00"/>
+          </h:outputText>
+        </p:column>
 
-        </p:dataTable>
+        <p:column headerText="Calories"
+                  footerText="#{workoutMonthBean.calories}">
+          <h:outputText value="#{day.calories}">
+            <f:convertNumber type="number" minFractionDigits="2" pattern="#0.00"/>
+          </h:outputText>
+        </p:column>
 
-        <p:chart type="line"
-                 model="#{workoutMonthBean.daysGraph}"
-                 style="width:100%;height:600px;border: 20px">
+        <p:column headerText="Minutes">
+          <h:outputText value="#{day.minutes}"/>
+        </p:column>
 
-        </p:chart>
+        <p:column headerText="Number of Workouts">
+          <h:outputText value="#{day.workouts.size()}">
+          </h:outputText>
+        </p:column>
 
-      </p:panelGrid>
-    </h:form>
-  </f:view>
-</h:body>
+      </p:dataTable>
+
+      <p:chart type="line"
+               model="#{workoutMonthBean.daysGraph}"
+               style="width:100%;height:600px;border: 20px">
+
+      </p:chart>
+
+    </p:panelGrid>
+  </ui:define>
+</ui:composition>
+
 </html>

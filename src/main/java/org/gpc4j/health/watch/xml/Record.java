@@ -2,6 +2,7 @@ package org.gpc4j.health.watch.xml;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import org.gpc4j.health.watch.jsf.beans.Constants;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -9,33 +10,45 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
+/*
+ *
+ * <!ELEMENT Record ((MetadataEntry|HeartRateVariabilityMetadataList)*)>
+ * <!ATTLIST Record
+ *   type          CDATA #REQUIRED
+ *   unit          CDATA #IMPLIED
+ *   value         CDATA #IMPLIED
+ *   sourceName    CDATA #REQUIRED
+ *   sourceVersion CDATA #IMPLIED
+ *   device        CDATA #IMPLIED
+ *   creationDate  CDATA #IMPLIED
+ *   startDate     CDATA #REQUIRED
+ *   endDate       CDATA #REQUIRED
+ * >
+ */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "Record")
 @Data
-public class Record implements Comparable<Record> {
+public class Record implements Comparable<Record>, Constants {
 
- public final static String SWIMMING = "HKQuantityTypeIdentifierDistanceSwimming";
+  private String user;
 
-
-  public static final DateTimeFormatter DTF
-      = DateTimeFormatter.ofPattern("yyyy-MM-dd k:mm:ss Z");
-
-  @XmlAttribute(name = "type")
+  @XmlAttribute
   private String type;
-
-  @XmlAttribute(name = "creationDate")
-  private String creationDate;
-
-  @XmlAttribute(name = "startDate")
-  private String startDate;
-
-  @XmlAttribute(name = "endDate")
-  private String endDate;
-
-  @XmlAttribute(name = "value")
+  @XmlAttribute
+  private String unit;
+  @XmlAttribute
   private String value;
+  @XmlAttribute
+  private String sourceName;
+  @XmlAttribute
+  private String sourceVersion;
+  @XmlAttribute
+  private String creationDate;
+  @XmlAttribute
+  private String startDate;
+  @XmlAttribute
+  private String endDate;
 
   @JsonIgnore
   public LocalDateTime getStart() {

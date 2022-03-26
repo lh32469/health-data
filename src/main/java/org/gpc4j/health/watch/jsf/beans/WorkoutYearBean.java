@@ -22,7 +22,6 @@ import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
-import javax.servlet.http.Cookie;
 import java.io.IOException;
 import java.text.DateFormatSymbols;
 import java.time.LocalDate;
@@ -40,6 +39,9 @@ public class WorkoutYearBean implements Constants {
 
   @Autowired
   private UserProvider userProvider;
+
+  @Autowired
+  CookieBean cookieBean;
 
   /**
    * Get Year from Session passed in via redirect from workouts.xhtml page.
@@ -68,12 +70,10 @@ public class WorkoutYearBean implements Constants {
   public void postConstruct() {
     log.debug("WorkoutYearBean.postConstruct");
 
-    ExternalContext externalContext =
-        FacesContext.getCurrentInstance().getExternalContext();
+    year = cookieBean.getYear();
 
-    Cookie cookie = (Cookie) externalContext.getRequestCookieMap().get(YEAR_COOKIE_KEY);
-    year = Integer.parseInt(cookie.getValue());
-    log.info("year = {}", year);
+    String workoutType = cookieBean.getWorkout();
+    log.info("year = {}, workoutType = {}", year, workoutType);
 
     IDocumentSession session = ravenBean.getSession();
 
@@ -81,7 +81,7 @@ public class WorkoutYearBean implements Constants {
     List<Workout> workouts = session.query(Workout.class)
         .whereEquals("user", userProvider.getUser().getUsername())
         .whereStartsWith("startDate", year + "-")
-        .whereEquals("workoutActivityType", SWIMMING_WORKOUT)
+        .whereEquals("workoutActivityType", WORKOUT_MAP.get(workoutType))
         .selectFields(Workout.class, "user", "duration", "totalDistance",
             "startDate", "totalEnergyBurned")
         .toList();
@@ -94,7 +94,7 @@ public class WorkoutYearBean implements Constants {
     });
 
     monthsGraph = new LineChartModel();
-    monthsGraph.setTitle("Swimming Distance by Month for " + year);
+    monthsGraph.setTitle(workoutType + " Distance by Month for " + year);
     monthsGraph.setLegendPosition("n");
     monthsGraph.getAxes().put(AxisType.X, new CategoryAxis("Months"));
 
@@ -125,7 +125,7 @@ public class WorkoutYearBean implements Constants {
       log.debug("prefix = {}", prefix);
 
       LocalDate date = LocalDate.of(year, month, 1);
-      if(date.isAfter(LocalDate.now())) {
+      if (date.isAfter(LocalDate.now())) {
         break;
       }
 

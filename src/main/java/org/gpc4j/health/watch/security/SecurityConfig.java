@@ -40,16 +40,38 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     http.headers().frameOptions().disable();
 
     http.authorizeRequests()
+        .antMatchers("/actuator/health").permitAll()
+        .antMatchers("/actuator/prometheus").hasIpAddress("192.0.0.0/8")
+        .antMatchers("/actuator/prometheus").hasIpAddress("10.0.0.0/8")
+        .antMatchers("/actuator").authenticated()
+        .antMatchers("/actuator/**").authenticated()
+        .antMatchers("/instances").authenticated()
+        .antMatchers("/instances/**").authenticated()
+        .and()
+        .httpBasic();
+
+    http.authorizeRequests()
         .antMatchers("/createaccount.xhtml").permitAll()
         .antMatchers("/javax.faces.resource/**").permitAll()
         .antMatchers("/createaccount.xhtml").hasRole("ADMIN")
         .antMatchers("/", "/month.xhtml").hasAnyRole("USER", "ADMIN")
+        .antMatchers("/**/*.xhtml").hasAnyRole("USER", "ADMIN")
         .antMatchers("/**").authenticated()
         .and()
         .formLogin()
         .successHandler(new LoginSuccessHandler())
         .and().logout()
-        .logoutUrl("/logout");
+        .logoutUrl("/logout")
+        .and()
+//        .csrf((csrf) -> csrf.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+//            .ignoringRequestMatchers(
+//                new AntPathRequestMatcher(("/instances"),
+//                    HttpMethod.POST.toString()),
+//                new AntPathRequestMatcher(("/instances/*"),
+//                    HttpMethod.DELETE.toString()),
+//                new AntPathRequestMatcher(("/actuator/**"))
+//            ))
+        .rememberMe().key("3f27f2b04fc6");
 
   }
 
