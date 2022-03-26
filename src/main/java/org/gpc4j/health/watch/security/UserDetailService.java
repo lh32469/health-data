@@ -35,7 +35,7 @@ public class UserDetailService implements UserDetailsService {
         User user = session.load(User.class, username);
         if (user == null) {
           log.info("username '{}' not found", username);
-          user = INVALID;
+          return INVALID;
         } else {
           log.info("found user = {}", user);
           cache.put(username, user);

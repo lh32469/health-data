@@ -75,7 +75,7 @@ public class CreateAccountBean {
       FacesMessage message = new FacesMessage(
           FacesMessage.SEVERITY_INFO,
           "Created",
-          "Username created");
+          "Username " + username + " created");
       FacesContext.getCurrentInstance().addMessage(null, message);
     }
   }
