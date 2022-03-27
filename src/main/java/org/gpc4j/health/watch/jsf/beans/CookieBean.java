@@ -28,7 +28,7 @@ public class CookieBean implements Constants {
 
   @PostConstruct
   public void postConstruct() {
-    log.info("CookieBean.postConstruct");
+    log.debug("CookieBean.postConstruct");
     ExternalContext externalContext =
         FacesContext.getCurrentInstance().getExternalContext();
 
@@ -67,8 +67,7 @@ public class CookieBean implements Constants {
       workout = workoutCookie.getValue();
     }
 
-    log.info("yearCookie = {}", yearCookie);
-    log.info("year = {}", year);
+    log.info("year, month, day = {}, {}, {}", year, month, day);
     log.info("workout = {}", workout);
 
   }

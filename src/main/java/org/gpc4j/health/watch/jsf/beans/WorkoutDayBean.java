@@ -110,14 +110,14 @@ public class WorkoutDayBean implements Constants {
       int index = 1;
       LineChartSeries segment = null;
       for (WorkoutEvent event : workout.getWorkoutEvents()) {
-        log.debug("event = {}", event);
+        log.trace("event = {}", event);
 
         if (SEGMENT.equals(event.getType())) {
           if (null != segment) {
             dayGraph.addSeries(segment);
           }
           // Start of new Segment/Set
-          log.info("New Segment = {}", event);
+          log.debug("New Segment = {}", event);
           segment = new LineChartSeries();
           segment.setShowMarker(false);
 

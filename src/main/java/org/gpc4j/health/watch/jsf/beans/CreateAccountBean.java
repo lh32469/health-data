@@ -46,7 +46,7 @@ public class CreateAccountBean {
   }
 
   public void submit(ActionEvent event) {
-    log.debug("event = {}", event);
+    log.info("event = {}", event);
     log.debug("username = {}", username);
     log.debug("password = {}", password);
 
