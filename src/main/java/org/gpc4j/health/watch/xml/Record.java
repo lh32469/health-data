@@ -10,6 +10,7 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 /*
  *
@@ -31,22 +32,33 @@ import java.time.LocalDateTime;
 @Data
 public class Record implements Comparable<Record>, Constants {
 
+  public String getId() {
+    return UUID.nameUUIDFromBytes(toString().getBytes()).toString();
+  }
+
   private String user;
 
   @XmlAttribute
   private String type;
+
   @XmlAttribute
   private String unit;
+
   @XmlAttribute
   private String value;
+
   @XmlAttribute
   private String sourceName;
+
   @XmlAttribute
   private String sourceVersion;
+
   @XmlAttribute
   private String creationDate;
+
   @XmlAttribute
   private String startDate;
+
   @XmlAttribute
   private String endDate;
 
