@@ -75,7 +75,9 @@ public class MenuBarBean implements Constants {
 
     model.getElements().add(home);
     model.getElements().add(getFileMenu());
-    model.getElements().add(getUsersMenu());
+    if (adminUser) {
+      model.getElements().add(getUsersMenu());
+    }
     if (workoutMenuViews.contains(viewId)) {
       model.getElements().add(getWorkoutsMenu());
     }
@@ -106,17 +108,14 @@ public class MenuBarBean implements Constants {
         .icon("pi pi-fw pi-user")
         .build();
 
-    if (adminUser) {
+    DefaultMenuItem newUser = DefaultMenuItem.builder()
+        .value("New")
+        .icon("pi pi-fw pi-user-plus")
+        .ajax(false)
+        .url("createaccount.xhtml")
+        .build();
 
-      DefaultMenuItem newUser = DefaultMenuItem.builder()
-          .value("New")
-          .icon("pi pi-fw pi-user-plus")
-          .ajax(false)
-          .url("createaccount.xhtml")
-          .build();
-
-      users.getElements().add(newUser);
-    }
+    users.getElements().add(newUser);
 
     return users;
 
