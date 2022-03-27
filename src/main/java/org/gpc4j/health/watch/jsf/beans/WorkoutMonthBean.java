@@ -110,7 +110,7 @@ public class WorkoutMonthBean implements Constants {
 
     LineChartSeries lineGraph = new LineChartSeries();
     BarChartSeries barGraph = new BarChartSeries();
-    barGraph.setLabel("Monthly Distance");
+    barGraph.setLabel("Daily Distance");
     lineGraph.setLabel("Cumulative Distance");
     lineGraph.setShowMarker(false);
 
