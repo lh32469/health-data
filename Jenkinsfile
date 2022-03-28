@@ -1,5 +1,5 @@
 // project should be the last token of the Git repo URL in lowercase.
-def project = "watch"
+def project = "health-data"
 def branch = BRANCH_NAME.toLowerCase()
 def port = "9020"
 k8sYml = ""
