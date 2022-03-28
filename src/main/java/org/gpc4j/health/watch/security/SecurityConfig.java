@@ -40,7 +40,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     http.headers().frameOptions().disable();
 
     http.authorizeRequests()
-        .antMatchers( "/favicon.ico").permitAll()
+        .antMatchers("/META-INF/resources/favicon.ico").permitAll()
         .antMatchers("/actuator/health").permitAll()
         .antMatchers("/actuator/prometheus").hasIpAddress("192.0.0.0/8")
         .antMatchers("/actuator/prometheus").hasIpAddress("10.0.0.0/8")
