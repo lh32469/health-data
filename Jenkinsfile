@@ -61,6 +61,8 @@ pipeline {
               --build-arg PROFILE=jenkins,${branch} \
               --label job.name=$JOB_NAME ."
         sh "docker push dell-0114.local:32000/${project}:${branch}"
+        // Delete image once pushed
+        sh "docker image rm dell-0114.local:32000/${project}:${branch}"
       }
     }
 
