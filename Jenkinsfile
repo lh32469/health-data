@@ -1,8 +1,6 @@
-// project should be the last token of the Git repo URL in lowercase.
-def project = "health-data"
-def branch = BRANCH_NAME.toLowerCase()
-def port = "9020"
 k8sYml = ""
+project = ""
+branch = ""
 
 pipeline {
 
@@ -19,6 +17,17 @@ pipeline {
   agent any
 
   stages {
+
+    stage("Get project") {
+      steps {
+        script {
+          // project is the last token of the Git repo URL in lowercase.
+          project = env.GIT_URL.toLowerCase().split("/")[1].replaceAll(".git", "")
+          branch = BRANCH_NAME.toLowerCase()
+          println "Project/Branch = " + project + "/" + branch
+        }
+      }
+    }
 
     stage('Compile') {
       agent {
@@ -45,7 +54,6 @@ pipeline {
         }
       }
       steps {
-        sh 'ls -l'
         sh 'mvn -B package'
         junit '**/target/surefire-reports/TEST-*.xml'
       }
@@ -91,18 +99,13 @@ pipeline {
 
           def namespace = "${project}-${branch}" as String
 
-          result = sh(
-              returnStdout: true,
-              script: "kubectl get namespaces | grep $namespace || true"
-          )
-
-          if (result.trim().isEmpty()) {
-            sh "kubectl create namespace $namespace"
+          if ("kubectl get namespace ${namespace}".execute().waitFor() == 0) {
+            println "$namespace namespace exists"
+            sh "kubectl -n ${namespace} rollout restart deployment/${project}"
+          } else {
+            "kubectl create namespace $namespace".execute().waitFor()
             writeFile file: 'k8s-out.yml', text: k8sYml
             sh "kubectl -n ${namespace} create -f k8s-out.yml"
-          } else {
-            echo "$namespace namespace exists"
-            sh "kubectl -n ${namespace} rollout restart deployment/${project}"
           }
 
         }
