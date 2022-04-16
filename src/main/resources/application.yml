@@ -35,6 +35,8 @@ spring:
       max-file-size: 1000MB
       max-request-size: 1000MB
   jackson:
+    serialization:
+      INDENT_OUTPUT: true
     default-property-inclusion:
   session:
     timeout: 180
