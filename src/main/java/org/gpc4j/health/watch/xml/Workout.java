@@ -46,4 +46,13 @@ public class Workout {
   @XmlElement(name = "WorkoutEvent")
   private List<WorkoutEvent> workoutEvents;
 
+  /**
+   * Get Duration formatted to min:sec
+   */
+  public String getDurationF() {
+    int minutes = (int) Math.floor(duration);
+    int seconds = (int) ((duration - minutes) * 60);
+    return String.format("%02d:%2d ", minutes, seconds);
+  }
+
 }

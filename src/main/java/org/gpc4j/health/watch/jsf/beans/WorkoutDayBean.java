@@ -19,6 +19,7 @@ import org.springframework.web.context.annotation.RequestScope;
 import javax.annotation.PostConstruct;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+import javax.inject.Named;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -28,6 +29,7 @@ import java.util.Locale;
 
 @RequestScope
 @Component("workoutDayBean")
+@Named
 @Slf4j
 public class WorkoutDayBean implements Constants {
 
@@ -122,10 +124,7 @@ public class WorkoutDayBean implements Constants {
           segment.setShowMarker(false);
 
           // TODO: Make event.duration a double
-          double duration = Double.parseDouble(event.getDuration());
-          segment.setLabel(event.getDate()
-              + String.format("; %.2f ", duration)
-              + event.getDurationUnit());
+          segment.setLabel(event.getDate() + "; " + event.getDurationF());
         } else {
           segment.set(index++, 60 * Double.parseDouble(event.getDuration()));
         }

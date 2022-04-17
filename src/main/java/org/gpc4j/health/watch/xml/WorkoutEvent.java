@@ -25,4 +25,11 @@ public class WorkoutEvent {
   @XmlAttribute
   private String durationUnit;
 
+  public String getDurationF() {
+    double _duration = Double.parseDouble(duration);
+    int minutes = (int) Math.floor(_duration);
+    int seconds = (int) ((_duration - minutes) * 60);
+    return String.format("%02d:%2d ", minutes, seconds);
+  }
+
 }

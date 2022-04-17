@@ -31,9 +31,7 @@
         </f:facet>
 
         <p:column headerText="Total Duration">
-          <h:outputText value="#{workout.duration}">
-            <f:convertNumber type="number" minFractionDigits="2" pattern="#0.00"/>
-          </h:outputText>
+          <h:outputText value="#{workout.durationF}"/>
         </p:column>
 
         <p:column headerText="Total Distance">
