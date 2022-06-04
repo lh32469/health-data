@@ -7,7 +7,7 @@ COPY target/watch-*.jar /usr/src/watch.jar
 WORKDIR                 /usr/src/
 
 ENV _JAVA_OPTIONS="-XX:+UseShenandoahGC \
--Xmx1g \
+-Xmx2g \
 -XX:+UnlockExperimentalVMOptions \
 -XX:MetaspaceSize=25m \
 -XX:MinMetaspaceFreeRatio=10 \
