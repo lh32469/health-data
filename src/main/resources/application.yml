@@ -48,7 +48,7 @@ joinfaces:
     serialize-server-state: true
 
 ravendb:
-  url: http://raven-all.raven:8080
+  url: http://raven.raven:8080
 
 logging:
   level:
