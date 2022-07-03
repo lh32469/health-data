@@ -43,6 +43,8 @@ pipeline {
 
             if (branch == "master") {
               host = project
+            } else if (branch == "main") {
+              host = project
             } else {
               host = "${branch}.${project}"
             }
