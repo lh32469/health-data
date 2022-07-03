@@ -65,9 +65,8 @@ pipeline {
     stage('Maven') {
       steps {
         container('maven') {
-          sh 'mvn -B package'
+          sh 'mvn -B -DskipTests package'
         }
-        junit '**/target/surefire-reports/TEST-*.xml'
       }
     }
 
