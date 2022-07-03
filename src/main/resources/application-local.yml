@@ -1,5 +1,5 @@
 server:
-  port: 5050
+  port: 8085
 
 ravendb:
   url: http://dell-4290.local:5050
@@ -20,3 +20,4 @@ spring:
             user:
               name: lth
               password: delth
+          prefer-ip: true
