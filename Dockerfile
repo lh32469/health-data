@@ -15,9 +15,6 @@ ENV _JAVA_OPTIONS="-XX:+UseShenandoahGC \
 -XX:ShenandoahUncommitDelay=1000 \
 -XX:ShenandoahGuaranteedGCInterval=10000"
 
-ENV PORT 5000
-EXPOSE $PORT
-
-CMD ["java", "-jar", "-Dserver.port=${PORT}", "watch.jar" ]
+CMD ["java", "-jar", "watch.jar" ]
 
 
