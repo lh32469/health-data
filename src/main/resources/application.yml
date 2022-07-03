@@ -29,6 +29,10 @@ spring:
         auto-deregistration: true
         instance:
           prefer-ip: true
+          metadata:
+            user:
+              name: lth
+              password: ENC(P6EKxg8w6Eer0w2mdvbiqsG+FD2pYa1XncEEhMVsKFw=)
   servlet:
     multipart:
       max-file-size: 1000MB
