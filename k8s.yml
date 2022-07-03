@@ -28,26 +28,21 @@ spec:
               value: "/"
             - name: BRANCH
               value: ${branch}
-          resources:
-            limits:
-              memory: 1Gi
-            requests:
-              memory: 512Mi
-#          livenessProbe:
-#            httpGet:
-#              path: /actuator/health/liveness
-#              port: 8085
-#              httpHeaders:
-#                - name: Custom-Header
-#                  value: Awesome
-#            initialDelaySeconds: 30
-#            periodSeconds: 10
-#          readinessProbe:
-#            httpGet:
-#              path: /actuator/health/readiness
-#              port: 8085
-#            initialDelaySeconds: 30
-#            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /actuator/health/liveness
+              port: 8085
+              httpHeaders:
+                - name: Custom-Header
+                  value: Awesome
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /actuator/health/readiness
+              port: 8085
+            initialDelaySeconds: 30
+            periodSeconds: 10
 
 ---
 

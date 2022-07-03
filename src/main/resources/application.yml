@@ -1,18 +1,21 @@
 server:
-  port: 5000
+  port: 8085
   http2:
     enabled: true
   tomcat:
     redirect-context-root: false
 
 management:
+  health:
+    probes:
+      enabled: true
   endpoints:
     web:
       exposure:
         include: "*"
   endpoint:
     health:
-      show-details: when_authorized
+      show-details: always
 
 spring:
   application:
