@@ -16,7 +16,7 @@ management:
 
 spring:
   application:
-    name: ${PROJECT}-${BRANCH}
+    name: healh-data-${BRANCH:dev}
   boot:
     admin:
       client:
@@ -25,11 +25,7 @@ spring:
         url: https://sba.k8s.gpc4j.org
         auto-deregistration: true
         instance:
-          management-base-url: https://${BRANCH}.${PROJECT}.lth.guru
-          metadata:
-            user:
-              name: lth
-              password: xafmo1-sogzuw-zEgkoc
+          prefer-ip: true
   servlet:
     multipart:
       max-file-size: 1000MB
