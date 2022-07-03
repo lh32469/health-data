@@ -8,6 +8,7 @@ WORKDIR                 /usr/src/
 
 ENV _JAVA_OPTIONS="-XX:+UseShenandoahGC \
 -Xmx2g \
+-XX:ActiveProcessorCount=2 \
 -XX:+UnlockExperimentalVMOptions \
 -XX:MetaspaceSize=25m \
 -XX:MinMetaspaceFreeRatio=10 \

@@ -15,35 +15,39 @@ spec:
       labels:
         app: ${project}-app
     spec:
+      hostAliases:
+        - ip: "192.168.5.220"
+          hostnames:
+            - "dell-4290.local"
       containers:
         - name: ${project}
           image: localhost:32000/${project}:${branch}
+          imagePullPolicy: "Always"
           env:
-            - name: PROJECT
-              value: ${project}
+            - name: SERVER_SERVLET_CONTEXT_PATH
+              value: "/"
             - name: BRANCH
               value: ${branch}
-          imagePullPolicy: "Always"
-          livenessProbe:
-            httpGet:
-              path: /actuator/health
-              port: 5000
-            failureThreshold: 12
-            initialDelaySeconds: 60
-            periodSeconds: 15
-          readinessProbe:
-            httpGet:
-              path: /actuator/health
-              port: 5000
-            initialDelaySeconds: 10
-            periodSeconds: 10
-#          resources:
-#            limits:
-#              cpu: "2"
-#              memory: 2Gi
-#            requests:
-#              cpu: ".25"
-#              memory: 500Mi
+          resources:
+            limits:
+              memory: 1Gi
+            requests:
+              memory: 512Mi
+#          livenessProbe:
+#            httpGet:
+#              path: /actuator/health/liveness
+#              port: 8085
+#              httpHeaders:
+#                - name: Custom-Header
+#                  value: Awesome
+#            initialDelaySeconds: 30
+#            periodSeconds: 10
+#          readinessProbe:
+#            httpGet:
+#              path: /actuator/health/readiness
+#              port: 8085
+#            initialDelaySeconds: 30
+#            periodSeconds: 10
 
 ---
 
@@ -53,25 +57,13 @@ metadata:
   name: ${project}
   annotations:
     prometheus.io/scrape: 'true'
+    prometheus.io/port: '8085'
     prometheus.io/path: '/actuator/prometheus'
 spec:
   selector:
     app: ${project}-app
   ports:
-    - port: 5000 # Default port for image
-
----
-
-kind: Service
-apiVersion: v1
-metadata:
-  name: java-debug
-spec:
-  type: NodePort
-  selector:
-    app: ${project}-app
-  ports:
-    - port: 5005 # Debug port for image
+    - port: 8085 # Default port for image
 
 ---
 
@@ -86,10 +78,10 @@ metadata:
 spec:
   tls:
     - hosts:
-        - ${branch}.${project}.lth.guru
+        - ${host}.lth.guru
       secretName: tls-secret
   rules:
-    - host: ${branch}.${project}.lth.guru
+    - host: ${host}.lth.guru
       http:
         paths:
           - pathType: Prefix
@@ -98,27 +90,5 @@ spec:
               service:
                 name: ${project}
                 port:
-                  number: 5000
-
----
-
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: ${project}-local
-  annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /
-    nginx.ingress.kubernetes.io/proxy-body-size: "0"
-spec:
-  rules:
-    - host: ${branch}.${project}.local
-      http:
-        paths:
-          - pathType: Prefix
-            path: /
-            backend:
-              service:
-                name: ${project}
-                port:
-                  number: 5000
+                  number: 8085
 
