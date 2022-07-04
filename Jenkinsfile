@@ -3,6 +3,7 @@ def dockerHost = "tcp://dind.container-registry:2375"
 
 project = ""
 branch = ""
+secretsYml = ""
 
 pipeline {
 
@@ -60,6 +61,24 @@ pipeline {
 
             k8sYml = template.toString()
           }
+
+          script {
+            // Need separate script because of SimpleTemplateEngine
+            // NotSerializableException
+            def secretsFile = readFile "secrets.yml"
+
+            withCredentials([string(credentialsId: 'jasypt-permits', variable: 'SECRET')]) {
+
+              def binding = [
+                  secret: SECRET
+              ]
+
+              def engine = new groovy.text.SimpleTemplateEngine()
+              def template = engine.createTemplate(secretsFile).make(binding)
+              secretsYml = template.toString()
+            }
+          }
+
         }
       }
     }
@@ -106,6 +125,10 @@ pipeline {
               sh "kubectl -n ${namespace} rollout restart deployment/${project}"
             } else {
               sh "kubectl create namespace $namespace"
+
+              writeFile file: 'secrets-out.yml', text: secretsYml
+              sh "kubectl -n ${namespace} create -f secrets-out.yml"
+
               writeFile file: 'k8s-out.yml', text: k8sYml
               sh "kubectl -n ${namespace} create -f k8s-out.yml"
             }

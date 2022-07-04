@@ -24,8 +24,11 @@ spec:
           image: localhost:32000/${project}:${branch}
           imagePullPolicy: "Always"
           env:
-            - name: SERVER_SERVLET_CONTEXT_PATH
-              value: "/"
+            - name: JASYPT_ENCRYPTOR_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: jasypt-secret
+                  key: password
             - name: BRANCH
               value: ${branch}
           livenessProbe:
