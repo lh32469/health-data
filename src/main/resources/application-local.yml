@@ -6,7 +6,7 @@ ravendb:
 
 spring:
   application:
-    name: ${PROJECT}-${BRANCH}
+    name: healh-data-${BRANCH:dev}
   boot:
     admin:
       client:
