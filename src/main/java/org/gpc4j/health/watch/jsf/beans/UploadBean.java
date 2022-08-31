@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import static org.gpc4j.health.watch.jsf.beans.Constants.DTF;
@@ -77,7 +78,7 @@ public class UploadBean {
           );
 
       session.saveChanges();
-      log.info("Saved Workouts");
+      log.info("Saved {} Workouts", data.getWorkouts().size());
       session.close();
 
       Set<Record> unique = new HashSet<>(data.getRecords());
@@ -86,17 +87,28 @@ public class UploadBean {
       }
 
       /*
-       * Start new Session to upload Records.
+       * Upload Records in sections.
        */
-      session = ravenBean.getSession();
-      log.info("Got session for Records");
+      List<Record> records = data.getRecords();
+      while (!records.isEmpty()) {
 
-      data.getRecords().stream()
-          .peek(record -> record.setUser(user))
-          .forEach(record -> session.store(record, record.getId())
-          );
+        session = ravenBean.getSession();
+        log.debug("Got session for {} Records", records.size());
 
-      session.saveChanges();
+        for (int i = 0; i < 1000; i++) {
+          if (!records.isEmpty()) {
+            Record record = records.remove(0);
+            record.setUser(user);
+            session.store(record, record.getId());
+          } else {
+            break;
+          }
+        }
+
+        session.saveChanges();
+        session.close();
+      }
+
       log.info("Saved Records");
 
     }
