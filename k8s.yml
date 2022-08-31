@@ -34,7 +34,7 @@ spec:
           livenessProbe:
             httpGet:
               path: /actuator/health/liveness
-              port: 8085
+              port: 8090
               httpHeaders:
                 - name: Custom-Header
                   value: Awesome
@@ -44,7 +44,7 @@ spec:
           readinessProbe:
             httpGet:
               path: /actuator/health/readiness
-              port: 8085
+              port: 8090
             initialDelaySeconds: 30
             periodSeconds: 15
             failureThreshold: 4
