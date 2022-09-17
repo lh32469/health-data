@@ -1,0 +1,43 @@
+server:
+  port: 8085
+
+ravendb:
+  url: http://raven.local
+
+spring:
+  application:
+    name: healh-data-${BRANCH:dev}
+  servlet:
+    multipart:
+      max-file-size: 1000MB
+      max-request-size: 1000MB
+  jackson:
+    serialization:
+      INDENT_OUTPUT: true
+    default-property-inclusion:
+  session:
+    timeout: 180
+
+
+joinfaces:
+  primefaces:
+  #theme: twitter
+  jsf:
+    state-saving-method: client
+    serialize-server-state: true
+
+
+logging:
+  level:
+    root: INFO
+    org.apache.http: INFO
+    net.ravendb.client: WARN
+    org:
+      gpc4j:
+        pf:
+          jsf:
+            beans:
+              EditBean: DEBUG
+  pattern:
+    dateformat: MM-dd HH:mm:ss.SSS,America/Los_Angeles
+    console: "${CONSOLE_LOG_PATTERN:-%clr(%d{HH:mm:ss.SSS}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(---){faint} %clr(%-25.35logger{1}.%M){cyan} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}}"

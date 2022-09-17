@@ -114,6 +114,14 @@ public class WorkoutDayBean implements Constants {
       for (WorkoutEvent event : workout.getWorkoutEvents()) {
         log.trace("event = {}", event);
 
+        if (PAUSE_WORKOUT.equals(event.getType())) {
+          continue;
+        }
+
+        if (RESUME_WORKOUT.equals(event.getType())) {
+          continue;
+        }
+
         if (SEGMENT.equals(event.getType())) {
           if (null != segment) {
             dayGraph.addSeries(segment);

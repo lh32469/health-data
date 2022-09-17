@@ -7,6 +7,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.util.Collections;
 import java.util.List;
 
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -45,6 +46,11 @@ public class Workout {
 
   @XmlElement(name = "WorkoutEvent")
   private List<WorkoutEvent> workoutEvents;
+
+  public List<WorkoutEvent> getWorkoutEvents() {
+    Collections.sort(workoutEvents);
+    return workoutEvents;
+  }
 
   /**
    * Get Duration formatted to min:sec

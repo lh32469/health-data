@@ -37,6 +37,21 @@ public interface Constants {
   String SEGMENT = "HKWorkoutEventTypeSegment";
 
   /**
+   * Single Lap (pool length) Event.
+   */
+  String LAP = "HKWorkoutEventTypeLap";
+
+  /**
+   * Marker type in WorkoutEvent which indicates workout was paused.
+   */
+   String PAUSE_WORKOUT = "HKWorkoutEventTypePause";
+
+  /**
+   * Marker type in WorkoutEvent which indicates workout was resumed.
+   */
+  String RESUME_WORKOUT = "HKWorkoutEventTypeResume";
+
+  /**
    * Common Date Format
    */
   DateTimeFormatter DTF = DateTimeFormatter.ofPattern("yyyy-MM-dd k:mm:ss Z");

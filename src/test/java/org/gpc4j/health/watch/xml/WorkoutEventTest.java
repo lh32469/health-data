@@ -5,13 +5,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 
+import java.util.Collections;
 import java.util.LinkedList;
+import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 
 @Slf4j
-public class WorkoutTest {
+public class WorkoutEventTest {
 
   @Test
   public void workoutEventSorting() throws JsonProcessingException {
@@ -34,18 +36,25 @@ public class WorkoutTest {
 
     WorkoutEvent segment = mapper.readValue(segmentString, WorkoutEvent.class);
     WorkoutEvent lap = mapper.readValue(lapString, WorkoutEvent.class);
+    log.info(segment.toString());
+    log.info(lap.toString());
 
-    Workout workout = new Workout();
-    workout.setWorkoutEvents(new LinkedList<>());
-    workout.getWorkoutEvents().add(lap);
-    workout.getWorkoutEvents().add(segment);
+    // Laps at same time as Segment get sorted after Segment
+    assertThat(lap.compareTo(segment), is(1));
 
-    for (WorkoutEvent event : workout.getWorkoutEvents()) {
-      log.info("event = {}", event);
-    }
+    // Laps at same time as Segment get sorted after Segment
+    assertThat(segment.compareTo(lap), is(-1));
 
-    assertThat(workout.getWorkoutEvents().get(0), is(segment));
-    assertThat(workout.getWorkoutEvents().get(1), is(lap));
+    List<WorkoutEvent> events = new LinkedList<>();
+    events.add(lap);
+    events.add(segment);
+
+    log.info("events = {}", events);
+    Collections.sort(events);
+    log.info("events = {}", events);
+
+    assertThat(events.get(0), is(segment));
+    assertThat(events.get(1), is(lap));
 
   }
 
