@@ -1,6 +1,7 @@
 package org.gpc4j.health.watch.xml;
 
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -13,6 +14,7 @@ import java.util.List;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "Workout")
 @Data
+@Slf4j
 public class Workout {
 
   private String user;
@@ -48,6 +50,10 @@ public class Workout {
   private List<WorkoutEvent> workoutEvents;
 
   public List<WorkoutEvent> getWorkoutEvents() {
+		if(null == workoutEvents) {
+			log.info("No WorkoutEvents for: {}", this);
+			return Collections.emptyList();
+		}
     Collections.sort(workoutEvents);
     return workoutEvents;
   }
