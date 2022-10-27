@@ -50,9 +50,13 @@ pipeline {
               host = "${branch}.${project}"
             }
 
+            def domain = env.DNS_DOMAIN.toLowerCase()
+            println "Domain = " + domain
+
             def binding = [
                 project: project,
                 branch : branch,
+                domain : domain,
                 host   : host
             ]
 
