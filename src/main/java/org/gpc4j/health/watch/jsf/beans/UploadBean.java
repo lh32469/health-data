@@ -42,6 +42,7 @@ public class UploadBean {
   @PostConstruct
   public void postConstruct() {
     log.info("UploadBean.postConstruct");
+	  session = ravenBean.getSession();
   }
 
   @PreDestroy
@@ -62,7 +63,6 @@ public class UploadBean {
       log.info("data.getWorkouts().size() = {}", data.getWorkouts().size());
       log.info("data.getRecords().size() = {}", data.getRecords().size());
 
-      session = ravenBean.getSession();
       log.info("Got session for Workouts");
 
       final String user = userProvider.getUser().getUsername();
@@ -86,30 +86,30 @@ public class UploadBean {
         throw new IllegalStateException("Duplicate Records: " + user);
       }
 
-      /*
-       * Upload Records in sections.
-       */
-      List<Record> records = data.getRecords();
-      while (!records.isEmpty()) {
-
-        session = ravenBean.getSession();
-        log.debug("Got session for {} Records", records.size());
-
-        for (int i = 0; i < 1000; i++) {
-          if (!records.isEmpty()) {
-            Record record = records.remove(0);
-            record.setUser(user);
-            session.store(record, record.getId());
-          } else {
-            break;
-          }
-        }
-
-        session.saveChanges();
-        session.close();
-      }
-
-      log.info("Saved Records");
+//      /*
+//       * Upload Records in sections.
+//       */
+//      List<Record> records = data.getRecords();
+//      while (!records.isEmpty()) {
+//
+//        session = ravenBean.getSession();
+//        log.debug("Got session for {} Records", records.size());
+//
+//        for (int i = 0; i < 1000; i++) {
+//          if (!records.isEmpty()) {
+//            Record record = records.remove(0);
+//            record.setUser(user);
+//            session.store(record, record.getId());
+//          } else {
+//            break;
+//          }
+//        }
+//
+//        session.saveChanges();
+//        session.close();
+//      }
+//
+//      log.info("Saved Records");
 
     }
 
