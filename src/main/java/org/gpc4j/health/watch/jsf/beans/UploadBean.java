@@ -18,10 +18,8 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.xml.bind.JAXB;
 import java.io.IOException;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import static org.gpc4j.health.watch.jsf.beans.Constants.DTF;
@@ -42,7 +40,7 @@ public class UploadBean {
   @PostConstruct
   public void postConstruct() {
     log.info("UploadBean.postConstruct");
-	  session = ravenBean.getSession();
+    session = ravenBean.getSession();
   }
 
   @PreDestroy
@@ -70,9 +68,9 @@ public class UploadBean {
       data.getWorkouts().stream()
           .peek(workout -> workout.setUser(user))
           .forEach(workout -> {
-                LocalDateTime created = LocalDateTime.parse(workout.getCreationDate(), DTF);
+                ZonedDateTime created = ZonedDateTime.parse(workout.getCreationDate(), DTF);
                 log.debug("created workout = {} -> {} ", workout.getCreationDate(), created);
-                long second = created.toEpochSecond(ZoneOffset.UTC);
+                long second = created.toEpochSecond();
                 session.store(workout, user + ".W." + second);
               }
           );

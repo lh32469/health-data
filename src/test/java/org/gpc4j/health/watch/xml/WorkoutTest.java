@@ -5,8 +5,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 
+import java.time.ZonedDateTime;
 import java.util.LinkedList;
 
+import static org.gpc4j.health.watch.jsf.beans.Constants.DTF;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 
@@ -47,6 +49,20 @@ public class WorkoutTest {
     assertThat(workout.getWorkoutEvents().get(0), is(segment));
     assertThat(workout.getWorkoutEvents().get(1), is(lap));
 
+  }
+
+  @Test
+  void daylightSavingsTimeChange() {
+    String date1 = "2023-01-08 15:41:02 -0800";
+    String date2 = "2023-01-08 16:41:02 -0700";
+    ZonedDateTime zdt1 = ZonedDateTime.parse(date1, DTF);
+    ZonedDateTime zdt2 = ZonedDateTime.parse(date1, DTF);
+    log.info("zdt1 = {}", zdt1);
+    log.info("zdt2 = {}", zdt2);
+    log.info("zdt1 = {}", zdt1.toEpochSecond());
+    log.info("zdt2 = {}", zdt2.toEpochSecond());
+
+    assertThat(zdt1.toEpochSecond(), is(zdt2.toEpochSecond()));
   }
 
 }
