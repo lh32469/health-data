@@ -23,6 +23,9 @@ spec:
         - name: ${project}
           image: localhost:32000/${project}:${branch}
           imagePullPolicy: "Always"
+          resources:
+            requests:
+              cpu: "250m"
           env:
             - name: JASYPT_ENCRYPTOR_PASSWORD
               valueFrom:
