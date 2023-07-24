@@ -25,7 +25,7 @@ spec:
           imagePullPolicy: "Always"
           resources:
             requests:
-              cpu: "250m"
+              cpu: "50m"
           env:
             - name: JASYPT_ENCRYPTOR_PASSWORD
               valueFrom:
@@ -109,4 +109,4 @@ spec:
     apiVersion: apps/v1
     kind: Deployment
     name: ${project}
-  targetCPUUtilizationPercentage: 75
+  targetCPUUtilizationPercentage: 200
