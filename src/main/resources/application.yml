@@ -24,7 +24,7 @@ spring:
       client:
         username: client
         password: 714df93cf5c9
-        url: https://sba.k8s.gpc4j.org
+        url: http://svc.sba-k8s:8099
         auto-deregistration: true
         instance:
           prefer-ip: true
