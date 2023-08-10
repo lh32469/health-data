@@ -41,17 +41,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     http.authorizeRequests()
         .antMatchers("/META-INF/resources/favicon.ico").permitAll()
-        .antMatchers("/actuator/health").permitAll()
-        .antMatchers("/actuator/health/liveness").permitAll()
-        .antMatchers("/actuator/health/readiness").permitAll()
+        .antMatchers("/actuator/").permitAll()
+        .antMatchers("/actuator/**").permitAll()
         .antMatchers("/actuator/prometheus").hasIpAddress("192.0.0.0/8")
-        .antMatchers("/actuator/prometheus").hasIpAddress("10.0.0.0/8")
-        .antMatchers("/actuator").authenticated()
-        .antMatchers("/actuator/**").authenticated()
-        .antMatchers("/instances").authenticated()
-        .antMatchers("/instances/**").authenticated()
-        .and()
-        .httpBasic();
+        .antMatchers("/actuator/prometheus").hasIpAddress("10.0.0.0/8");
 
     http.authorizeRequests()
         .antMatchers("/createaccount.xhtml").permitAll()
