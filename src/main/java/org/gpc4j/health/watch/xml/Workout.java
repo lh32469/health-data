@@ -48,12 +48,14 @@ public class Workout {
 
   @XmlElement(name = "WorkoutEvent")
   private List<WorkoutEvent> workoutEvents;
+  @XmlElement(name = "MetadataEntry")
+  private List<MetadataEntry> metadataEntry;
 
   public List<WorkoutEvent> getWorkoutEvents() {
-		if(null == workoutEvents) {
-			log.info("No WorkoutEvents for: {}", this);
-			return Collections.emptyList();
-		}
+    if (null == workoutEvents) {
+      log.info("No WorkoutEvents for: {}", this);
+      return Collections.emptyList();
+    }
     Collections.sort(workoutEvents);
     return workoutEvents;
   }
