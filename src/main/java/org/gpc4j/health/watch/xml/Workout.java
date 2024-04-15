@@ -71,11 +71,8 @@ public class Workout {
       switch (workoutActivityType) {
 
         case SWIMMING_WORKOUT:
-          WorkoutStatistics swimming = workoutStatistics.stream()
-              .filter(stat ->
-                  "HKQuantityTypeIdentifierDistanceSwimming".equals(stat.type))
-              .findAny()
-              .get();
+          WorkoutStatistics swimming =
+              getStatistic("HKQuantityTypeIdentifierDistanceSwimming");
 
           if ("YD".equalsIgnoreCase(swimming.unit)) {
             return Math.round(Integer.parseInt(swimming.sum) / 1760.0 * 100) / 100.0;
@@ -83,11 +80,8 @@ public class Workout {
           break;
 
         case WALKING_WORKOUT:
-          WorkoutStatistics walking = workoutStatistics.stream()
-              .filter(stat ->
-                  "HKQuantityTypeIdentifierDistanceWalkingRunning".equals(stat.type))
-              .findAny()
-              .get();
+          WorkoutStatistics walking =
+              getStatistic("HKQuantityTypeIdentifierDistanceWalkingRunning");
 
           if ("MI".equalsIgnoreCase(walking.unit)) {
             return Double.parseDouble(walking.sum);
@@ -100,7 +94,36 @@ public class Workout {
     return totalDistance;
   }
 
-//  double getTotalDistanceSwimming() {
+  public Double getTotalEnergyBurned() {
+
+    if (totalEnergyBurned == null) {
+
+      try {
+
+        WorkoutStatistics base =
+            getStatistic("HKQuantityTypeIdentifierBasalEnergyBurned");
+
+        WorkoutStatistics activity =
+            getStatistic("HKQuantityTypeIdentifierActiveEnergyBurned");
+
+        totalEnergyBurned = Double.parseDouble(base.sum) + Double.parseDouble(activity.sum);
+      } catch (NullPointerException ex) {
+        log.info("ex = {}", ex);
+      }
+    }
+
+    return totalEnergyBurned;
+  }
+
+  WorkoutStatistics getStatistic(final String statisticName) {
+    return workoutStatistics.stream()
+        .filter(stat ->
+            statisticName.equals(stat.type))
+        .findAny()
+        .get();
+  }
+
+  //  double getTotalDistanceSwimming() {
 //    String lapLength = metadataEntry.stream()
 //        .filter(entry -> entry.getKey().equals("HKLapLength"))
 //        .findAny()

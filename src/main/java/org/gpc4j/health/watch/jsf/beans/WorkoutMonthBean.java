@@ -82,8 +82,9 @@ public class WorkoutMonthBean implements Constants {
         .whereEquals("user", userProvider.getUser().getUsername())
         .whereStartsWith("startDate", queryString)
         .whereEquals("workoutActivityType", WORKOUT_MAP.get(cookieBean.getWorkout()))
-        .selectFields(Workout.class, "duration", "totalDistance",
-            "startDate", "totalEnergyBurned")
+        .selectFields(Workout.class,
+            "duration", "totalDistance", "startDate", "totalEnergyBurned",
+            "workoutActivityType", "workoutStatistics")
         .toList();
 
     workouts.forEach(workout -> {

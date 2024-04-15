@@ -82,8 +82,9 @@ public class WorkoutYearBean implements Constants {
         .whereEquals("user", userProvider.getUser().getUsername())
         .whereStartsWith("startDate", year + "-")
         .whereEquals("workoutActivityType", WORKOUT_MAP.get(workoutType))
-        .selectFields(Workout.class, "user", "duration", "totalDistance",
-            "startDate", "totalEnergyBurned")
+        .selectFields(Workout.class,
+            "user", "duration", "totalDistance", "startDate", "totalEnergyBurned",
+            "workoutActivityType", "workoutStatistics")
         .toList();
 
     log.info("workouts for the year = {}", workouts.size());

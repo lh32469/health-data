@@ -95,8 +95,9 @@ public class WorkoutBean implements Constants {
     List<Workout> workouts = session.query(Workout.class)
         .whereEquals("user", userProvider.getUser().getUsername())
         .whereEquals("workoutActivityType", WORKOUT_MAP.get(workout))
-        .selectFields(Workout.class, "duration", "totalDistance",
-            "startDate", "totalEnergyBurned")
+        .selectFields(Workout.class,
+            "duration", "totalDistance", "startDate", "totalEnergyBurned",
+            "workoutActivityType", "workoutStatistics")
         .toList();
 
     getActiveYears(workouts).stream().sorted().forEach(year -> {
