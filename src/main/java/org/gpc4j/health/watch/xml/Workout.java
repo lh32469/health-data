@@ -10,6 +10,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import static org.gpc4j.health.watch.jsf.beans.Constants.SWIMMING_WORKOUT;
 import static org.gpc4j.health.watch.jsf.beans.Constants.WALKING_WORKOUT;
@@ -71,22 +72,24 @@ public class Workout {
       switch (workoutActivityType) {
 
         case SWIMMING_WORKOUT:
-          WorkoutStatistics swimming =
+          Optional<WorkoutStatistics> swimming =
               getStatistic("HKQuantityTypeIdentifierDistanceSwimming");
 
-          if ("YD".equalsIgnoreCase(swimming.unit)) {
-            return Math.round(Integer.parseInt(swimming.sum) / 1760.0 * 100) / 100.0;
+          if (swimming.isPresent() && "YD".equalsIgnoreCase(swimming.get().unit)) {
+            return Math.round(Integer.parseInt(swimming.get().sum) / 1760.0 * 100) / 100.0;
+          } else {
+            return 0.0;
           }
-          break;
 
         case WALKING_WORKOUT:
-          WorkoutStatistics walking =
+          Optional<WorkoutStatistics> walking =
               getStatistic("HKQuantityTypeIdentifierDistanceWalkingRunning");
 
-          if ("MI".equalsIgnoreCase(walking.unit)) {
-            return Double.parseDouble(walking.sum);
+          if (walking.isPresent() && "MI".equalsIgnoreCase(walking.get().unit)) {
+            return Double.parseDouble(walking.get().sum);
+          } else {
+            return 0.0;
           }
-          break;
       }
 
     }
@@ -100,13 +103,19 @@ public class Workout {
 
       try {
 
-        WorkoutStatistics base =
+        Optional<WorkoutStatistics> base =
             getStatistic("HKQuantityTypeIdentifierBasalEnergyBurned");
 
-        WorkoutStatistics activity =
+        Optional<WorkoutStatistics> activity =
             getStatistic("HKQuantityTypeIdentifierActiveEnergyBurned");
 
-        totalEnergyBurned = Double.parseDouble(base.sum) + Double.parseDouble(activity.sum);
+        if (base.isEmpty() || activity.isEmpty()) {
+          return 0.0;
+        }
+
+        totalEnergyBurned = Double.parseDouble(base.get().sum)
+            + Double.parseDouble(activity.get().sum);
+
       } catch (NullPointerException ex) {
         log.info("ex = {}", ex);
       }
@@ -115,12 +124,16 @@ public class Workout {
     return totalEnergyBurned;
   }
 
-  WorkoutStatistics getStatistic(final String statisticName) {
-    return workoutStatistics.stream()
-        .filter(stat ->
-            statisticName.equals(stat.type))
-        .findAny()
-        .get();
+  Optional<WorkoutStatistics> getStatistic(final String statisticName) {
+    Optional<WorkoutStatistics> statistics = workoutStatistics.stream()
+        .filter(stat -> statisticName.equals(stat.type))
+        .findAny();
+
+    if (statistics.isEmpty()) {
+      log.error("No " + statisticName + " for " + workoutActivityType +
+          "; " + startDate);
+    }
+    return statistics;
   }
 
   //  double getTotalDistanceSwimming() {
