@@ -135,17 +135,27 @@ public class WorkoutBean implements Constants {
 
         LineChartSeries projected = new LineChartSeries();
         projected.setLabel(year + " Projected");
+        projected.setMarkerStyle("plus");
+        projected.setShowLine(false);
 //        projected.set(
 //            new DateFormatSymbols().getMonths()[11],
 //            workoutYear.getProjectedDistance());
 
-        double monthlyRate = workoutYear.getProjectedDistance() / 12.0;
+        final double monthlyRate = workoutYear.getProjectedDistance() / 12.0;
 
         for (int i = 0; i < 12; i++) {
-          projected.set(MONTHS[i], monthlyRate * (i + 1));
+
+          LocalDate date = LocalDate.of(year, i + 1, 1);
+          if (date.isAfter(LocalDate.now())) {
+            projected.set(MONTHS[i], monthlyRate * (i + 1));
+          }
         }
 
-        yearsGraph.addSeries(projected);
+        if (projected.getData().isEmpty()) {
+          log.info("Projection compleste for year = {}", year);
+        } else {
+          yearsGraph.addSeries(projected);
+        }
 
       }
 
