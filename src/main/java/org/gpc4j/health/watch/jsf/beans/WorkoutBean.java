@@ -38,6 +38,8 @@ import java.util.stream.Collectors;
 @Slf4j
 public class WorkoutBean implements Constants {
 
+  static final String[] MONTHS = new DateFormatSymbols().getMonths();
+
   @Autowired
   RavenBean ravenBean;
 
@@ -122,12 +124,30 @@ public class WorkoutBean implements Constants {
         }
 
         total += workoutYear.get(i).getDistance();
-        String month = new DateFormatSymbols().getMonths()[i - 1];
+        String month = MONTHS[i - 1];
         yearChart.set(month, total);
 
       }
 
       yearsGraph.addSeries(yearChart);
+
+      if (year == LocalDate.now().getYear()) {
+
+        LineChartSeries projected = new LineChartSeries();
+        projected.setLabel(year + " Projected");
+//        projected.set(
+//            new DateFormatSymbols().getMonths()[11],
+//            workoutYear.getProjectedDistance());
+
+        double monthlyRate = workoutYear.getProjectedDistance() / 12.0;
+
+        for (int i = 0; i < 12; i++) {
+          projected.set(MONTHS[i], monthlyRate * (i + 1));
+        }
+
+        yearsGraph.addSeries(projected);
+
+      }
 
     });
 
