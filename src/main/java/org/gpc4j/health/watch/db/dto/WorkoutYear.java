@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.gpc4j.health.watch.xml.Workout;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -18,7 +19,6 @@ public class WorkoutYear {
 
   List<Workout> workouts;
   List<WorkoutMonth> months;
-
 
   public WorkoutYear(int year, List<Workout> workouts) {
     this.year = year;
@@ -57,6 +57,25 @@ public class WorkoutYear {
         .sum();
     log.info("year/distance = {}/{}", year, distance);
     return distance;
+  }
+
+  /**
+   * Get projected total distance in miles based on current years data.
+   */
+  public double getProjectedDistance() {
+
+    int currentYear = LocalDate.now().getYear();
+
+    if (year != currentYear) {
+      return 0;
+    }
+
+    int currentDay = LocalDate.now().getDayOfYear();
+    double currentRate = getDistance() / currentDay;
+    log.info("currentRate = {}", currentRate);
+    double projected = (currentRate * 365.0);
+    log.info("projected = {}", projected);
+    return projected;
   }
 
 }
