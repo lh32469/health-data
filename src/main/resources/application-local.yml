@@ -1,23 +1,2 @@
-server:
-  port: 8085
-
 ravendb:
-  url: http://dell-4290.local:5050
-
-spring:
-  application:
-    name: healh-data-${BRANCH:dev}
-  boot:
-    admin:
-      client:
-        username: client
-        password: 714df93cf5c9
-        url: http://localhost:8099
-        auto-deregistration: true
-        instance:
-          management-base-url: http://localhost:5000
-          metadata:
-            user:
-              name: lth
-              password: delth
-          prefer-ip: true
+  url: http://raven.basement.ltd
