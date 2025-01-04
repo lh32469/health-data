@@ -34,6 +34,8 @@ spec:
                   key: password
             - name: BRANCH
               value: ${branch}
+            - name: SPRING_PROFILES_ACTIVE
+              value: k8s
           livenessProbe:
             httpGet:
               path: /actuator/health/liveness
