@@ -28,8 +28,10 @@ import java.io.IOException;
 import java.text.DateFormatSymbols;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -78,6 +80,9 @@ public class WorkoutBean implements Constants {
     Cookie workoutCookie = (Cookie) externalContext
         .getRequestCookieMap()
         .get(WORKOUT_COOKIE_KEY);
+
+    Map<String, String> headerMap = externalContext.getRequestHeaderMap();
+    log.info("headerMap = {}", headerMap);
 
     workout = cookieBean.getWorkout();
 
