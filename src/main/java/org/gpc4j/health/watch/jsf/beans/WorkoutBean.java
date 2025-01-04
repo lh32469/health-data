@@ -1,5 +1,6 @@
 package org.gpc4j.health.watch.jsf.beans;
 
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.ravendb.client.documents.session.IDocumentSession;
 import org.gpc4j.health.watch.db.RavenBean;
@@ -67,6 +68,9 @@ public class WorkoutBean implements Constants {
    */
   private String workout;
 
+  @Getter
+  private String template = "template.xhtml";
+
   @PostConstruct
   public void postConstruct() {
     log.debug("WorkoutBean.postConstruct");
@@ -83,6 +87,12 @@ public class WorkoutBean implements Constants {
 
     Map<String, String> headerMap = externalContext.getRequestHeaderMap();
     log.info("headerMap = {}", headerMap);
+    final String userAgent = headerMap.getOrDefault("user-agent","");
+    log.info("userAgent = {}", userAgent);
+
+    if(userAgent.toLowerCase().contains("iphone")) {
+      template = "phone.xhtml";
+    }
 
     workout = cookieBean.getWorkout();
 
