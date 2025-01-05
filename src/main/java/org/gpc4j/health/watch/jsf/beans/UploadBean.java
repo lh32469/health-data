@@ -6,6 +6,7 @@ import org.gpc4j.health.watch.db.RavenBean;
 import org.gpc4j.health.watch.security.UserProvider;
 import org.gpc4j.health.watch.xml.HealthData;
 import org.gpc4j.health.watch.xml.Record;
+import org.gpc4j.health.watch.xml.Workout;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.file.UploadedFile;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,10 +18,14 @@ import javax.annotation.PreDestroy;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.xml.bind.JAXB;
+import java.io.BufferedInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.time.ZonedDateTime;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 import static org.gpc4j.health.watch.jsf.beans.Constants.DTF;
 
@@ -39,12 +44,13 @@ public class UploadBean {
 
   @PostConstruct
   public void postConstruct() {
-    log.info("UploadBean.postConstruct");
+    log.debug(this.toString());
     session = ravenBean.getSession();
   }
 
   @PreDestroy
   public void preDestroy() {
+    log.debug(this.toString());
     session.close();
   }
 
@@ -52,37 +58,29 @@ public class UploadBean {
 
     UploadedFile uploadedFile = event.getFile();
 
-    log.info("uploadedFile.getFileName() = {}", uploadedFile.getFileName());
+    log.debug("uploadedFile.getFileName() = {}", uploadedFile.getFileName());
+
+    if (uploadedFile.getFileName().endsWith(".zip")) {
+
+      ZipInputStream zis = new ZipInputStream(
+          new BufferedInputStream(uploadedFile.getInputStream()));
+
+      ZipEntry entry;
+
+      while ((entry = zis.getNextEntry()) != null) {
+        if ("apple_health_export/export.xml".equals(entry.toString())) {
+          log.debug("Extracting: {}", entry);
+          HealthData data = JAXB.unmarshal(zis, HealthData.class);
+          zis.close();
+          postData(data);
+          break;
+        }
+      }
+    }
 
     if (uploadedFile.getFileName().endsWith(".xml")) {
       HealthData data = JAXB.unmarshal(
           uploadedFile.getInputStream(), HealthData.class);
-
-      log.info("data.getWorkouts().size() = {}", data.getWorkouts().size());
-      log.info("data.getRecords().size() = {}", data.getRecords().size());
-
-      log.info("Got session for Workouts");
-
-      final String user = userProvider.getUser().getUsername();
-
-      data.getWorkouts().stream()
-          .peek(workout -> workout.setUser(user))
-          .forEach(workout -> {
-                ZonedDateTime created = ZonedDateTime.parse(workout.getCreationDate(), DTF);
-                log.debug("created workout = {} -> {} ", workout.getCreationDate(), created);
-                long second = created.toEpochSecond();
-                session.store(workout, user + ".W." + second);
-              }
-          );
-
-      session.saveChanges();
-      log.info("Saved {} Workouts", data.getWorkouts().size());
-      session.close();
-
-      Set<Record> unique = new HashSet<>(data.getRecords());
-      if (unique.size() != data.getRecords().size()) {
-        throw new IllegalStateException("Duplicate Records: " + user);
-      }
 
 //      /*
 //       * Upload Records in sections.
@@ -115,6 +113,61 @@ public class UploadBean {
         event.getFile().getFileName() + " is uploaded.");
 
     FacesContext.getCurrentInstance().addMessage(null, message);
+  }
+
+  void postData(HealthData data) {
+
+    log.debug("data.getWorkouts().size() = {}", data.getWorkouts().size());
+    log.debug("data.getRecords().size() = {}", data.getRecords().size());
+
+    final String user = userProvider.getUser().getUsername();
+
+    data.getWorkouts().stream()
+        .peek(workout -> workout.setUser(user))
+        .forEach(workout -> {
+              ZonedDateTime created = ZonedDateTime.parse(workout.getCreationDate(), DTF);
+              log.debug("created workout = {} -> {} ", workout.getCreationDate(), created);
+              long second = created.toEpochSecond();
+              session.store(workout, user + ".W." + second);
+            }
+        );
+
+    session.saveChanges();
+    log.debug("Saved {} Workouts", data.getWorkouts().size());
+
+    Set<Record> unique = new HashSet<>(data.getRecords());
+    if (unique.size() != data.getRecords().size()) {
+      throw new IllegalStateException("Duplicate Records: " + user);
+    }
+
+  }
+
+  public static void main(String[] args) {
+    System.out.println("UploadBean.main");
+
+    File file = new File("/tmp/export.xml");
+
+    HealthData data = JAXB.unmarshal(file, HealthData.class);
+
+    Workout workout0
+        = data.getWorkouts().get(0);
+
+    Workout swimming = data.getWorkouts().stream()
+        .filter(workout -> workout.getWorkoutActivityType().endsWith("Swimming"))
+        .findFirst()
+        .get();
+
+//    System.out.println("swimming = " + swimming);
+
+    System.out.println();
+    System.out.println("swimming.getMetadataEntry() = " + swimming.getMetadataEntry());
+
+//    System.out.println("workout0 = " + workout0);
+//
+//    System.out.println("\n\nworkout0.getMetadataEntry() size= " +
+//        workout0.getMetadataEntry().size());
+//    System.out.println("\n\nworkout0.getMetadataEntry() = " +
+//        workout0.getMetadataEntry());
   }
 
 }
