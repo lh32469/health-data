@@ -7,12 +7,14 @@ import org.gpc4j.health.watch.db.RavenBean;
 import org.gpc4j.health.watch.db.dto.WorkoutYear;
 import org.gpc4j.health.watch.security.UserProvider;
 import org.gpc4j.health.watch.xml.Workout;
+import org.primefaces.component.chart.Chart;
 import org.primefaces.event.ItemSelectEvent;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.model.chart.Axis;
 import org.primefaces.model.chart.AxisType;
 import org.primefaces.model.chart.CategoryAxis;
 import org.primefaces.model.chart.ChartModel;
+import org.primefaces.model.chart.ChartSeries;
 import org.primefaces.model.chart.LineChartModel;
 import org.primefaces.model.chart.LineChartSeries;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -237,8 +239,19 @@ public class WorkoutBean implements Constants {
   }
 
   public void itemSelect(ItemSelectEvent event) {
-    FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Item selected",
-        "Item Index: " + event.getItemIndex() + ", DataSet Index:" + event.getDataSetIndex());
+
+    log.debug("Item Index: {}, DataSet Index:{}",
+        event.getItemIndex(), event.getDataSetIndex());
+
+    Chart chart = (Chart) event.getComponent();
+    LineChartModel model = (LineChartModel) chart.getModel();
+    ChartSeries line = model.getSeries().get(event.getDataSetIndex());
+    Map<Object, Number> data = line.getData();
+    Double value = (Double) data.values().toArray()[event.getItemIndex()];
+
+    FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO,
+        data.keySet().toArray()[event.getItemIndex()].toString() + ", " + line.getLabel(),
+        String.format("%.2f Miles", value));
 
     FacesContext.getCurrentInstance().addMessage(null, msg);
   }
