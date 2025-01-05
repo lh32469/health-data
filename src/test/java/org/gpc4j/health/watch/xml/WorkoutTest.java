@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 
+import javax.xml.bind.JAXB;
+import java.io.File;
 import java.time.ZonedDateTime;
 import java.util.LinkedList;
 
@@ -63,6 +65,31 @@ public class WorkoutTest {
     log.info("zdt2 = {}", zdt2.toEpochSecond());
 
     assertThat(zdt1.toEpochSecond(), is(zdt2.toEpochSecond()));
+  }
+
+  @Test
+  void newFormatSwimming() {
+
+    File file = new File("src/test/resources/workout-swimming-2024-1.xml");
+
+    Workout workout = JAXB.unmarshal(file, Workout.class);
+    Double totalDisance = workout.getTotalDistance();
+    log.info("totalDisance = {}", totalDisance);
+    assertThat(totalDisance, is(1.29));
+  }
+
+  @Test
+  void newFormatWalking() {
+
+    File file = new File("src/test/resources/workout-walking-2024-1.xml");
+
+    Workout workout = JAXB.unmarshal(file, Workout.class);
+
+    log.info("workout.getWorkoutStatistics() = {}", workout.getWorkoutStatistics());
+
+    Double totalDisance = workout.getTotalDistance();
+    log.info("totalDisance = {}", totalDisance);
+    assertThat(totalDisance, is(2.50571));
   }
 
 }

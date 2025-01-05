@@ -183,6 +183,7 @@ public class WorkoutBean implements Constants {
 
   @PreDestroy
   public void preDestroy() {
+    log.debug(this.toString());
     session.close();
   }
 

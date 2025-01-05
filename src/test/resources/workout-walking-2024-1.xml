@@ -1,0 +1,31 @@
+<Workout workoutActivityType="HKWorkoutActivityTypeWalking" duration="57.0801644663016" durationUnit="min" sourceName="Lyle’s Apple Watch" sourceVersion="8.8.1" device="&lt;&lt;HKDevice: 0x302ab52c0&gt;, name:Apple Watch, manufacturer:Apple Inc., model:Watch, hardware:Watch4,2, software:8.8.1&gt;" creationDate="2024-01-01 16:21:13 -0700" startDate="2024-01-01 15:24:07 -0700" endDate="2024-01-01 16:21:12 -0700">
+  <MetadataEntry key="HKIndoorWorkout" value="0"/>
+  <MetadataEntry key="HKAverageMETs" value="4.99316 kcal/hr·kg"/>
+  <MetadataEntry key="HKWeatherTemperature" value="46.4 degF"/>
+  <MetadataEntry key="HKWeatherHumidity" value="6700 %"/>
+  <MetadataEntry key="HKTimeZone" value="America/Los_Angeles"/>
+  <MetadataEntry key="HKElevationAscended" value="10280 cm"/>
+  <WorkoutEvent type="HKWorkoutEventTypeSegment" date="2024-01-01 15:24:07 -0700" duration="14.00105961958567" durationUnit="min"/>
+  <WorkoutEvent type="HKWorkoutEventTypeSegment" date="2024-01-01 15:24:07 -0700" duration="22.40567415157954" durationUnit="min"/>
+  <WorkoutEvent type="HKWorkoutEventTypeSegment" date="2024-01-01 15:38:07 -0700" duration="14.2389124194781" durationUnit="min"/>
+  <WorkoutEvent type="HKWorkoutEventTypeSegment" date="2024-01-01 15:46:31 -0700" duration="22.32602619131406" durationUnit="min"/>
+  <WorkoutEvent type="HKWorkoutEventTypeSegment" date="2024-01-01 15:52:21 -0700" duration="13.67101054588954" durationUnit="min"/>
+  <WorkoutEvent type="HKWorkoutEventTypeSegment" date="2024-01-01 16:06:01 -0700" duration="14.6533405204614" durationUnit="min"/>
+  <WorkoutEvent type="HKWorkoutEventTypeSegment" date="2024-01-01 16:08:51 -0700" duration="12.30138828357061" durationUnit="min"/>
+  <WorkoutEvent type="HKWorkoutEventTypeSegment" date="2024-01-01 16:20:41 -0700" duration="0.4687655210494995" durationUnit="min"/>
+  <WorkoutStatistics type="HKQuantityTypeIdentifierActiveEnergyBurned" startDate="2024-01-01 15:24:07 -0700" endDate="2024-01-01 16:21:12 -0700" sum="238.704" unit="Cal"/>
+  <WorkoutStatistics type="HKQuantityTypeIdentifierDistanceWalkingRunning" startDate="2024-01-01 15:24:07 -0700" endDate="2024-01-01 16:21:12 -0700" sum="2.50571" unit="mi"/>
+  <WorkoutStatistics type="HKQuantityTypeIdentifierBasalEnergyBurned" startDate="2024-01-01 15:24:07 -0700" endDate="2024-01-01 16:21:12 -0700" sum="82.77" unit="Cal"/>
+  <WorkoutRoute sourceName="Lyle’s Apple Watch" sourceVersion="8.8.1" creationDate="2024-01-01 16:21:16 -0700" startDate="2024-01-01 15:24:07 -0700" endDate="2024-01-01 16:21:11 -0700">
+   <MetadataEntry key="HKMetadataKeySyncVersion" value="2"/>
+   <MetadataEntry key="HKMetadataKeySyncIdentifier" value="0851151E-1EBA-4EB0-BC7B-B66556D06930"/>
+   <FileReference path="/workout-routes/route_2024-01-01_3.21pm.gpx"/>
+  </WorkoutRoute>
+  <MetadataEntry key="HKIndoorWorkout" value="0"/>
+  <MetadataEntry key="HKAverageMETs" value="4.99316 kcal/hr·kg"/>
+  <MetadataEntry key="HKWeatherTemperature" value="46.4 degF"/>
+  <MetadataEntry key="HKWeatherHumidity" value="6700 %"/>
+  <MetadataEntry key="HKTimeZone" value="America/Los_Angeles"/>
+  <MetadataEntry key="HKElevationAscended" value="10280 cm"/>
+ </Workout>
+

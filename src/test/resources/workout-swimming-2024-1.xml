@@ -1,0 +1,291 @@
+ <Workout workoutActivityType="HKWorkoutActivityTypeSwimming" duration="43.15810121695201" durationUnit="min" sourceName="Lyle’s Apple Watch" sourceVersion="8.8.1" device="&lt;&lt;HKDevice: 0x302ab52c0&gt;, name:Apple Watch, manufacturer:Apple Inc., model:Watch, hardware:Watch4,2, software:8.8.1&gt;" creationDate="2024-01-02 16:11:21 -0700" startDate="2024-01-02 15:28:10 -0700" endDate="2024-01-02 16:11:20 -0700">
+  <MetadataEntry key="HKAverageMETs" value="9.50572 kcal/hr·kg"/>
+  <MetadataEntry key="HKTimeZone" value="America/Los_Angeles"/>
+  <MetadataEntry key="HKSwimmingLocationType" value="1"/>
+  <MetadataEntry key="HKIndoorWorkout" value="0"/>
+  <MetadataEntry key="HKLapLength" value="22.86 m"/>
+  <WorkoutEvent type="HKWorkoutEventTypeSegment" date="2024-01-02 15:28:10 -0700" duration="31.05404746333758" durationUnit="min"/>
+  <WorkoutEvent type="HKWorkoutEventTypeLap" date="2024-01-02 15:28:15 -0700" duration="0.3153005361557007" durationUnit="min">
+   <MetadataEntry key="HKSwimmingStrokeStyle" value="2"/>
+  </WorkoutEvent>
+  <WorkoutEvent type="HKWorkoutEventTypeLap" date="2024-01-02 15:28:34 -0700" duration="0.3605096280574799" durationUnit="min">
+   <MetadataEntry key="HKSwimmingStrokeStyle" value="2"/>
+  </WorkoutEvent>
+  <WorkoutEvent type="HKWorkoutEventTypeLap" date="2024-01-02 15:28:56 -0700" duration="0.4173972328503927" durationUnit="min">
+   <MetadataEntry key="HKSwimmingStrokeStyle" value="2"/>
+  </WorkoutEvent>
+  <WorkoutEvent type="HKWorkoutEventTypeLap" date="2024-01-02 15:29:21 -0700" duration="0.4190661013126373" durationUnit="min">
+   <MetadataEntry key="HKSwimmingStrokeStyle" value="2"/>
+  </WorkoutEvent>
+  <WorkoutEvent type="HKWorkoutEventTypeLap" date="2024-01-02 15:29:46 -0700" duration="0.449594388405482" durationUnit="min">
+   <MetadataEntry key="HKSwimmingStrokeStyle" value="2"/>
+  </WorkoutEvent>
+  <WorkoutEvent type="HKWorkoutEventTypeLap" date="2024-01-02 15:30:13 -0700" duration="0.4165630102157593" durationUnit="min">
+   <MetadataEntry key="HKSwimmingStrokeStyle" value="2"/>
+  </WorkoutEvent>
+  <WorkoutEvent type="HKWorkoutEventTypeLap" date="2024-01-02 15:30:38 -0700" duration="0.4400856117407481" durationUnit="min">
+   <MetadataEntry key="HKSwimmingStrokeStyle" value="2"/>
+  </WorkoutEvent>
+  <WorkoutEvent type="HKWorkoutEventTypeLap" date="2024-01-02 15:31:05 -0700" duration="0.4322426160176595" durationUnit="min">
+   <MetadataEntry key="HKSwimmingStrokeStyle" value="2"/>
+  </WorkoutEvent>
+  <WorkoutEvent type="HKWorkoutEventTypeLap" date="2024-01-02 15:31:31 -0700" duration="0.4132221142450969" durationUnit="min">
+   <MetadataEntry key="HKSwimmingStrokeStyle" value="2"/>
+  </WorkoutEvent>
+  <WorkoutEvent type="HKWorkoutEventTypeLap" date="2024-01-02 15:31:56 -0700" duration="0.4200621088345846" durationUnit="min">
+   <MetadataEntry key="HKSwimmingStrokeStyle" value="2"/>
+  </WorkoutEvent>
+  <WorkoutEvent type="HKWorkoutEventTypeLap" date="2024-01-02 15:32:22 -0700" duration="0.4264012674490611" durationUnit="min">
+   <MetadataEntry key="HKSwimmingStrokeStyle" value="2"/>
+  </WorkoutEvent>
+  <WorkoutEvent type="HKWorkoutEventTypeLap" date="2024-01-02 15:32:48 -0700" duration="0.4300709625085195" durationUnit="min">
+   <MetadataEntry key="HKSwimmingStrokeStyle" value="2"/>
+  </WorkoutEvent>
+  <WorkoutEvent type="HKWorkoutEventTypeLap" date="2024-01-02 15:33:14 -0700" duration="0.4440835396448771" durationUnit="min">
+   <MetadataEntry key="HKSwimmingStrokeStyle" value="2"/>
+  </WorkoutEvent>
+  <WorkoutEvent type="HKWorkoutEventTypeLap" date="2024-01-02 15:33:41 -0700" duration="0.4279014348983765" durationUnit="min">
+   <MetadataEntry key="HKSwimmingStrokeStyle" value="2"/>
+  </WorkoutEvent>
+  <WorkoutEvent type="HKWorkoutEventTypeLap" date="2024-01-02 15:34:07 -0700" duration="0.4108853876590729" durationUnit="min">
+   <MetadataEntry key="HKSwimmingStrokeStyle" value="2"/>
+  </WorkoutEvent>
+  <WorkoutEvent type="HKWorkoutEventTypeLap" date="2024-01-02 15:34:31 -0700" duration="0.4560943404833476" durationUnit="min">
+   <MetadataEntry key="HKSwimmingStrokeStyle" value="2"/>
+  </WorkoutEvent>
+  <WorkoutEvent type="HKWorkoutEventTypeLap" date="2024-01-02 15:34:59 -0700" duration="0.4167240381240845" durationUnit="min">
+   <MetadataEntry key="HKSwimmingStrokeStyle" value="2"/>
+  </WorkoutEvent>
+  <WorkoutEvent type="HKWorkoutEventTypeLap" date="2024-01-02 15:35:24 -0700" duration="0.4357417901357015" durationUnit="min">
+   <MetadataEntry key="HKSwimmingStrokeStyle" value="2"/>
+  </WorkoutEvent>
+  <WorkoutEvent type="HKWorkoutEventTypeLap" date="2024-01-02 15:35:50 -0700" duration="0.4215619524319967" durationUnit="min">
+   <MetadataEntry key="HKSwimmingStrokeStyle" value="2"/>
+  </WorkoutEvent>
+  <WorkoutEvent type="HKWorkoutEventTypeLap" date="2024-01-02 15:36:17 -0700" duration="0.4173912286758423" durationUnit="min">
+   <MetadataEntry key="HKSwimmingStrokeStyle" value="2"/>
+  </WorkoutEvent>
+  <WorkoutEvent type="HKWorkoutEventTypeLap" date="2024-01-02 15:36:42 -0700" duration="0.4200608928998311" durationUnit="min">
+   <MetadataEntry key="HKSwimmingStrokeStyle" value="2"/>
+  </WorkoutEvent>
+  <WorkoutEvent type="HKWorkoutEventTypeLap" date="2024-01-02 15:37:07 -0700" duration="0.4529246250788371" durationUnit="min">
+   <MetadataEntry key="HKSwimmingStrokeStyle" value="2"/>
+  </WorkoutEvent>
+  <WorkoutEvent type="HKWorkoutEventTypeLap" date="2024-01-02 15:37:34 -0700" duration="0.4142215629418691" durationUnit="min">
+   <MetadataEntry key="HKSwimmingStrokeStyle" value="2"/>
+  </WorkoutEvent>
+  <WorkoutEvent type="HKWorkoutEventTypeLap" date="2024-01-02 15:37:59 -0700" duration="0.4470856368541717" durationUnit="min">
+   <MetadataEntry key="HKSwimmingStrokeStyle" value="2"/>
+  </WorkoutEvent>
+  <WorkoutEvent type="HKWorkoutEventTypeLap" date="2024-01-02 15:38:26 -0700" duration="0.4432487746079763" durationUnit="min">
+   <MetadataEntry key="HKSwimmingStrokeStyle" value="2"/>
+  </WorkoutEvent>
+  <WorkoutEvent type="HKWorkoutEventTypeLap" date="2024-01-02 15:38:53 -0700" duration="0.415889565149943" durationUnit="min">
+   <MetadataEntry key="HKSwimmingStrokeStyle" value="2"/>
+  </WorkoutEvent>
+  <WorkoutEvent type="HKWorkoutEventTypeLap" date="2024-01-02 15:39:18 -0700" duration="0.4138877669970195" durationUnit="min">
+   <MetadataEntry key="HKSwimmingStrokeStyle" value="2"/>
+  </WorkoutEvent>
+  <WorkoutEvent type="HKWorkoutEventTypeLap" date="2024-01-02 15:39:43 -0700" duration="0.4325719436009725" durationUnit="min">
+   <MetadataEntry key="HKSwimmingStrokeStyle" value="2"/>
+  </WorkoutEvent>
+  <WorkoutEvent type="HKWorkoutEventTypeLap" date="2024-01-02 15:40:09 -0700" duration="0.4387444317340851" durationUnit="min">
+   <MetadataEntry key="HKSwimmingStrokeStyle" value="2"/>
+  </WorkoutEvent>
+  <WorkoutEvent type="HKWorkoutEventTypeLap" date="2024-01-02 15:40:35 -0700" duration="0.4165569027264913" durationUnit="min">
+   <MetadataEntry key="HKSwimmingStrokeStyle" value="2"/>
+  </WorkoutEvent>
+  <WorkoutEvent type="HKWorkoutEventTypeLap" date="2024-01-02 15:41:00 -0700" duration="0.4397451778252919" durationUnit="min">
+   <MetadataEntry key="HKSwimmingStrokeStyle" value="2"/>
+  </WorkoutEvent>
+  <WorkoutEvent type="HKWorkoutEventTypeLap" date="2024-01-02 15:41:26 -0700" duration="0.4178914546966553" durationUnit="min">
+   <MetadataEntry key="HKSwimmingStrokeStyle" value="2"/>
+  </WorkoutEvent>
+  <WorkoutEvent type="HKWorkoutEventTypeLap" date="2024-01-02 15:41:52 -0700" duration="0.4480863591035207" durationUnit="min">
+   <MetadataEntry key="HKSwimmingStrokeStyle" value="2"/>
+  </WorkoutEvent>
+  <WorkoutEvent type="HKWorkoutEventTypeLap" date="2024-01-02 15:42:18 -0700" duration="0.4100508371988932" durationUnit="min">
+   <MetadataEntry key="HKSwimmingStrokeStyle" value="2"/>
+  </WorkoutEvent>
+  <WorkoutEvent type="HKWorkoutEventTypeLap" date="2024-01-02 15:42:43 -0700" duration="0.4439167976379395" durationUnit="min">
+   <MetadataEntry key="HKSwimmingStrokeStyle" value="2"/>
+  </WorkoutEvent>
+  <WorkoutEvent type="HKWorkoutEventTypeLap" date="2024-01-02 15:43:11 -0700" duration="0.3865296284357707" durationUnit="min">
+   <MetadataEntry key="HKSwimmingStrokeStyle" value="2"/>
+  </WorkoutEvent>
+  <WorkoutEvent type="HKWorkoutEventTypeLap" date="2024-01-02 15:43:35 -0700" duration="0.4415818134943644" durationUnit="min">
+   <MetadataEntry key="HKSwimmingStrokeStyle" value="2"/>
+  </WorkoutEvent>
+  <WorkoutEvent type="HKWorkoutEventTypeLap" date="2024-01-02 15:44:01 -0700" duration="0.4195611715316773" durationUnit="min">
+   <MetadataEntry key="HKSwimmingStrokeStyle" value="2"/>
+  </WorkoutEvent>
+  <WorkoutEvent type="HKWorkoutEventTypeLap" date="2024-01-02 15:44:26 -0700" duration="0.4432497878869375" durationUnit="min">
+   <MetadataEntry key="HKSwimmingStrokeStyle" value="2"/>
+  </WorkoutEvent>
+  <WorkoutEvent type="HKWorkoutEventTypeLap" date="2024-01-02 15:44:53 -0700" duration="0.4150567988554636" durationUnit="min">
+   <MetadataEntry key="HKSwimmingStrokeStyle" value="2"/>
+  </WorkoutEvent>
+  <WorkoutEvent type="HKWorkoutEventTypeLap" date="2024-01-02 15:45:18 -0700" duration="0.4440832873185476" durationUnit="min">
+   <MetadataEntry key="HKSwimmingStrokeStyle" value="2"/>
+  </WorkoutEvent>
+  <WorkoutEvent type="HKWorkoutEventTypeLap" date="2024-01-02 15:45:44 -0700" duration="0.4197267711162567" durationUnit="min">
+   <MetadataEntry key="HKSwimmingStrokeStyle" value="2"/>
+  </WorkoutEvent>
+  <WorkoutEvent type="HKWorkoutEventTypeLap" date="2024-01-02 15:46:10 -0700" duration="0.4522571285565694" durationUnit="min">
+   <MetadataEntry key="HKSwimmingStrokeStyle" value="2"/>
+  </WorkoutEvent>
+  <WorkoutEvent type="HKWorkoutEventTypeLap" date="2024-01-02 15:46:37 -0700" duration="0.4560939570267995" durationUnit="min">
+   <MetadataEntry key="HKSwimmingStrokeStyle" value="2"/>
+  </WorkoutEvent>
+  <WorkoutEvent type="HKWorkoutEventTypeLap" date="2024-01-02 15:47:04 -0700" duration="0.3980401635169983" durationUnit="min">
+   <MetadataEntry key="HKSwimmingStrokeStyle" value="2"/>
+  </WorkoutEvent>
+  <WorkoutEvent type="HKWorkoutEventTypeLap" date="2024-01-02 15:47:28 -0700" duration="0.4465859413146973" durationUnit="min">
+   <MetadataEntry key="HKSwimmingStrokeStyle" value="2"/>
+  </WorkoutEvent>
+  <WorkoutEvent type="HKWorkoutEventTypeLap" date="2024-01-02 15:47:55 -0700" duration="0.4314051330089569" durationUnit="min">
+   <MetadataEntry key="HKSwimmingStrokeStyle" value="2"/>
+  </WorkoutEvent>
+  <WorkoutEvent type="HKWorkoutEventTypeLap" date="2024-01-02 15:48:21 -0700" duration="0.4202280839284261" durationUnit="min">
+   <MetadataEntry key="HKSwimmingStrokeStyle" value="2"/>
+  </WorkoutEvent>
+  <WorkoutEvent type="HKWorkoutEventTypeLap" date="2024-01-02 15:48:46 -0700" duration="0.4178926289081574" durationUnit="min">
+   <MetadataEntry key="HKSwimmingStrokeStyle" value="2"/>
+  </WorkoutEvent>
+  <WorkoutEvent type="HKWorkoutEventTypeLap" date="2024-01-02 15:49:11 -0700" duration="0.4801178435484568" durationUnit="min">
+   <MetadataEntry key="HKSwimmingStrokeStyle" value="2"/>
+  </WorkoutEvent>
+  <WorkoutEvent type="HKWorkoutEventTypeLap" date="2024-01-02 15:49:41 -0700" duration="0.4227305273214976" durationUnit="min">
+   <MetadataEntry key="HKSwimmingStrokeStyle" value="2"/>
+  </WorkoutEvent>
+  <WorkoutEvent type="HKWorkoutEventTypeLap" date="2024-01-02 15:50:06 -0700" duration="0.4544270833333333" durationUnit="min">
+   <MetadataEntry key="HKSwimmingStrokeStyle" value="2"/>
+  </WorkoutEvent>
+  <WorkoutEvent type="HKWorkoutEventTypeLap" date="2024-01-02 15:50:33 -0700" duration="0.4233979761600494" durationUnit="min">
+   <MetadataEntry key="HKSwimmingStrokeStyle" value="2"/>
+  </WorkoutEvent>
+  <WorkoutEvent type="HKWorkoutEventTypeLap" date="2024-01-02 15:50:59 -0700" duration="0.4470860679944356" durationUnit="min">
+   <MetadataEntry key="HKSwimmingStrokeStyle" value="2"/>
+  </WorkoutEvent>
+  <WorkoutEvent type="HKWorkoutEventTypeLap" date="2024-01-02 15:51:25 -0700" duration="0.4173912743727366" durationUnit="min">
+   <MetadataEntry key="HKSwimmingStrokeStyle" value="2"/>
+  </WorkoutEvent>
+  <WorkoutEvent type="HKWorkoutEventTypeLap" date="2024-01-02 15:51:50 -0700" duration="0.4404130717118581" durationUnit="min">
+   <MetadataEntry key="HKSwimmingStrokeStyle" value="2"/>
+  </WorkoutEvent>
+  <WorkoutEvent type="HKWorkoutEventTypeLap" date="2024-01-02 15:52:17 -0700" duration="0.4125533223152161" durationUnit="min">
+   <MetadataEntry key="HKSwimmingStrokeStyle" value="2"/>
+  </WorkoutEvent>
+  <WorkoutEvent type="HKWorkoutEventTypeLap" date="2024-01-02 15:52:42 -0700" duration="0.4355748136838277" durationUnit="min">
+   <MetadataEntry key="HKSwimmingStrokeStyle" value="2"/>
+  </WorkoutEvent>
+  <WorkoutEvent type="HKWorkoutEventTypeLap" date="2024-01-02 15:53:09 -0700" duration="0.4165569206078847" durationUnit="min">
+   <MetadataEntry key="HKSwimmingStrokeStyle" value="2"/>
+  </WorkoutEvent>
+  <WorkoutEvent type="HKWorkoutEventTypeLap" date="2024-01-02 15:53:34 -0700" duration="0.45159064133962" durationUnit="min">
+   <MetadataEntry key="HKSwimmingStrokeStyle" value="2"/>
+  </WorkoutEvent>
+  <WorkoutEvent type="HKWorkoutEventTypeLap" date="2024-01-02 15:54:01 -0700" duration="0.4272346297899882" durationUnit="min">
+   <MetadataEntry key="HKSwimmingStrokeStyle" value="2"/>
+  </WorkoutEvent>
+  <WorkoutEvent type="HKWorkoutEventTypeLap" date="2024-01-02 15:54:27 -0700" duration="0.4389121135075887" durationUnit="min">
+   <MetadataEntry key="HKSwimmingStrokeStyle" value="2"/>
+  </WorkoutEvent>
+  <WorkoutEvent type="HKWorkoutEventTypeLap" date="2024-01-02 15:54:53 -0700" duration="0.4223972042401632" durationUnit="min">
+   <MetadataEntry key="HKSwimmingStrokeStyle" value="2"/>
+  </WorkoutEvent>
+  <WorkoutEvent type="HKWorkoutEventTypeLap" date="2024-01-02 15:55:18 -0700" duration="0.4636022428671519" durationUnit="min">
+   <MetadataEntry key="HKSwimmingStrokeStyle" value="2"/>
+  </WorkoutEvent>
+  <WorkoutEvent type="HKWorkoutEventTypeLap" date="2024-01-02 15:55:46 -0700" duration="0.4213958481947581" durationUnit="min">
+   <MetadataEntry key="HKSwimmingStrokeStyle" value="2"/>
+  </WorkoutEvent>
+  <WorkoutEvent type="HKWorkoutEventTypeLap" date="2024-01-02 15:56:12 -0700" duration="0.4197275002797445" durationUnit="min">
+   <MetadataEntry key="HKSwimmingStrokeStyle" value="2"/>
+  </WorkoutEvent>
+  <WorkoutEvent type="HKWorkoutEventTypeLap" date="2024-01-02 15:56:37 -0700" duration="0.4379112561543783" durationUnit="min">
+   <MetadataEntry key="HKSwimmingStrokeStyle" value="2"/>
+  </WorkoutEvent>
+  <WorkoutEvent type="HKWorkoutEventTypeLap" date="2024-01-02 15:57:03 -0700" duration="0.4267334322134654" durationUnit="min">
+   <MetadataEntry key="HKSwimmingStrokeStyle" value="2"/>
+  </WorkoutEvent>
+  <WorkoutEvent type="HKWorkoutEventTypeLap" date="2024-01-02 15:57:29 -0700" duration="0.4425814549128215" durationUnit="min">
+   <MetadataEntry key="HKSwimmingStrokeStyle" value="2"/>
+  </WorkoutEvent>
+  <WorkoutEvent type="HKWorkoutEventTypeLap" date="2024-01-02 15:57:55 -0700" duration="0.4385775009791056" durationUnit="min">
+   <MetadataEntry key="HKSwimmingStrokeStyle" value="2"/>
+  </WorkoutEvent>
+  <WorkoutEvent type="HKWorkoutEventTypeLap" date="2024-01-02 15:58:22 -0700" duration="0.4105512817700704" durationUnit="min">
+   <MetadataEntry key="HKSwimmingStrokeStyle" value="2"/>
+  </WorkoutEvent>
+  <WorkoutEvent type="HKWorkoutEventTypeLap" date="2024-01-02 15:58:47 -0700" duration="0.4502549668153127" durationUnit="min">
+   <MetadataEntry key="HKSwimmingStrokeStyle" value="2"/>
+  </WorkoutEvent>
+  <WorkoutEvent type="HKWorkoutEventTypeLap" date="2024-01-02 16:02:00 -0700" duration="0.3595065573851268" durationUnit="min">
+   <MetadataEntry key="HKSwimmingStrokeStyle" value="2"/>
+  </WorkoutEvent>
+  <WorkoutEvent type="HKWorkoutEventTypeSegment" date="2024-01-02 16:02:00 -0700" duration="8.896555650234223" durationUnit="min"/>
+  <WorkoutEvent type="HKWorkoutEventTypeLap" date="2024-01-02 16:02:21 -0700" duration="0.4285703122615814" durationUnit="min">
+   <MetadataEntry key="HKSwimmingStrokeStyle" value="2"/>
+  </WorkoutEvent>
+  <WorkoutEvent type="HKWorkoutEventTypeLap" date="2024-01-02 16:02:47 -0700" duration="0.4292369325955709" durationUnit="min">
+   <MetadataEntry key="HKSwimmingStrokeStyle" value="2"/>
+  </WorkoutEvent>
+  <WorkoutEvent type="HKWorkoutEventTypeLap" date="2024-01-02 16:03:13 -0700" duration="0.4240649998188019" durationUnit="min">
+   <MetadataEntry key="HKSwimmingStrokeStyle" value="2"/>
+  </WorkoutEvent>
+  <WorkoutEvent type="HKWorkoutEventTypeLap" date="2024-01-02 16:03:38 -0700" duration="0.4469197630882263" durationUnit="min">
+   <MetadataEntry key="HKSwimmingStrokeStyle" value="2"/>
+  </WorkoutEvent>
+  <WorkoutEvent type="HKWorkoutEventTypeLap" date="2024-01-02 16:04:07 -0700" duration="0.4228971342245738" durationUnit="min">
+   <MetadataEntry key="HKSwimmingStrokeStyle" value="2"/>
+  </WorkoutEvent>
+  <WorkoutEvent type="HKWorkoutEventTypeLap" date="2024-01-02 16:04:32 -0700" duration="0.4437501013278961" durationUnit="min">
+   <MetadataEntry key="HKSwimmingStrokeStyle" value="2"/>
+  </WorkoutEvent>
+  <WorkoutEvent type="HKWorkoutEventTypeLap" date="2024-01-02 16:04:59 -0700" duration="0.4230638841787974" durationUnit="min">
+   <MetadataEntry key="HKSwimmingStrokeStyle" value="2"/>
+  </WorkoutEvent>
+  <WorkoutEvent type="HKWorkoutEventTypeLap" date="2024-01-02 16:05:24 -0700" duration="0.4352422952651978" durationUnit="min">
+   <MetadataEntry key="HKSwimmingStrokeStyle" value="2"/>
+  </WorkoutEvent>
+  <WorkoutEvent type="HKWorkoutEventTypeLap" date="2024-01-02 16:05:50 -0700" duration="0.4187268614768982" durationUnit="min">
+   <MetadataEntry key="HKSwimmingStrokeStyle" value="2"/>
+  </WorkoutEvent>
+  <WorkoutEvent type="HKWorkoutEventTypeLap" date="2024-01-02 16:06:15 -0700" duration="0.4133881727854411" durationUnit="min">
+   <MetadataEntry key="HKSwimmingStrokeStyle" value="2"/>
+  </WorkoutEvent>
+  <WorkoutEvent type="HKWorkoutEventTypeLap" date="2024-01-02 16:06:40 -0700" duration="0.4667714893817901" durationUnit="min">
+   <MetadataEntry key="HKSwimmingStrokeStyle" value="2"/>
+  </WorkoutEvent>
+  <WorkoutEvent type="HKWorkoutEventTypeLap" date="2024-01-02 16:07:08 -0700" duration="0.399541699886322" durationUnit="min">
+   <MetadataEntry key="HKSwimmingStrokeStyle" value="2"/>
+  </WorkoutEvent>
+  <WorkoutEvent type="HKWorkoutEventTypeLap" date="2024-01-02 16:07:32 -0700" duration="0.4744453112284343" durationUnit="min">
+   <MetadataEntry key="HKSwimmingStrokeStyle" value="2"/>
+  </WorkoutEvent>
+  <WorkoutEvent type="HKWorkoutEventTypeLap" date="2024-01-02 16:08:01 -0700" duration="0.4397461593151092" durationUnit="min">
+   <MetadataEntry key="HKSwimmingStrokeStyle" value="2"/>
+  </WorkoutEvent>
+  <WorkoutEvent type="HKWorkoutEventTypeLap" date="2024-01-02 16:08:27 -0700" duration="0.4379109899202983" durationUnit="min">
+   <MetadataEntry key="HKSwimmingStrokeStyle" value="2"/>
+  </WorkoutEvent>
+  <WorkoutEvent type="HKWorkoutEventTypeLap" date="2024-01-02 16:08:53 -0700" duration="0.4018772025903066" durationUnit="min">
+   <MetadataEntry key="HKSwimmingStrokeStyle" value="2"/>
+  </WorkoutEvent>
+  <WorkoutEvent type="HKWorkoutEventTypeLap" date="2024-01-02 16:09:18 -0700" duration="0.3997085114320119" durationUnit="min">
+   <MetadataEntry key="HKSwimmingStrokeStyle" value="2"/>
+  </WorkoutEvent>
+  <WorkoutEvent type="HKWorkoutEventTypeLap" date="2024-01-02 16:09:44 -0700" duration="1.150248102347056" durationUnit="min">
+   <MetadataEntry key="HKSwimmingStrokeStyle" value="2"/>
+  </WorkoutEvent>
+  <WorkoutStatistics type="HKQuantityTypeIdentifierDistanceSwimming" startDate="2024-01-02 15:28:10 -0700" endDate="2024-01-02 16:11:20 -0700" sum="2275" unit="yd"/>
+  <WorkoutStatistics type="HKQuantityTypeIdentifierSwimmingStrokeCount" startDate="2024-01-02 15:28:10 -0700" endDate="2024-01-02 16:11:20 -0700" sum="1139" unit="count"/>
+  <WorkoutStatistics type="HKQuantityTypeIdentifierBasalEnergyBurned" startDate="2024-01-02 15:28:10 -0700" endDate="2024-01-02 16:11:20 -0700" sum="62.377" unit="Cal"/>
+  <WorkoutStatistics type="HKQuantityTypeIdentifierActiveEnergyBurned" startDate="2024-01-02 15:28:10 -0700" endDate="2024-01-02 16:11:20 -0700" sum="399.867" unit="Cal"/>
+  <MetadataEntry key="HKAverageMETs" value="9.50572 kcal/hr·kg"/>
+  <MetadataEntry key="HKTimeZone" value="America/Los_Angeles"/>
+  <MetadataEntry key="HKSwimmingLocationType" value="1"/>
+  <MetadataEntry key="HKIndoorWorkout" value="0"/>
+  <MetadataEntry key="HKLapLength" value="22.86 m"/>
+ </Workout>
