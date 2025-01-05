@@ -34,10 +34,10 @@ public class UserDetailService implements UserDetailsService {
       try (IDocumentSession session = ravenBean.getSession()) {
         User user = session.load(User.class, username);
         if (user == null) {
-          log.info("username '{}' not found", username);
+          log.warn("username '{}' not found", username);
           return INVALID;
         } else {
-          log.info("found user = {}", user);
+          log.debug("found user = {}", user);
           cache.put(username, user);
         }
       }

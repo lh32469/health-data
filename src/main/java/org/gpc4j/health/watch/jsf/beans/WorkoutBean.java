@@ -73,22 +73,22 @@ public class WorkoutBean implements Constants {
 
   @PostConstruct
   public void postConstruct() {
-    log.debug("WorkoutBean.postConstruct");
+    log.debug(this.toString());
 
-    log.info("cookieBean = {}", cookieBean);
+    log.debug("cookieBean = {}", cookieBean);
 
     ExternalContext externalContext =
         FacesContext.getCurrentInstance().getExternalContext();
-    log.info("SessionMap = {}", externalContext.getSessionMap());
+    log.debug("SessionMap = {}", externalContext.getSessionMap());
 
     Cookie workoutCookie = (Cookie) externalContext
         .getRequestCookieMap()
         .get(WORKOUT_COOKIE_KEY);
 
     Map<String, String> headerMap = externalContext.getRequestHeaderMap();
-    log.info("headerMap = {}", headerMap);
+    log.debug("headerMap = {}", headerMap);
     final String userAgent = headerMap.getOrDefault("user-agent","");
-    log.info("userAgent = {}", userAgent);
+    log.debug("userAgent = {}", userAgent);
 
     if(userAgent.toLowerCase().contains("iphone")) {
       template = "phone.xhtml";
@@ -167,7 +167,7 @@ public class WorkoutBean implements Constants {
         }
 
         if (projected.getData().isEmpty()) {
-          log.info("Projection compleste for year = {}", year);
+          log.debug("Projection complete for year = {}", year);
         } else {
           yearsGraph.addSeries(projected);
         }
@@ -196,7 +196,7 @@ public class WorkoutBean implements Constants {
         FacesContext.getCurrentInstance().getExternalContext();
 
     String yearSelected = String.valueOf(event.getObject().getYear());
-    log.info("yearSelected = {}", yearSelected);
+    log.debug("yearSelected = {}", yearSelected);
 
     externalContext.addResponseCookie("Test", "Test4", null);
     externalContext.addResponseCookie(YEAR_COOKIE_KEY, yearSelected, null);
@@ -241,7 +241,7 @@ public class WorkoutBean implements Constants {
         .map(LocalDateTime::getYear)
         .collect(Collectors.toSet());
 
-    log.info("years = {}", years);
+    log.debug("years = {}", years);
     return years;
   }
 

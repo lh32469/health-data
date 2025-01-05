@@ -58,7 +58,7 @@ public class MenuBarBean implements Constants {
 
     FacesContext facesContext = FacesContext.getCurrentInstance();
     viewId = facesContext.getViewRoot().getViewId();
-    log.info("viewId = {}", viewId);
+    log.debug("viewId = {}", viewId);
 
     adminUser = userProvider.getUser().getAuthorities().stream()
         .map(auth -> auth.getAuthority())
@@ -144,9 +144,9 @@ public class MenuBarBean implements Constants {
   }
 
   public void select(MenuActionEvent event) throws IOException {
-    log.info("event = {}", event);
+    log.debug("event = {}", event);
     String workout = event.getMenuItem().getValue().toString();
-    log.info("workout = {}", workout);
+    log.debug("workout = {}", workout);
 
     ExternalContext externalContext =
         FacesContext.getCurrentInstance().getExternalContext();

@@ -67,8 +67,8 @@ public class CookieBean implements Constants {
       workout = workoutCookie.getValue();
     }
 
-    log.info("year, month, day = {}, {}, {}", year, month, day);
-    log.info("workout = {}", workout);
+    log.debug("year, month, day = {}, {}, {}", year, month, day);
+    log.debug("workout = {}", workout);
 
   }
 

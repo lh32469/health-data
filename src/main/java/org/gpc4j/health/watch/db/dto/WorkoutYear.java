@@ -23,7 +23,7 @@ public class WorkoutYear {
   public WorkoutYear(int year, List<Workout> workouts) {
     this.year = year;
     this.workouts = workouts;
-    log.info("year/workouts = {}/{}", year, workouts.size());
+    log.debug("year/workouts = {}/{}", year, workouts.size());
   }
 
   public int getYear() {
@@ -55,7 +55,7 @@ public class WorkoutYear {
     double distance = workouts.stream()
         .mapToDouble(Workout::getTotalDistance)
         .sum();
-    log.info("year/distance = {}/{}", year, distance);
+    log.debug("year/distance = {}/{}", year, distance);
     return distance;
   }
 
@@ -72,9 +72,9 @@ public class WorkoutYear {
 
     int currentDay = LocalDate.now().getDayOfYear();
     double currentRate = getDistance() / currentDay;
-    log.info("currentRate = {}", currentRate);
+    log.debug("currentRate = {}", currentRate);
     double projected = (currentRate * 365.0);
-    log.info("projected = {}", projected);
+    log.debug("projected = {}", projected);
     return projected;
   }
 

@@ -27,7 +27,7 @@ public class UserProvider {
         .getAuthentication()
         .getPrincipal();
 
-    log.info("user = {}", user);
+    log.debug("user = {}", user);
   }
 
   @PreDestroy

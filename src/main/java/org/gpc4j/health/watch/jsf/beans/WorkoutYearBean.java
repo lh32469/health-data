@@ -68,12 +68,12 @@ public class WorkoutYearBean implements Constants {
 
   @PostConstruct
   public void postConstruct() {
-    log.debug("WorkoutYearBean.postConstruct");
+    log.debug(this.toString());
 
     year = cookieBean.getYear();
 
     String workoutType = cookieBean.getWorkout();
-    log.info("year = {}, workoutType = {}", year, workoutType);
+    log.debug("year = {}, workoutType = {}", year, workoutType);
 
     IDocumentSession session = ravenBean.getSession();
 
@@ -87,7 +87,7 @@ public class WorkoutYearBean implements Constants {
             "workoutActivityType", "workoutStatistics")
         .toList();
 
-    log.info("workouts for the year = {}", workouts.size());
+    log.debug("workouts for the year = {}", workouts.size());
 
     workouts.forEach(workout -> {
       totalMiles += workout.getTotalDistance();

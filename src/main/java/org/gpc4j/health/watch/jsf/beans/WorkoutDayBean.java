@@ -66,7 +66,7 @@ public class WorkoutDayBean implements Constants {
 
   @PostConstruct
   public void postConstruct() {
-    log.debug("WorkoutDayBean.postConstruct");
+    log.debug(this.toString());
 
     ExternalContext externalContext =
         FacesContext.getCurrentInstance().getExternalContext();
