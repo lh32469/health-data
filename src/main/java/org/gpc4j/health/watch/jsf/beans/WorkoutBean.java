@@ -24,7 +24,6 @@ import javax.annotation.PreDestroy;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
-import javax.servlet.http.Cookie;
 import java.io.IOException;
 import java.text.DateFormatSymbols;
 import java.time.LocalDate;
@@ -68,36 +67,38 @@ public class WorkoutBean implements Constants {
    */
   private String workout;
 
+  /**
+   * Default JSF Template for desktop browsers.
+   */
   @Getter
   private String template = "template.xhtml";
 
+  /**
+   * JSF Template to use for phones.
+   */
+  public static final String PHONE_TEMPLATE = "phone.xhtml";
+
   @PostConstruct
   public void postConstruct() {
-    log.debug(this.toString());
+    log.trace(this.toString());
 
-    log.debug("cookieBean = {}", cookieBean);
+    log.trace("cookieBean = {}", cookieBean);
 
     ExternalContext externalContext =
         FacesContext.getCurrentInstance().getExternalContext();
-    log.debug("SessionMap = {}", externalContext.getSessionMap());
-
-    Cookie workoutCookie = (Cookie) externalContext
-        .getRequestCookieMap()
-        .get(WORKOUT_COOKIE_KEY);
+    log.trace("SessionMap = {}", externalContext.getSessionMap());
 
     Map<String, String> headerMap = externalContext.getRequestHeaderMap();
-    log.debug("headerMap = {}", headerMap);
-    final String userAgent = headerMap.getOrDefault("user-agent","");
-    log.debug("userAgent = {}", userAgent);
+    log.trace("headerMap = {}", headerMap);
+    final String userAgent = headerMap.getOrDefault("user-agent", "");
+    log.trace("userAgent = {}", userAgent);
 
-    if(userAgent.toLowerCase().contains("iphone")) {
-      template = "phone.xhtml";
+    if (userAgent.toLowerCase().contains("iphone")) {
+      template = PHONE_TEMPLATE;
     }
 
     workout = cookieBean.getWorkout();
-
     session = ravenBean.getSession();
-
     workoutYears = new LinkedList<>();
 
     yearsGraph = new LineChartModel();
@@ -117,7 +118,17 @@ public class WorkoutBean implements Constants {
             "workoutActivityType", "workoutStatistics")
         .toList();
 
-    getActiveYears(workouts).stream().sorted().forEach(year -> {
+    // Get total active years for this workout
+    Set<Integer> active = getActiveYears(workouts);
+
+    if (PHONE_TEMPLATE.equals(template)) {
+      active = active.stream()
+          .sorted(Comparator.reverseOrder())
+          .limit(5)  // Last 5 years on phone
+          .collect(Collectors.toSet());
+    }
+
+    active.stream().sorted().forEach(year -> {
 
       List<Workout> filtered = workouts.stream()
           .filter(workout -> workout.getStartDate().startsWith(year + "-"))
@@ -183,7 +194,7 @@ public class WorkoutBean implements Constants {
 
   @PreDestroy
   public void preDestroy() {
-    log.debug(this.toString());
+    log.trace(this.toString());
     session.close();
   }
 
