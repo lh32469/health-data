@@ -97,8 +97,8 @@ public class WorkoutMonthBean implements Constants {
     String monthString = new DateFormatSymbols().getMonths()[month - 1];
 
     monthsGraph = new LineChartModel();
-    monthsGraph.setTitle("Swimming Distance by Day for " +
-        monthString + ", " + year);
+    monthsGraph.setTitle(cookieBean.getWorkout() +
+        " Distance by Day for " + monthString + ", " + year);
     monthsGraph.setLegendPosition("n");
     monthsGraph.getAxes().put(AxisType.X, new CategoryAxis("Days"));
 
