@@ -134,7 +134,7 @@ public class WorkoutDayBean implements Constants {
           // TODO: Make event.duration a double
           segment.setLabel(event.getDate() + "; " + event.getDurationF());
         } else {
-          segment.set(index++, 60 * Double.parseDouble(event.getDuration()));
+          segment.set(index++, 60 * event.getDuration());
         }
 
       }

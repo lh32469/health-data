@@ -1,8 +1,10 @@
 package org.gpc4j.health.watch.xml;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.gpc4j.health.watch.db.CustomDoubleSerializer;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -29,18 +31,17 @@ public class WorkoutEvent implements Comparable<WorkoutEvent> {
   @XmlAttribute
   private String date;
 
-  // TODO: refactor to double.
   @XmlAttribute
-  private String duration;
+//  @JsonSerialize(using = CustomDoubleSerializer.class)
+  private Double duration;
 
   @XmlAttribute
   private String durationUnit;
 
   @JsonIgnore
   public String getDurationF() {
-    double _duration = Double.parseDouble(duration);
-    int minutes = (int) Math.floor(_duration);
-    int seconds = (int) ((_duration - minutes) * 60);
+    int minutes = (int) Math.floor(duration);
+    int seconds = (int) ((duration - minutes) * 60);
     return String.format("%02d:%02d ", minutes, seconds);
   }
 

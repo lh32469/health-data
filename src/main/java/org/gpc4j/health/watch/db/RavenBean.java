@@ -1,5 +1,7 @@
 package org.gpc4j.health.watch.db;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 import lombok.extern.slf4j.Slf4j;
 import net.ravendb.client.documents.DocumentStore;
 import net.ravendb.client.documents.IDocumentStore;
@@ -23,6 +25,11 @@ public class RavenBean {
     log.info("ravenDB = " + ravenDB);
     docStore = new DocumentStore(ravenDB, "HealthData");
     docStore.initialize();
+
+    ObjectMapper mapper = docStore.getConventions().getEntityMapper();
+    SimpleModule module = new SimpleModule();
+    module.addSerializer(Double.class, new CustomDoubleSerializer());
+    mapper.registerModule(module);
   }
 
   public IDocumentStore getDocStore() {
