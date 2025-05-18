@@ -23,6 +23,7 @@
 
   <properties>
     <java.version>11</java.version>
+    <jackson.version>2.19.0</jackson.version>
   </properties>
 
   <dependencies>
@@ -57,14 +58,25 @@
       <version>3.25.0-GA</version>
     </dependency>
 
-    <!--    <dependency>-->
-    <!--      <groupId>com.fasterxml.jackson.datatype</groupId>-->
-    <!--      <artifactId>jackson-datatype-jsr310</artifactId>-->
-    <!--    </dependency>-->
+    <!-- Jackson Core -->
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-core</artifactId>
+      <version>${jackson.version}</version>
+    </dependency>
+
+    <!-- Jackson Databind -->
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+      <version>${jackson.version}</version>
+    </dependency>
+
+    <!-- Jackson XML -->
     <dependency>
       <groupId>com.fasterxml.jackson.dataformat</groupId>
       <artifactId>jackson-dataformat-xml</artifactId>
-      <version>LATEST</version>
+      <version>${jackson.version}</version>
     </dependency>
 
     <dependency>
