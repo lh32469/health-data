@@ -115,23 +115,26 @@ public class WorkoutDayBean implements Constants {
       for (WorkoutEvent event : workout.getWorkoutEvents()) {
         log.trace("event = {}", event);
 
-        if (PAUSE_WORKOUT.equals(event.getType()) ||
-            RESUME_WORKOUT.equals(event.getType())) {
-          log.debug("Skipping {}", event);
-          continue;
-        }
+        switch (event.getType()) {
+          case PAUSE_WORKOUT:
+          case RESUME_WORKOUT:
+            log.debug("Skipping {}", event);
+            continue;
 
-        if (SEGMENT.equals(event.getType())) {
-          if (Objects.isNull(segment) || !segment.getData().isEmpty()) {
-            log.debug("New Segment = {}", event);
-            segment = new LineChartSeries();
-            segment.setShowMarker(false);
-            // TODO: Make event.duration a double
-            segment.setLabel(event.getDate() + "; " + event.getDurationF());
-            dayGraph.addSeries(segment);
-          }
-        } else {
-          segment.set(index++, 60 * event.getDuration());
+          case SEGMENT:
+            if (Objects.isNull(segment) || !segment.getData().isEmpty()) {
+              log.debug("New Segment = {}", event);
+              segment = new LineChartSeries();
+              segment.setShowMarker(false);
+              // TODO: Make event.duration a double
+              segment.setLabel(event.getDate() + "; " + event.getDurationF());
+              dayGraph.addSeries(segment);
+            }
+            break;
+
+          default:
+            segment.set(index++, 60 * event.getDuration());
+            break;
         }
 
       }
