@@ -26,6 +26,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 @RequestScope
 @Component("workoutDayBean")
@@ -114,33 +115,27 @@ public class WorkoutDayBean implements Constants {
       for (WorkoutEvent event : workout.getWorkoutEvents()) {
         log.trace("event = {}", event);
 
-        if (PAUSE_WORKOUT.equals(event.getType())) {
-          continue;
-        }
-
-        if (RESUME_WORKOUT.equals(event.getType())) {
+        if (PAUSE_WORKOUT.equals(event.getType()) ||
+            RESUME_WORKOUT.equals(event.getType())) {
+          log.debug("Skipping {}", event);
           continue;
         }
 
         if (SEGMENT.equals(event.getType())) {
-          if (null != segment) {
+          if (Objects.isNull(segment) || !segment.getData().isEmpty()) {
+            log.debug("New Segment = {}", event);
+            segment = new LineChartSeries();
+            segment.setShowMarker(false);
+            // TODO: Make event.duration a double
+            segment.setLabel(event.getDate() + "; " + event.getDurationF());
             dayGraph.addSeries(segment);
           }
-          // Start of new Segment/Set
-          log.debug("New Segment = {}", event);
-          segment = new LineChartSeries();
-          segment.setShowMarker(false);
-
-          // TODO: Make event.duration a double
-          segment.setLabel(event.getDate() + "; " + event.getDurationF());
         } else {
           segment.set(index++, 60 * event.getDuration());
         }
 
       }
 
-      // Add last Segment/Set
-      dayGraph.addSeries(segment);
     }
 
   }
