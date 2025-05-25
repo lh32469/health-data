@@ -22,6 +22,7 @@ import javax.faces.context.FacesContext;
 import javax.inject.Named;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.List;
@@ -111,6 +112,9 @@ public class WorkoutDayBean implements Constants {
 
     for (Workout workout : workouts) {
       int index = 1;
+      int events = 0;  // Number of Events/Laps per Segment
+      String segmentStartTime = null;
+      String segmentDuration = null;
       LineChartSeries segment = null;
       for (WorkoutEvent event : workout.getWorkoutEvents()) {
         log.trace("event = {}", event);
@@ -124,16 +128,24 @@ public class WorkoutDayBean implements Constants {
           case SEGMENT:
             if (Objects.isNull(segment) || !segment.getData().isEmpty()) {
               log.debug("New Segment = {}", event);
+              segmentStartTime = LocalDateTime
+                  .parse(event.getDate(), DTF)
+                  .format(DateTimeFormatter.ISO_TIME);
+              segmentDuration = event.getDurationF();
+              events = 0;
               segment = new LineChartSeries();
               segment.setShowMarker(false);
-              // TODO: Make event.duration a double
-              segment.setLabel(event.getDate() + "; " + event.getDurationF());
               dayGraph.addSeries(segment);
             }
             break;
 
           default:
+            events++;
+            // TODO: Make event.duration a double
             segment.set(index++, 60 * event.getDuration());
+            segment.setLabel(segmentStartTime + "; "
+                + events + "@"
+                + segmentDuration);
             break;
         }
 
