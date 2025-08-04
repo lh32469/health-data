@@ -3,6 +3,7 @@ package org.gpc4j.health.watch.jsf.beans;
 import lombok.extern.slf4j.Slf4j;
 import net.ravendb.client.documents.session.IDocumentSession;
 import org.gpc4j.health.watch.db.RavenBean;
+import org.gpc4j.health.watch.db.dto.User;
 import org.gpc4j.health.watch.security.UserProvider;
 import org.gpc4j.health.watch.xml.HealthData;
 import org.gpc4j.health.watch.xml.Record;
@@ -12,6 +13,7 @@ import org.primefaces.model.file.UploadedFile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.annotation.RequestScope;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -53,6 +55,30 @@ public class UploadBean {
     log.debug(this.toString());
     session.close();
   }
+
+//  /**
+//   * Handle posted export.zip file
+//   */
+//  public void handlePostUpload(MultipartFile file, User user) throws IOException {
+//    log.info("file.getName() = {}", file.getOriginalFilename());
+//    log.info("file.getSize() = {}", file.getSize());
+//
+//    ZipInputStream zis = new ZipInputStream(
+//        new BufferedInputStream(file.getInputStream()));
+//
+//    ZipEntry entry;
+//
+//    while ((entry = zis.getNextEntry()) != null) {
+//      if ("apple_health_export/export.xml".equals(entry.toString())) {
+//        log.debug("Extracting: {}", entry);
+//        HealthData data = JAXB.unmarshal(zis, HealthData.class);
+//        zis.close();
+//        postData(data, user);
+//        break;
+//      }
+//    }
+//
+//  }
 
   public void handleFileUpload(FileUploadEvent event) throws IOException {
 
@@ -114,6 +140,13 @@ public class UploadBean {
 
     FacesContext.getCurrentInstance().addMessage(null, message);
   }
+
+//  /**
+//   * Handle posting data from user logged in to web page.
+//   */
+//  void postData(HealthData data) {
+//    postData(data, userProvider.getUser());
+//  }
 
   void postData(HealthData data) {
 
