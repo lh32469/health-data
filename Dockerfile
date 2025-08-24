@@ -15,6 +15,6 @@ ENV _JAVA_OPTIONS="-XX:+UseShenandoahGC \
 -XX:ShenandoahUncommitDelay=1000 \
 -XX:ShenandoahGuaranteedGCInterval=10000"
 
-CMD ["java", "-jar", "watch.jar" ]
+CMD ["java", "--add-opens", "java.base/java.lang=ALL-UNNAMED", "-jar", "watch.jar" ]
 
 
