@@ -8,6 +8,9 @@ WORKDIR                 /usr/src/
 
 ENV _JAVA_OPTIONS="-XX:+UseShenandoahGC \
 -Djdk.xml.maxGeneralEntitySizeLimit=0 \
+-Djdk.xml.entityExpansionLimit=0 \
+-Djdk.xml.totalEntitySizeLimit=0 \
+-Djdk.xml.maxGeneralEntitySizeLimit=0 \
 -Xmx2g \
 -XX:ActiveProcessorCount=2 \
 -XX:+UnlockExperimentalVMOptions \
