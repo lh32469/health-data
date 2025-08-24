@@ -7,6 +7,7 @@ COPY target/watch-*.jar /usr/src/watch.jar
 WORKDIR                 /usr/src/
 
 ENV _JAVA_OPTIONS="-XX:+UseShenandoahGC \
+-Djdk.xml.maxGeneralEntitySizeLimit=0 \
 -Xmx2g \
 -XX:ActiveProcessorCount=2 \
 -XX:+UnlockExperimentalVMOptions \
