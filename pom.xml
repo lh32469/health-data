@@ -27,6 +27,19 @@
   </properties>
 
   <dependencies>
+
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId>
+      <version>3.14.0</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-text</artifactId>
+      <version>1.11.0</version>
+    </dependency>
+
     <dependency>
       <groupId>org.joinfaces</groupId>
       <artifactId>primefaces-spring-boot-starter</artifactId>
@@ -88,7 +101,7 @@
     <dependency>
       <groupId>net.ravendb</groupId>
       <artifactId>ravendb</artifactId>
-      <version>5.2.0</version>
+      <version>5.4.4</version>
     </dependency>
 
     <dependency>

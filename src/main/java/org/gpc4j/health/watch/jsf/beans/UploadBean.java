@@ -1,9 +1,11 @@
 package org.gpc4j.health.watch.jsf.beans;
 
 import lombok.extern.slf4j.Slf4j;
+import net.ravendb.client.documents.BulkInsertOperation;
+import net.ravendb.client.documents.IDocumentStore;
 import net.ravendb.client.documents.session.IDocumentSession;
 import org.gpc4j.health.watch.db.RavenBean;
-import org.gpc4j.health.watch.db.dto.User;
+import org.gpc4j.health.watch.db.docs.HeartRateReading;
 import org.gpc4j.health.watch.security.UserProvider;
 import org.gpc4j.health.watch.xml.HealthData;
 import org.gpc4j.health.watch.xml.Record;
@@ -13,7 +15,6 @@ import org.primefaces.model.file.UploadedFile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.annotation.RequestScope;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -36,8 +37,11 @@ import static org.gpc4j.health.watch.jsf.beans.Constants.DTF;
 @Slf4j
 public class UploadBean {
 
+  /**
+   * IDocumentStore from RavenDBConfig
+   */
   @Autowired
-  RavenBean ravenBean;
+  private IDocumentStore documentStore;
 
   IDocumentSession session;
 
@@ -47,7 +51,7 @@ public class UploadBean {
   @PostConstruct
   public void postConstruct() {
     log.debug(this.toString());
-    session = ravenBean.getSession();
+    session = documentStore.openSession();
   }
 
   @PreDestroy
@@ -136,7 +140,8 @@ public class UploadBean {
     }
 
     FacesMessage message = new FacesMessage("Successful",
-        event.getFile().getFileName() + " is uploaded.");
+                                            event.getFile()
+                                                 .getFileName() + " is uploaded.");
 
     FacesContext.getCurrentInstance().addMessage(null, message);
   }
@@ -158,11 +163,13 @@ public class UploadBean {
     data.getWorkouts().stream()
         .peek(workout -> workout.setUser(user))
         .forEach(workout -> {
-              ZonedDateTime created = ZonedDateTime.parse(workout.getCreationDate(), DTF);
-              log.debug("created workout = {} -> {} ", workout.getCreationDate(), created);
-              long second = created.toEpochSecond();
-              session.store(workout, user + ".W." + second);
-            }
+                   ZonedDateTime created =
+                       ZonedDateTime.parse(workout.getCreationDate(), DTF);
+                   log.debug("created workout = {} -> {} ",
+                             workout.getCreationDate(), created);
+                   long second = created.toEpochSecond();
+                   session.store(workout, user + ".W." + second);
+                 }
         );
 
     session.saveChanges();
@@ -171,6 +178,22 @@ public class UploadBean {
     Set<Record> unique = new HashSet<>(data.getRecords());
     if (unique.size() != data.getRecords().size()) {
       throw new IllegalStateException("Duplicate Records: " + user);
+    }
+
+    try (BulkInsertOperation bulkStore = documentStore.bulkInsert()) {
+
+      // Save HeartRateReadings
+      unique.stream()
+            .filter(record -> record.getType()
+                                    .equals("HKQuantityTypeIdentifierHeartRate"))
+            .map(entry -> {
+              HeartRateReading hr = new HeartRateReading();
+              hr.setUser(user);
+              hr.setDate(ZonedDateTime.parse(entry.getStartDate(), DTF));
+              hr.setValue(Float.parseFloat(entry.getValue()));
+              return hr;
+            })
+            .forEach(doc -> bulkStore.store(doc, doc.getId()));
     }
 
   }
@@ -186,9 +209,10 @@ public class UploadBean {
         = data.getWorkouts().get(0);
 
     Workout swimming = data.getWorkouts().stream()
-        .filter(workout -> workout.getWorkoutActivityType().endsWith("Swimming"))
-        .findFirst()
-        .get();
+                           .filter(workout -> workout.getWorkoutActivityType()
+                                                     .endsWith("Swimming"))
+                           .findFirst()
+                           .get();
 
 //    System.out.println("swimming = " + swimming);
 

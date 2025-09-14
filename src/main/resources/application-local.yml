@@ -1,5 +1,5 @@
 ravendb:
-  url: http://raven.basement.ltd
+  url: http://192.168.0.105
 
 
 logging:

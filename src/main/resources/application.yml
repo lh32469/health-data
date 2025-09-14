@@ -37,6 +37,10 @@ joinfaces:
     state-saving-method: client
     serialize-server-state: true
 
+# RavenDB Configuration
+ravendb:
+  database: HealthData
+
 logging:
   level:
     root: INFO

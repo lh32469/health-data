@@ -46,6 +46,8 @@ joinfaces:
     state-saving-method: client
     serialize-server-state: true
 
+
+# RavenDB Configuration
 ravendb:
   url: http://raven.raven:8080
 
