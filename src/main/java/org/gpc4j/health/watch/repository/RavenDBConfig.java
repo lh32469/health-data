@@ -1,11 +1,13 @@
 package org.gpc4j.health.watch.repository;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.ravendb.client.documents.DocumentStore;
 import net.ravendb.client.documents.IDocumentStore;
+import org.gpc4j.health.watch.db.CustomDoubleSerializer;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -32,6 +34,11 @@ public class RavenDBConfig {
     // Configure Jackson ObjectMapper for proper DateTime handling
     ObjectMapper mapper = store.getConventions().getEntityMapper();
     mapper.registerModule(new JavaTimeModule());
+
+    SimpleModule module = new SimpleModule();
+    // Format Doubles as Strings in to 4 decimal places
+    module.addSerializer(Double.class, new CustomDoubleSerializer());
+    mapper.registerModule(module);
 
     store.initialize();
     return store;
