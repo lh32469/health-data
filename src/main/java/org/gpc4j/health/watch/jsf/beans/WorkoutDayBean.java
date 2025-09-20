@@ -62,9 +62,11 @@ public class WorkoutDayBean implements Constants {
   private double calories;
 
   /**
-   * The Chart/Graph object used by JSF/Primefaces.
+   * The Chart/Graph for laps.
    */
-  LineChartModel dayGraph;
+  LineChartModel segmentGraph;
+
+  LineChartModel heartRateGraph;
 
   @PostConstruct
   public void postConstruct() {
@@ -83,30 +85,36 @@ public class WorkoutDayBean implements Constants {
     String queryString = String.format("%d-%02d-%02d", year, month, day);
     log.debug("queryString = {}", queryString);
     workouts = session.query(Workout.class)
-        .whereEquals("user", userProvider.getUser().getUsername())
-        .whereStartsWith("startDate", queryString)
-        .whereEquals("workoutActivityType", WORKOUT_MAP.get(cookieBean.getWorkout()))
-        .toList();
+                      .whereEquals("user", userProvider.getUser().getUsername())
+                      .whereStartsWith("startDate", queryString)
+                      .whereEquals("workoutActivityType",
+                                   WORKOUT_MAP.get(cookieBean.getWorkout()))
+                      .toList();
 
     totalMiles = workouts.stream()
-        .mapToDouble(Workout::getTotalDistance)
-        .sum();
+                         .mapToDouble(Workout::getTotalDistance)
+                         .sum();
 
     calories = workouts.stream()
-        .mapToDouble(Workout::getTotalEnergyBurned)
-        .sum();
+                       .mapToDouble(Workout::getTotalEnergyBurned)
+                       .sum();
 
     log.info("{}-{}-{} = {}", year, month, day, workouts.size());
 
-    dayGraph = new LineChartModel();
-    dayGraph.setTitle("Segments/Sets");
-    dayGraph.setLegendPosition("n");
+    segmentGraph = new LineChartModel();
+    segmentGraph.setTitle("Segments/Sets");
+    segmentGraph.setLegendPosition("n");
 
-    Axis yAxis = dayGraph.getAxis(AxisType.Y);
+    heartRateGraph = initHeartRateGraph();
+    LineChartSeries heartRate = new LineChartSeries();
+    heartRate.setLabel("Heart Rate");
+    heartRateGraph.addSeries(heartRate);
+
+    Axis yAxis = segmentGraph.getAxis(AxisType.Y);
     yAxis.setLabel("Seconds per Length");
     yAxis.setTickInterval("10");
 
-    Axis xAxis = dayGraph.getAxis(AxisType.X);
+    Axis xAxis = segmentGraph.getAxis(AxisType.X);
     xAxis.setMin(0);
     xAxis.setLabel("Lengths");
 
@@ -135,7 +143,7 @@ public class WorkoutDayBean implements Constants {
               events = 0;
               segment = new LineChartSeries();
               segment.setShowMarker(false);
-              dayGraph.addSeries(segment);
+              segmentGraph.addSeries(segment);
             }
             break;
 
@@ -144,15 +152,37 @@ public class WorkoutDayBean implements Constants {
             // TODO: Make event.duration a double
             segment.set(index++, 60 * event.getDuration());
             segment.setLabel(segmentStartTime + "; "
-                + events + "@"
-                + segmentDuration);
+                                 + events + "@"
+                                 + segmentDuration);
             break;
         }
 
+        if (event.getHeartRate() > 0) {
+          heartRate.set(index++, event.getHeartRate());
+        }else {
+          heartRate.set(index++, null);
+        }
       }
 
     }
 
+  }
+
+  private LineChartModel initHeartRateGraph() {
+
+    LineChartModel graph = new LineChartModel();
+    graph.setTitle("Heart Rate");
+    graph.setLegendPosition("n");
+
+    Axis yAxis = graph.getAxis(AxisType.Y);
+    yAxis.setLabel("Heart Rate");
+    yAxis.setTickInterval("10");
+
+    Axis xAxis = graph.getAxis(AxisType.X);
+    xAxis.setMin(0);
+    xAxis.setLabel("Lengths");
+
+    return graph;
   }
 
   public void onRowSelect(SelectEvent<WorkoutDay> event) throws IOException {
@@ -172,8 +202,12 @@ public class WorkoutDayBean implements Constants {
     return workouts;
   }
 
-  public LineChartModel getDayGraph() {
-    return dayGraph;
+  public LineChartModel getSegmentGraph() {
+    return segmentGraph;
+  }
+
+  public LineChartModel getHeartRateGraph() {
+    return heartRateGraph;
   }
 
   public int getYear() {
@@ -187,7 +221,7 @@ public class WorkoutDayBean implements Constants {
   public String getDate() {
     LocalDate date = LocalDate.of(year, month, day);
     return date.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL)
-        .withLocale(Locale.US));
+                                        .withLocale(Locale.US));
   }
 
   public int getDay() {

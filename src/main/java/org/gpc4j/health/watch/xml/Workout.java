@@ -1,5 +1,6 @@
 package org.gpc4j.health.watch.xml;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
@@ -8,10 +9,12 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import static org.gpc4j.health.watch.jsf.beans.Constants.DTF;
 import static org.gpc4j.health.watch.jsf.beans.Constants.SWIMMING_WORKOUT;
 import static org.gpc4j.health.watch.jsf.beans.Constants.WALKING_WORKOUT;
 
@@ -64,6 +67,16 @@ public class Workout {
     }
     Collections.sort(workoutEvents);
     return workoutEvents;
+  }
+
+  @JsonIgnore
+  public LocalDateTime getStart() {
+    return LocalDateTime.parse(startDate, DTF);
+  }
+
+  @JsonIgnore
+  public LocalDateTime getEnd() {
+    return LocalDateTime.parse(endDate, DTF);
   }
 
   public Double getTotalDistance() {
@@ -126,12 +139,13 @@ public class Workout {
 
   Optional<WorkoutStatistics> getStatistic(final String statisticName) {
     Optional<WorkoutStatistics> statistics = workoutStatistics.stream()
-        .filter(stat -> statisticName.equals(stat.type))
-        .findAny();
+                                                              .filter(stat -> statisticName.equals(
+                                                                  stat.type))
+                                                              .findAny();
 
     if (statistics.isEmpty()) {
       log.error("No " + statisticName + " for " + workoutActivityType +
-          "; " + startDate);
+                    "; " + startDate);
     }
     return statistics;
   }

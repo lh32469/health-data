@@ -3,9 +3,6 @@ package org.gpc4j.health.watch.jsf.beans;
 import lombok.extern.slf4j.Slf4j;
 import net.ravendb.client.documents.BulkInsertOperation;
 import net.ravendb.client.documents.IDocumentStore;
-import net.ravendb.client.documents.session.IDocumentSession;
-import org.gpc4j.health.watch.db.RavenBean;
-import org.gpc4j.health.watch.db.docs.HeartRateReading;
 import org.gpc4j.health.watch.security.UserProvider;
 import org.gpc4j.health.watch.xml.HealthData;
 import org.gpc4j.health.watch.xml.Record;
@@ -31,6 +28,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 import static org.gpc4j.health.watch.jsf.beans.Constants.DTF;
+import static org.gpc4j.health.watch.xml.WorkoutDataProcessor.processData;
 
 @RequestScope
 @Component("uploadBean")
@@ -43,21 +41,21 @@ public class UploadBean {
   @Autowired
   private IDocumentStore documentStore;
 
-  IDocumentSession session;
+  BulkInsertOperation bulkStore;
 
   @Autowired
   UserProvider userProvider;
 
   @PostConstruct
   public void postConstruct() {
-    log.debug(this.toString());
-    session = documentStore.openSession();
+    log.info(this.toString());
+    bulkStore = documentStore.bulkInsert();
   }
 
   @PreDestroy
   public void preDestroy() {
-    log.debug(this.toString());
-    session.close();
+    log.info(this.toString());
+    bulkStore.close();
   }
 
 //  /**
@@ -160,6 +158,9 @@ public class UploadBean {
 
     final String user = userProvider.getUser().getUsername();
 
+    // Add HeartRateReadings to Some Workouts
+    processData(data);
+
     data.getWorkouts().stream()
         .peek(workout -> workout.setUser(user))
         .forEach(workout -> {
@@ -168,11 +169,10 @@ public class UploadBean {
                    log.debug("created workout = {} -> {} ",
                              workout.getCreationDate(), created);
                    long second = created.toEpochSecond();
-                   session.store(workout, user + ".W." + second);
+                   bulkStore.store(workout, user + ".W." + second);
                  }
         );
 
-    session.saveChanges();
     log.debug("Saved {} Workouts", data.getWorkouts().size());
 
     Set<Record> unique = new HashSet<>(data.getRecords());
@@ -180,21 +180,21 @@ public class UploadBean {
       throw new IllegalStateException("Duplicate Records: " + user);
     }
 
-    try (BulkInsertOperation bulkStore = documentStore.bulkInsert()) {
-
-      // Save HeartRateReadings
-      unique.stream()
-            .filter(record -> record.getType()
-                                    .equals("HKQuantityTypeIdentifierHeartRate"))
-            .map(entry -> {
-              HeartRateReading hr = new HeartRateReading();
-              hr.setUser(user);
-              hr.setDate(ZonedDateTime.parse(entry.getStartDate(), DTF));
-              hr.setValue(Float.parseFloat(entry.getValue()));
-              return hr;
-            })
-            .forEach(doc -> bulkStore.store(doc, doc.getId()));
-    }
+//    try (BulkInsertOperation bulkStore = documentStore.bulkInsert()) {
+//
+//      // Save HeartRateReadings
+//      unique.stream()
+//            .filter(record -> record.getType()
+//                                    .equals("HKQuantityTypeIdentifierHeartRate"))
+//            .map(entry -> {
+//              HeartRateReading hr = new HeartRateReading();
+//              hr.setUser(user);
+//              hr.setDate(ZonedDateTime.parse(entry.getStartDate(), DTF));
+//              hr.setValue(Float.parseFloat(entry.getValue()));
+//              return hr;
+//            })
+//            .forEach(doc -> bulkStore.store(doc, doc.getId()));
+//    }
 
   }
 

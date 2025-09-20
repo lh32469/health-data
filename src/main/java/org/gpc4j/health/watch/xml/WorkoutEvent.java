@@ -1,18 +1,16 @@
 package org.gpc4j.health.watch.xml;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import org.gpc4j.health.watch.db.CustomDoubleSerializer;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
+import static org.gpc4j.health.watch.jsf.beans.Constants.DTF;
 import static org.gpc4j.health.watch.jsf.beans.Constants.LAP;
 import static org.gpc4j.health.watch.jsf.beans.Constants.SEGMENT;
 
@@ -21,9 +19,6 @@ import static org.gpc4j.health.watch.jsf.beans.Constants.SEGMENT;
 @Data
 @Slf4j
 public class WorkoutEvent implements Comparable<WorkoutEvent> {
-
-  static final DateTimeFormatter DTF =
-      DateTimeFormatter.ofPattern("yyyy-MM-dd k:mm:ss Z");
 
   @XmlAttribute
   private String type;
@@ -44,6 +39,8 @@ public class WorkoutEvent implements Comparable<WorkoutEvent> {
     int seconds = (int) ((duration - minutes) * 60);
     return String.format("%02d:%02d ", minutes, seconds);
   }
+
+  private short heartRate;
 
   @Override
   public int compareTo(WorkoutEvent other) {

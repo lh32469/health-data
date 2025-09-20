@@ -44,7 +44,7 @@ public interface Constants {
   /**
    * Marker type in WorkoutEvent which indicates workout was paused.
    */
-   String PAUSE_WORKOUT = "HKWorkoutEventTypePause";
+  String PAUSE_WORKOUT = "HKWorkoutEventTypePause";
 
   /**
    * Marker type in WorkoutEvent which indicates workout was resumed.

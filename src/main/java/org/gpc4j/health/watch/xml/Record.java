@@ -68,6 +68,11 @@ public class Record implements Comparable<Record>, Constants {
   }
 
   @JsonIgnore
+  public LocalDateTime getEnd() {
+    return LocalDateTime.parse(endDate, DTF);
+  }
+
+  @JsonIgnore
   public int getDuration() {
     LocalDateTime start = LocalDateTime.parse(startDate, DTF);
     LocalDateTime finish = LocalDateTime.parse(endDate, DTF);
