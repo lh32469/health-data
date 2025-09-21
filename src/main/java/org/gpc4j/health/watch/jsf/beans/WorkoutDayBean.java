@@ -7,9 +7,12 @@ import org.gpc4j.health.watch.db.dto.WorkoutDay;
 import org.gpc4j.health.watch.security.UserProvider;
 import org.gpc4j.health.watch.xml.Workout;
 import org.gpc4j.health.watch.xml.WorkoutEvent;
+import org.primefaces.component.chart.Chart;
+import org.primefaces.event.ItemSelectEvent;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.model.chart.Axis;
 import org.primefaces.model.chart.AxisType;
+import org.primefaces.model.chart.ChartSeries;
 import org.primefaces.model.chart.LineChartModel;
 import org.primefaces.model.chart.LineChartSeries;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +20,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.context.annotation.RequestScope;
 
 import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.inject.Named;
@@ -27,6 +31,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Objects;
 
 @RequestScope
@@ -150,18 +155,20 @@ public class WorkoutDayBean implements Constants {
           default:
             events++;
             // TODO: Make event.duration a double
-            segment.set(index++, 60 * event.getDuration());
+            segment.set(index, 60 * event.getDuration());
             segment.setLabel(segmentStartTime + "; "
                                  + events + "@"
                                  + segmentDuration);
+
+            if (event.getHeartRate() > 0) {
+              heartRate.set(index, event.getHeartRate());
+            } else {
+              heartRate.set(index, null);
+            }
+            index++;
             break;
         }
 
-        if (event.getHeartRate() > 0) {
-          heartRate.set(index++, event.getHeartRate());
-        }else {
-          heartRate.set(index++, null);
-        }
       }
 
     }
@@ -177,6 +184,8 @@ public class WorkoutDayBean implements Constants {
     Axis yAxis = graph.getAxis(AxisType.Y);
     yAxis.setLabel("Heart Rate");
     yAxis.setTickInterval("10");
+    yAxis.setMin(80);
+    yAxis.setMax(160);
 
     Axis xAxis = graph.getAxis(AxisType.X);
     xAxis.setMin(0);
@@ -227,5 +236,25 @@ public class WorkoutDayBean implements Constants {
   public int getDay() {
     return day;
   }
+
+
+  public void heartRateSelect(ItemSelectEvent event) {
+
+    log.debug("Item Index: {}, DataSet Index:{}",
+              event.getItemIndex(), event.getDataSetIndex());
+
+    Chart chart = (Chart) event.getComponent();
+    LineChartModel model = (LineChartModel) chart.getModel();
+    ChartSeries line = model.getSeries().get(event.getDataSetIndex());
+    Map<Object, Number> data = line.getData();
+    Short value = (Short) data.values().toArray()[event.getItemIndex()];
+
+    FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO,
+                                        data.keySet().toArray()[event.getItemIndex()].toString() + ", " + line.getLabel(),
+                                        String.format("%s Beats per minute", value));
+
+    FacesContext.getCurrentInstance().addMessage(null, msg);
+  }
+
 
 }

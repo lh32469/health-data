@@ -2,11 +2,13 @@ package org.gpc4j.health.watch.xml;
 
 import lombok.extern.slf4j.Slf4j;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ForkJoinPool;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 import static org.gpc4j.health.watch.jsf.beans.Constants.DTF;
@@ -30,42 +32,32 @@ public class WorkoutDataProcessor {
     log.info("Loaded {} Records", data.getRecords().size());
     log.info("Loaded {} Workouts", data.getWorkouts().size());
 
-    List<Record> heartrates =
-        data.getRecords().parallelStream()
-            .filter(record -> record.getType().equals(HEART_RATE))
-            .sorted(Comparator.comparing(Record::getStart))
-            .collect(Collectors.toList());
+    Map<LocalDate, List<Record>>
+        recordsByDate = getHeartRateRecordsByDate(data);
 
-    log.info("Filtered {} Heart Rate Records", heartrates.size());
+    log.info("Loaded {} Heart Rate Records", recordsByDate.size());
 
     data.getWorkouts()
         .parallelStream()
         .filter(workout ->
                     workout.getWorkoutActivityType().equals(SWIMMING_WORKOUT))
         .forEach(workout -> {
-          workout.setUser("JUnit");
-          log.debug("Processing Workout starting: {}", workout.getStart());
+//          log.info("Processing Workout starting: {}", workout.getStart().toLocalDate());
 
           // Get heart rates for duration of workout
-          List<Record> heartRatesForWorkout =
-              heartrates.stream()
-                        .filter(record ->
-                                    record.getStart()
-                                          .isAfter(
-                                              workout.getStart()))
-                        .filter(record ->
-                                    record.getEnd()
-                                          .isBefore(workout.getEnd()))
-                        .sorted(Comparator.comparing(Record::getStart))
-                        .collect(Collectors.toList());
+          LocalDate date = workout.getStart().toLocalDate();
+          List<Record> heartRatesForWorkout = recordsByDate.get(date);
+
+          log.info("Found {} Heart Rate Records for Workout day {}",
+                   heartRatesForWorkout.size(), date);
 
           workout.getWorkoutEvents()
                  .stream()
                  .filter(event -> event.getType().equals(LAP))
                  .forEach(event -> {
-                   LocalDateTime date = LocalDateTime.parse(event.getDate(), DTF);
+                   LocalDateTime day = LocalDateTime.parse(event.getDate(), DTF);
                    Optional<Record> heartRateRecord =
-                       findHeartRate(heartRatesForWorkout, date);
+                       findHeartRate(heartRatesForWorkout, day);
 
                    if (heartRateRecord.isPresent()) {
 //                     log.info("Found heart rate for workout = " + event);
@@ -89,19 +81,52 @@ public class WorkoutDataProcessor {
     return data;
   }
 
-  static Optional<Record> findHeartRate(List<Record> heartrates, LocalDateTime start) {
+  static Map<LocalDate, List<Record>> getHeartRateRecordsByDate(HealthData data) {
+    Map<LocalDate, List<Record>> recordsByDate =
+        data.getRecords().stream()
+            .filter(record -> record.getType().equals(HEART_RATE))
+            .collect(Collectors.groupingBy(record -> record.getStart().toLocalDate()));
+    return recordsByDate;
+  }
 
-    Optional<Record> result = heartrates.stream()
-                                        .filter(record ->
-                                                    record.getStart().isAfter(start))
-                                        .filter(record ->
-                                                    record.getEnd()
-                                                          .isBefore(start.plusMinutes(1)))
-                                        .findFirst();
+  static Optional<Record> findHeartRate(List<Record> heartRateData, LocalDateTime start) {
 
-//    result.ifPresent(heartrates::remove);
+//    log.info("heartRateData.size() = {}", heartRateData.size());
 
-    return result;
+    // Only consider records after the start time
+    // and within 90 seconds of start time
+
+    List<Record> after =
+        heartRateData.stream()
+                     .filter(record ->
+                                 record.getStart().isAfter(start))
+                     .filter(record ->
+                                 record.getEnd()
+                                       .isBefore(start.plusSeconds(65)))
+                     .collect(Collectors.toList());
+
+//    log.info("after.size() = {}", after.size());
+
+    // Expanding range, in seconds, to find a match
+    final AtomicInteger range = new AtomicInteger(0);
+
+    // Check for match within 60 seconds
+    while (range.getAndIncrement() < 60) {
+
+      Optional<Record> result =
+          after.stream()
+               .filter(record ->
+                           record.getEnd()
+                                 .isBefore(start.plusSeconds(range.get())))
+               .findFirst();
+
+      if (result.isPresent()) {
+        return result;
+      }
+
+    }
+
+    return Optional.empty();
   }
 
 }

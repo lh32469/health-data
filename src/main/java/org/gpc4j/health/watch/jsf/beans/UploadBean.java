@@ -3,6 +3,7 @@ package org.gpc4j.health.watch.jsf.beans;
 import lombok.extern.slf4j.Slf4j;
 import net.ravendb.client.documents.BulkInsertOperation;
 import net.ravendb.client.documents.IDocumentStore;
+import org.gpc4j.health.watch.db.docs.HeartRateReading;
 import org.gpc4j.health.watch.security.UserProvider;
 import org.gpc4j.health.watch.xml.HealthData;
 import org.gpc4j.health.watch.xml.Record;
@@ -28,6 +29,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 import static org.gpc4j.health.watch.jsf.beans.Constants.DTF;
+import static org.gpc4j.health.watch.jsf.beans.Constants.HEART_RATE;
 import static org.gpc4j.health.watch.xml.WorkoutDataProcessor.processData;
 
 @RequestScope
@@ -180,21 +182,18 @@ public class UploadBean {
       throw new IllegalStateException("Duplicate Records: " + user);
     }
 
-//    try (BulkInsertOperation bulkStore = documentStore.bulkInsert()) {
-//
-//      // Save HeartRateReadings
-//      unique.stream()
-//            .filter(record -> record.getType()
-//                                    .equals("HKQuantityTypeIdentifierHeartRate"))
-//            .map(entry -> {
-//              HeartRateReading hr = new HeartRateReading();
-//              hr.setUser(user);
-//              hr.setDate(ZonedDateTime.parse(entry.getStartDate(), DTF));
-//              hr.setValue(Float.parseFloat(entry.getValue()));
-//              return hr;
-//            })
-//            .forEach(doc -> bulkStore.store(doc, doc.getId()));
-//    }
+//    // Save HeartRateReadings
+//    unique.stream()
+//          .filter(record -> record.getType()
+//                                  .equals(HEART_RATE))
+//          .map(entry -> {
+//            HeartRateReading hr = new HeartRateReading();
+//            hr.setUser(user);
+//            hr.setDate(ZonedDateTime.parse(entry.getStartDate(), DTF));
+//            hr.setValue(Float.parseFloat(entry.getValue()));
+//            return hr;
+//          })
+//          .forEach(doc -> bulkStore.store(doc, doc.getId()));
 
   }
 

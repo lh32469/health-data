@@ -57,7 +57,9 @@
       <p:chart type="line"
                model="#{workoutDayBean.heartRateGraph}"
                style="width:100%;height:600px;border: 20px">
-
+        <p:ajax event="itemSelect"
+                listener="#{workoutDayBean.heartRateSelect}"
+                update="growl"/>
       </p:chart>
 
     </p:panelGrid>
