@@ -35,7 +35,7 @@ public class WorkoutDataProcessor {
     Map<LocalDate, List<Record>>
         recordsByDate = getHeartRateRecordsByDate(data);
 
-    log.info("Loaded {} Heart Rate Records", recordsByDate.size());
+    log.info("Loaded {} Heart Rate Record Days", recordsByDate.size());
 
     data.getWorkouts()
         .parallelStream()
@@ -45,19 +45,25 @@ public class WorkoutDataProcessor {
 //          log.info("Processing Workout starting: {}", workout.getStart().toLocalDate());
 
           // Get heart rates for duration of workout
-          LocalDate date = workout.getStart().toLocalDate();
-          List<Record> heartRatesForWorkout = recordsByDate.get(date);
+          List<Record> heartRatesForWorkout =
+              recordsByDate.get(workout.getStart().toLocalDate())
+                           .stream()
+                           .filter(record ->
+                                       record.getStart().isAfter(workout.getStart()))
+                           .filter(record ->
+                                       record.getEnd().isBefore(workout.getEnd()))
+                           .collect(Collectors.toList());
 
-          log.info("Found {} Heart Rate Records for Workout day {}",
-                   heartRatesForWorkout.size(), date);
+//          log.info("Found {} Heart Rate Records for Workout day {}",
+//                   heartRatesForWorkout.size(), date);
 
           workout.getWorkoutEvents()
                  .stream()
                  .filter(event -> event.getType().equals(LAP))
                  .forEach(event -> {
-                   LocalDateTime day = LocalDateTime.parse(event.getDate(), DTF);
+                   LocalDateTime time = LocalDateTime.parse(event.getDate(), DTF);
                    Optional<Record> heartRateRecord =
-                       findHeartRate(heartRatesForWorkout, day);
+                       findHeartRate(heartRatesForWorkout, time);
 
                    if (heartRateRecord.isPresent()) {
 //                     log.info("Found heart rate for workout = " + event);
@@ -91,7 +97,7 @@ public class WorkoutDataProcessor {
 
   static Optional<Record> findHeartRate(List<Record> heartRateData, LocalDateTime start) {
 
-//    log.info("heartRateData.size() = {}", heartRateData.size());
+//    log.debug("heartRateData.size() = {}", heartRateData.size());
 
     // Only consider records after the start time
     // and within 90 seconds of start time
@@ -105,7 +111,7 @@ public class WorkoutDataProcessor {
                                        .isBefore(start.plusSeconds(65)))
                      .collect(Collectors.toList());
 
-//    log.info("after.size() = {}", after.size());
+//    log.debug("after.size() = {}", after.size());
 
     // Expanding range, in seconds, to find a match
     final AtomicInteger range = new AtomicInteger(0);

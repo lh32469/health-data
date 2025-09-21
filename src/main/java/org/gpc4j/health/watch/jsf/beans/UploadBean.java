@@ -175,7 +175,7 @@ public class UploadBean {
                  }
         );
 
-    log.debug("Saved {} Workouts", data.getWorkouts().size());
+    log.info("Saved {} Workouts", data.getWorkouts().size());
 
     Set<Record> unique = new HashSet<>(data.getRecords());
     if (unique.size() != data.getRecords().size()) {
