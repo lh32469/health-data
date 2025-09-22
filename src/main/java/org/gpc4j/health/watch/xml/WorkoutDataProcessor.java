@@ -58,7 +58,7 @@ public class WorkoutDataProcessor {
 //                   heartRatesForWorkout.size(), date);
 
           workout.getWorkoutEvents()
-                 .stream()
+                 .parallelStream()
                  .filter(event -> event.getType().equals(LAP))
                  .forEach(event -> {
                    LocalDateTime time = LocalDateTime.parse(event.getDate(), DTF);
