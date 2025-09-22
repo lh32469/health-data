@@ -19,7 +19,7 @@ import static org.gpc4j.health.watch.jsf.beans.Constants.SWIMMING_WORKOUT;
 @Slf4j
 public class WorkoutDataProcessor {
 
-  static final ForkJoinPool POOL = new ForkJoinPool(25);
+  static final ForkJoinPool POOL = new ForkJoinPool(50);
 
   public static HealthData processData(HealthData data) {
     return POOL.submit(() -> _processData(data)).join();
