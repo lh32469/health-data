@@ -7,6 +7,7 @@ COPY target/watch-*.jar /usr/src/watch.jar
 WORKDIR                 /usr/src/
 
 ENV _JAVA_OPTIONS="-XX:+UseShenandoahGC \
+-XX:+UseCompactObjectHeaders \
 -Djdk.xml.maxGeneralEntitySizeLimit=0 \
 -Djdk.xml.entityExpansionLimit=0 \
 -Djdk.xml.totalEntitySizeLimit=0 \
