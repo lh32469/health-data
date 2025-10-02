@@ -1,5 +1,6 @@
 package org.gpc4j.health.watch.jsf.beans;
 
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.ravendb.client.documents.session.IDocumentSession;
 import org.gpc4j.health.watch.db.RavenBean;
@@ -15,6 +16,10 @@ import org.primefaces.model.chart.AxisType;
 import org.primefaces.model.chart.ChartSeries;
 import org.primefaces.model.chart.LineChartModel;
 import org.primefaces.model.chart.LineChartSeries;
+import org.primefaces.model.charts.ChartData;
+import org.primefaces.model.charts.ChartDataSet;
+import org.primefaces.model.charts.line.LineChartDataSet;
+import org.primefaces.model.charts.scatter.ScatterChartModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.annotation.RequestScope;
@@ -29,6 +34,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -51,13 +57,16 @@ public class WorkoutDayBean implements Constants {
   /**
    * Get Year and Month from Cookies passed in via redirect from year.xhtml page.
    */
+  @Getter
   private int year;
+  @Getter
   private int month;
   private int day;
 
   /**
    * Workouts for the day.
    */
+  @Getter
   List<Workout> workouts;
 
   /**
@@ -69,9 +78,14 @@ public class WorkoutDayBean implements Constants {
   /**
    * The Chart/Graph for laps.
    */
+  @Getter
   LineChartModel segmentGraph;
 
+  @Getter
   LineChartModel heartRateGraph;
+
+  @Getter
+  ScatterChartModel scatterChart;
 
   @PostConstruct
   public void postConstruct() {
@@ -207,36 +221,11 @@ public class WorkoutDayBean implements Constants {
     externalContext.redirect("day.xhtml");
   }
 
-  public List<Workout> getWorkouts() {
-    return workouts;
-  }
-
-  public LineChartModel getSegmentGraph() {
-    return segmentGraph;
-  }
-
-  public LineChartModel getHeartRateGraph() {
-    return heartRateGraph;
-  }
-
-  public int getYear() {
-    return year;
-  }
-
-  public int getMonth() {
-    return month;
-  }
-
   public String getDate() {
     LocalDate date = LocalDate.of(year, month, day);
     return date.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL)
                                         .withLocale(Locale.US));
   }
-
-  public int getDay() {
-    return day;
-  }
-
 
   public void heartRateSelect(ItemSelectEvent event) {
 
@@ -250,11 +239,11 @@ public class WorkoutDayBean implements Constants {
     Short value = (Short) data.values().toArray()[event.getItemIndex()];
 
     FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO,
-                                        data.keySet().toArray()[event.getItemIndex()].toString() + ", " + line.getLabel(),
+                                        data.keySet()
+                                            .toArray()[event.getItemIndex()].toString() + ", " + line.getLabel(),
                                         String.format("%s Beats per minute", value));
 
     FacesContext.getCurrentInstance().addMessage(null, msg);
   }
-
 
 }
