@@ -8,18 +8,12 @@ import org.gpc4j.health.watch.db.dto.WorkoutDay;
 import org.gpc4j.health.watch.security.UserProvider;
 import org.gpc4j.health.watch.xml.Workout;
 import org.gpc4j.health.watch.xml.WorkoutEvent;
-import org.primefaces.component.chart.Chart;
 import org.primefaces.event.ItemSelectEvent;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.model.chart.Axis;
 import org.primefaces.model.chart.AxisType;
-import org.primefaces.model.chart.ChartSeries;
 import org.primefaces.model.chart.LineChartModel;
 import org.primefaces.model.chart.LineChartSeries;
-import org.primefaces.model.charts.ChartData;
-import org.primefaces.model.charts.ChartDataSet;
-import org.primefaces.model.charts.line.LineChartDataSet;
-import org.primefaces.model.charts.scatter.ScatterChartModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.annotation.RequestScope;
@@ -34,10 +28,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Objects;
 
 @RequestScope
@@ -84,12 +76,18 @@ public class WorkoutDayBean implements Constants {
   @Getter
   LineChartModel heartRateGraph;
 
-  @Getter
-  ScatterChartModel scatterChart;
-
   @PostConstruct
   public void postConstruct() {
     log.debug(this.toString());
+
+    // Initialize a blank Scatter chart model for the page bottom
+    heartRateGraph = initHeartRateGraph();
+
+    LineChartSeries zone1 = addZone(heartRateGraph, "Zone 1");
+    LineChartSeries zone2 = addZone(heartRateGraph, "Zone 2");
+    LineChartSeries zone3 = addZone(heartRateGraph, "Zone 3");
+    LineChartSeries zone4 = addZone(heartRateGraph, "Zone 4");
+    LineChartSeries zone5 = addZone(heartRateGraph, "Zone 5");
 
     ExternalContext externalContext =
         FacesContext.getCurrentInstance().getExternalContext();
@@ -122,12 +120,7 @@ public class WorkoutDayBean implements Constants {
 
     segmentGraph = new LineChartModel();
     segmentGraph.setTitle("Segments/Sets");
-    segmentGraph.setLegendPosition("n");
-
-    heartRateGraph = initHeartRateGraph();
-    LineChartSeries heartRate = new LineChartSeries();
-    heartRate.setLabel("Heart Rate");
-    heartRateGraph.addSeries(heartRate);
+    segmentGraph.setLegendPosition("s");
 
     Axis yAxis = segmentGraph.getAxis(AxisType.Y);
     yAxis.setLabel("Seconds per Length");
@@ -174,13 +167,22 @@ public class WorkoutDayBean implements Constants {
                                  + events + "@"
                                  + segmentDuration);
 
-            if (event.getHeartRate() > 0) {
-              heartRate.set(index, event.getHeartRate());
-            } else {
-              heartRate.set(index, null);
+            int rate = event.getHeartRate();
+
+            if (rate > 0) {
+              if (rate > 144) {
+                zone5.set(index, rate);
+              } else if (rate > 135) {
+                zone4.set(index, rate);
+              } else if (rate > 125) {
+                zone3.set(index, rate);
+              } else if (rate > 116) {
+                zone2.set(index, rate);
+              } else {
+                zone1.set(index, rate);
+              }
             }
             index++;
-            break;
         }
 
       }
@@ -194,11 +196,17 @@ public class WorkoutDayBean implements Constants {
     LineChartModel graph = new LineChartModel();
     graph.setTitle("Heart Rate");
     graph.setLegendPosition("n");
+    graph.setTitle("Heart Rate Zones");
+    graph.setLegendPosition("s");
+    graph.setShowPointLabels(false);
+    graph.setZoom(true);
+    graph.setAnimate(false);
+    graph.setSeriesColors("0000FF,ADD8E6,00FF00,FFA500,FF0000");
 
     Axis yAxis = graph.getAxis(AxisType.Y);
     yAxis.setLabel("Heart Rate");
     yAxis.setTickInterval("10");
-    yAxis.setMin(80);
+    yAxis.setMin(100);
     yAxis.setMax(160);
 
     Axis xAxis = graph.getAxis(AxisType.X);
@@ -206,6 +214,18 @@ public class WorkoutDayBean implements Constants {
     xAxis.setLabel("Lengths");
 
     return graph;
+  }
+
+  LineChartSeries addZone(LineChartModel heartRateGraph, String title) {
+    LineChartSeries zone = new LineChartSeries();
+    zone.setLabel(title);
+    zone.setShowLine(false);
+    zone.setShowMarker(true);
+    zone.setMarkerStyle("filledCircle");
+
+    heartRateGraph.addSeries(zone);
+
+    return zone;
   }
 
   public void onRowSelect(SelectEvent<WorkoutDay> event) throws IOException {
@@ -227,22 +247,16 @@ public class WorkoutDayBean implements Constants {
                                         .withLocale(Locale.US));
   }
 
-  public void heartRateSelect(ItemSelectEvent event) {
-
-    log.debug("Item Index: {}, DataSet Index:{}",
-              event.getItemIndex(), event.getDataSetIndex());
-
-    Chart chart = (Chart) event.getComponent();
-    LineChartModel model = (LineChartModel) chart.getModel();
-    ChartSeries line = model.getSeries().get(event.getDataSetIndex());
-    Map<Object, Number> data = line.getData();
-    Short value = (Short) data.values().toArray()[event.getItemIndex()];
-
-    FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO,
-                                        data.keySet()
-                                            .toArray()[event.getItemIndex()].toString() + ", " + line.getLabel(),
-                                        String.format("%s Beats per minute", value));
-
+  public void itemSelectListener(ItemSelectEvent event) {
+    FacesMessage msg = new FacesMessage(
+        FacesMessage.SEVERITY_INFO,
+        "Selected",
+        String.format("Item %d in dataset %d",
+                      event.getItemIndex(),
+                      event.getDataSetIndex())
+    );
+    log.info("ItemSelectEvent: {}", event.getComponent().toString());
+    log.info(event.getComponent().getClientId());
     FacesContext.getCurrentInstance().addMessage(null, msg);
   }
 

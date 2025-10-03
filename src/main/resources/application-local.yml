@@ -1,6 +1,21 @@
 ravendb:
   url: http://192.168.0.105
 
+spring:
+  devtools:
+    restart:
+      enabled: true
+    livereload:
+      enabled: true
+
+joinfaces:
+  primefaces:
+  #theme: twitter
+  jsf:
+    project-stage: Development
+    facelets-refresh-period: 0
+    state-saving-method: client
+    serialize-server-state: true
 
 logging:
   level:

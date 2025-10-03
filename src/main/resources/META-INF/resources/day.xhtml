@@ -48,17 +48,22 @@
 
       </p:dataTable>
 
-      <p:chart type="line"
+      <p:chart id="segmentGraph"
+               type="line"
                model="#{workoutDayBean.segmentGraph}"
                style="width:100%;height:600px;border: 20px">
-
+        <p:ajax event="itemSelect"
+                listener="#{workoutDayBean.itemSelectListener}"
+                update="growl"/>
       </p:chart>
 
-      <p:chart type="line"
+      <p:chart id="heartRateGraph"
+               type="line"
                model="#{workoutDayBean.heartRateGraph}"
-               style="width:100%;height:600px;border: 20px">
+               style="width: 100%; height: 600px;"
+               responsive="true">
         <p:ajax event="itemSelect"
-                listener="#{workoutDayBean.heartRateSelect}"
+                listener="#{workoutDayBean.itemSelectListener}"
                 update="growl"/>
       </p:chart>
 
