@@ -124,7 +124,7 @@
     <dependency>
       <groupId>de.codecentric</groupId>
       <artifactId>spring-boot-admin-starter-client</artifactId>
-      <version>2.4.3</version>
+      <version>3.5.6</version>
     </dependency>
     <!-- Micrometer Prometheus registry  -->
     <dependency>
@@ -165,6 +165,40 @@
               <artifactId>lombok</artifactId>
             </exclude>
           </excludes>
+        </configuration>
+        <executions>
+          <execution>
+            <goals>
+              <goal>build-info</goal>
+            </goals>
+            <configuration>
+              <additionalProperties>
+                <foo>bar</foo>
+                <description>${project.description}</description>
+                <!--suppress UnresolvedMavenProperty -->
+                <commitMessage>${git.commit.message.short}</commitMessage>
+              </additionalProperties>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>io.github.git-commit-id</groupId>
+        <artifactId>git-commit-id-maven-plugin</artifactId>
+        <version>6.0.0</version>
+        <executions>
+          <execution>
+            <id>get-the-git-infos</id>
+            <goals>
+              <goal>revision</goal>
+            </goals>
+            <phase>initialize</phase>
+          </execution>
+        </executions>
+        <configuration>
+          <dotGitDirectory>${project.basedir}/.git</dotGitDirectory>
+          <generateGitPropertiesFile>true</generateGitPropertiesFile>
+          <generateGitPropertiesFilename>${project.build.outputDirectory}/git.properties</generateGitPropertiesFilename>
         </configuration>
       </plugin>
     </plugins>

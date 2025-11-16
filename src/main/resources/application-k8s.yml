@@ -22,12 +22,15 @@ spring:
   boot:
     admin:
       client:
-        username: client
-        password: 714df93cf5c9
-        url: http://svc.sba-k8s:8099
+        url: http://sba.sba-java25:8085
+        username: admin
+        password: Temp01!
+        auto-registration: true
         auto-deregistration: true
         instance:
+          name: ${spring.application.name}
           prefer-ip: true
+          management-base-url: http://${POD_IP}:8090
   servlet:
     multipart:
       max-file-size: 1000MB
