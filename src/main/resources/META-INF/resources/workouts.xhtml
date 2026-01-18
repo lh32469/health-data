@@ -7,6 +7,7 @@
       xmlns:p="http://primefaces.org/ui"
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
 >
 
 <ui:composition template="#{workoutBean.template}">
@@ -34,77 +35,16 @@
           <h:outputText value="#{year.year}"/>
         </p:column>
 
-        <p:column headerText="Jan">
-          <h:outputText value="#{year.get(1).distance}">
+        <p:columns value="#{workoutBean.monthHeaders}"
+                   var="monthName"
+                   columnIndexVar="idx">
+          <f:facet name="header">
+            #{monthName}
+          </f:facet>
+          <h:outputText value="#{year.get(idx + 1).distance}">
             <f:convertNumber type="number" minFractionDigits="2" pattern="#0.00"/>
           </h:outputText>
-        </p:column>
-
-        <p:column headerText="Feb">
-          <h:outputText value="#{year.get(2).distance}">
-            <f:convertNumber type="number" minFractionDigits="2" pattern="#0.00"/>
-          </h:outputText>
-        </p:column>
-
-        <p:column headerText="Mar">
-          <h:outputText value="#{year.get(3).distance}">
-            <f:convertNumber type="number" minFractionDigits="2" pattern="#0.00"/>
-          </h:outputText>
-        </p:column>
-
-        <p:column headerText="Apr">
-          <h:outputText value="#{year.get(4).distance}">
-            <f:convertNumber type="number" minFractionDigits="2" pattern="#0.00"/>
-          </h:outputText>
-        </p:column>
-
-        <p:column headerText="May">
-          <h:outputText value="#{year.get(5).distance}">
-            <f:convertNumber type="number" minFractionDigits="2" pattern="#0.00"/>
-          </h:outputText>
-        </p:column>
-
-        <p:column headerText="Jun">
-          <h:outputText value="#{year.get(6).distance}">
-            <f:convertNumber type="number" minFractionDigits="2" pattern="#0.00"/>
-          </h:outputText>
-        </p:column>
-
-        <p:column headerText="Jul">
-          <h:outputText value="#{year.get(7).distance}">
-            <f:convertNumber type="number" minFractionDigits="2" pattern="#0.00"/>
-          </h:outputText>
-        </p:column>
-
-        <p:column headerText="Aug">
-          <h:outputText value="#{year.get(8).distance}">
-            <f:convertNumber type="number" minFractionDigits="2" pattern="#0.00"/>
-          </h:outputText>
-        </p:column>
-
-        <p:column headerText="Sep">
-          <h:outputText value="#{year.get(9).distance}">
-            <f:convertNumber type="number" minFractionDigits="2" pattern="#0.00"/>
-          </h:outputText>
-        </p:column>
-
-        <p:column headerText="Oct">
-          <h:outputText value="#{year.get(10).distance}">
-            <f:convertNumber type="number" minFractionDigits="2" pattern="#0.00"/>
-          </h:outputText>
-        </p:column>
-
-        <p:column headerText="Nov">
-          <h:outputText value="#{year.get(11).distance}">
-            <f:convertNumber type="number" minFractionDigits="2" pattern="#0.00"/>
-          </h:outputText>
-        </p:column>
-
-        <p:column headerText="Dec">
-          <h:outputText value="#{year.get(12).distance}">
-            <f:convertNumber type="number" minFractionDigits="2" pattern="#0.00"/>
-          </h:outputText>
-        </p:column>
+        </p:columns>
 
         <p:column headerText="Total">
           <h:outputText value="#{year.distance}">

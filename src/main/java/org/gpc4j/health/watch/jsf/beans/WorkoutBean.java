@@ -30,6 +30,7 @@ import java.io.IOException;
 import java.text.DateFormatSymbols;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
@@ -79,6 +80,11 @@ public class WorkoutBean implements Constants {
    * JSF Template to use for phones.
    */
   public static final String PHONE_TEMPLATE = "phone.xhtml";
+
+  public static final List<String> MONTH_HEADERS =
+      Arrays.asList("Jan", "Feb", "Mar", "Apr", "May", "Jun",
+                    "Jul", "Aug", "Sep", "Oct", "Nov", "Dec");
+
 
   @PostConstruct
   public void postConstruct() {
@@ -203,6 +209,12 @@ public class WorkoutBean implements Constants {
   public List<WorkoutYear> getYears() {
     return workoutYears;
   }
+
+
+  public List<String> getMonthHeaders() {
+    return MONTH_HEADERS;
+  }
+
 
   public void onRowSelect(SelectEvent<WorkoutYear> event) throws IOException {
 
