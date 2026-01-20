@@ -4,6 +4,8 @@ A Spring Boot application for parsing, storing, and visualizing Apple Health exp
 
 ## Overview
 
+A running instance of the application can be found at: https://health-data.mcquarrie.cc
+
 This application provides a web-based interface to import Apple Health export data and visualize workout metrics through interactive charts and tables. It parses Apple's XML health export format and stores the data in RavenDB for efficient querying and analysis.
 
 ## Technology Stack
