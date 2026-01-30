@@ -47,7 +47,7 @@ joinfaces:
 # RavenDB Configuration
 ravendb:
   database: HealthData
-  urls: http://nodea:8080, http://nodeb:8080
+  urls: http://nodea.mcquarrie.cc:8080, http://nodeb.mcquarrie.cc:8080
 
 logging:
   level:
