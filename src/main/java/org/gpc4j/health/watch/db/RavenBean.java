@@ -2,6 +2,7 @@ package org.gpc4j.health.watch.db;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.ravendb.client.documents.DocumentStore;
 import net.ravendb.client.documents.IDocumentStore;
@@ -10,20 +11,22 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.util.List;
 
 @Component
 @Slf4j
 public class RavenBean {
 
-  @Value("${ravendb.url}")
-  String ravenDB;
+  @Setter
+  @Value("${ravendb.urls}")
+  private List<String> urls;
 
   private IDocumentStore docStore;
 
   @PostConstruct
   public void postConstruct() {
-    log.info("ravenDB = " + ravenDB);
-    docStore = new DocumentStore(ravenDB, "HealthData");
+    log.info("URLs: {}", urls);
+    docStore = new DocumentStore(urls.toArray(new String[0]), "HealthData");
     docStore.initialize();
 
     ObjectMapper mapper = docStore.getConventions().getEntityMapper();
@@ -38,10 +41,6 @@ public class RavenBean {
 
   public IDocumentSession getSession() {
     return docStore.openSession();
-  }
-
-  public void setRavenDB(String ravenDB) {
-    this.ravenDB = ravenDB;
   }
 
 }

@@ -9,6 +9,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import java.util.List;
+
 @Slf4j
 class UserDetailServiceTest {
 
@@ -19,7 +21,7 @@ class UserDetailServiceTest {
   void setup() {
     log.info("UserDetailServiceTest.setup");
     RavenBean rb = new RavenBean();
-    rb.setRavenDB("http://dell-4290.local:5050");
+    rb.setUrls(List.of("http://nodea:8080"));
     rb.postConstruct();
 
     session = rb.getSession();

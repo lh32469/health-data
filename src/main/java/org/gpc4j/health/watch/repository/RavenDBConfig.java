@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.List;
+
 /**
  * Configuration class for RavenDB.
  */
@@ -24,12 +26,14 @@ public class RavenDBConfig {
   private String databaseName;
 
   @Setter
-  @Value("${ravendb.url}")
-  private String[] urls;
+  @Value("${ravendb.urls}")
+  private List<String> urls;
 
   @Bean
   public IDocumentStore documentStore() {
-    DocumentStore store = new DocumentStore(urls, databaseName);
+    log.info("URLs: {}", urls);
+
+    DocumentStore store = new DocumentStore(urls.toArray(new String[0]), databaseName);
 
     // Configure Jackson ObjectMapper for proper DateTime handling
     ObjectMapper mapper = store.getConventions().getEntityMapper();
