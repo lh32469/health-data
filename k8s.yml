@@ -36,6 +36,8 @@ spec:
               value: ${branch}
             - name: SPRING_PROFILES_ACTIVE
               value: k8s
+            - name: RAVENDB_URLS
+              value: ${raven_urls}
             - name: POD_IP
               valueFrom:
                 fieldRef:

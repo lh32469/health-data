@@ -53,13 +53,18 @@ pipeline {
               host = "${branch}.${project}"
             }
 
+            // Injected from Jenkins Global properties
+            def raven_urls = env.RAVENDB_URLS
+            println "RavenDB URLS = " + raven_urls
             def domain = env.DNS_DOMAIN.toLowerCase()
             println "Domain = " + domain
+
 
             def binding = [
                 project: project,
                 branch : branch,
                 domain : domain,
+                raven_urls : raven_urls,
                 host   : host
             ]
 
