@@ -137,6 +137,7 @@ pipeline {
               sh "kubectl -n ${namespace} rollout restart deployment/${project}"
             } else {
               sh "kubectl create namespace $namespace"
+              sh "kubectl label namespace $namespace inject-raven-url=enabled"
 
               writeFile file: 'secrets-out.yml', text: secretsYml
               sh "kubectl -n ${namespace} create -f secrets-out.yml"
