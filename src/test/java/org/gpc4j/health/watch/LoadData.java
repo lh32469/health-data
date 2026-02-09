@@ -104,14 +104,6 @@ class LoadData {
 
     log.info("Saved");
 
-//    RavenBean rb = new RavenBean();
-//    rb.setRavenDB(ravenDB);
-//    rb.postConstruct();
-//
-//   try(IDocumentSession session = rb.getSession()) {
-//     log.info("got session");
-//
-//   }
 
   }
 

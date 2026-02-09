@@ -118,7 +118,6 @@ public class UploadBean {
 //      List<Record> records = data.getRecords();
 //      while (!records.isEmpty()) {
 //
-//        session = ravenBean.getSession();
 //        log.debug("Got session for {} Records", records.size());
 //
 //        for (int i = 0; i < 1000; i++) {

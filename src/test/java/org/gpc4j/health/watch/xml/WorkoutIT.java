@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import net.ravendb.client.documents.session.IDocumentSession;
-import org.gpc4j.health.watch.db.RavenBean;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -22,14 +21,12 @@ import static org.gpc4j.health.watch.xml.Record.DTF;
 public class WorkoutIT {
 
   @Autowired
-  RavenBean ravenBean;
+  IDocumentSession session;
 
   //  @Test
   public void getActiveYears() {
     log.info("log = {}", log);
-    log.info("ravenBean = {}", ravenBean);
-
-    IDocumentSession session = ravenBean.getSession();
+    log.info("session = {}", session);
 
     List<Workout> workouts = session.query(Workout.class)
         .whereEquals("workoutActivityType", SWIMMING_WORKOUT)
@@ -52,26 +49,24 @@ public class WorkoutIT {
 
   @Test
   public void mapEventDate() {
-    log.info("ravenBean = {}", ravenBean);
+    log.info("session = {}", session);
 
     String queryString = String.format("%d-%02d-%02d", 2022, 9, 16);
     log.info("queryString = {}", queryString);
 
-    try (IDocumentSession session = ravenBean.getSession()) {
-      List<Workout> workouts = session.query(Workout.class)
-          .whereEquals("user","lth")
-          .whereStartsWith("startDate", queryString)
-          .whereEquals("workoutActivityType", SWIMMING_WORKOUT)
-          .toList();
+    List<Workout> workouts = session.query(Workout.class)
+        .whereEquals("user","lth")
+        .whereStartsWith("startDate", queryString)
+        .whereEquals("workoutActivityType", SWIMMING_WORKOUT)
+        .toList();
 
-      for (Workout workout : workouts) {
+    for (Workout workout : workouts) {
 
         for (WorkoutEvent event : workout.getWorkoutEvents()) {
           log.info("event = {}", event);
         }
       }
 
-    }
   }
 
 

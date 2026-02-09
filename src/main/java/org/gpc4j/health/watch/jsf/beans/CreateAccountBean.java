@@ -2,7 +2,6 @@ package org.gpc4j.health.watch.jsf.beans;
 
 import lombok.extern.slf4j.Slf4j;
 import net.ravendb.client.documents.session.IDocumentSession;
-import org.gpc4j.health.watch.db.RavenBean;
 import org.gpc4j.health.watch.db.dto.User;
 import org.gpc4j.health.watch.security.AppGrantedAuthority;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +29,7 @@ public class CreateAccountBean {
   static BCryptPasswordEncoder ENCODER = new BCryptPasswordEncoder();
 
   @Autowired
-  RavenBean ravenBean;
+  IDocumentSession session;
 
   @Autowired
   UserDetailsService userDetailsService;
@@ -67,10 +66,8 @@ public class CreateAccountBean {
       user.setPassword(ENCODER.encode(password));
       user.getAuthorities().add(basic);
 
-      try (IDocumentSession session = ravenBean.getSession()) {
-        session.store(user);
-        session.saveChanges();
-      }
+      session.store(user);
+      session.saveChanges();
 
       FacesMessage message = new FacesMessage(
           FacesMessage.SEVERITY_INFO,

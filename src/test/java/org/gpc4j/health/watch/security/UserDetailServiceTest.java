@@ -2,11 +2,10 @@ package org.gpc4j.health.watch.security;
 
 import lombok.extern.slf4j.Slf4j;
 import net.ravendb.client.documents.session.IDocumentSession;
-import org.gpc4j.health.watch.db.RavenBean;
 import org.gpc4j.health.watch.db.dto.User;
+import org.gpc4j.health.watch.repository.RavenDBConfig;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.List;
@@ -20,11 +19,11 @@ class UserDetailServiceTest {
   @BeforeEach
   void setup() {
     log.info("UserDetailServiceTest.setup");
-    RavenBean rb = new RavenBean();
-    rb.setUrls(List.of("http://nodea:8080"));
-    rb.postConstruct();
+    RavenDBConfig config = new RavenDBConfig();
+    config.setDatabaseName("HealthData");
+    config.setUrls(List.of("http://nodea:8080"));
 
-    session = rb.getSession();
+    session = config.session(config.documentStore());
     log.info("got session");
   }
 
@@ -34,7 +33,7 @@ class UserDetailServiceTest {
     session.close();
   }
 
-//  @Test
+  //  @Test
   void createUser() {
     User user = new User();
     user.setId("lth");

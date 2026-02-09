@@ -3,7 +3,6 @@ package org.gpc4j.health.watch.security;
 import lombok.extern.slf4j.Slf4j;
 import net.ravendb.client.documents.session.IDocumentSession;
 import org.apache.commons.collections4.map.PassiveExpiringMap;
-import org.gpc4j.health.watch.db.RavenBean;
 import org.gpc4j.health.watch.db.dto.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -23,7 +22,7 @@ public class UserDetailService implements UserDetailsService {
       new PassiveExpiringMap<>(CACHE_TIMEOUT);
 
   @Autowired
-  RavenBean ravenBean;
+  IDocumentSession session;
 
   @Override
   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -31,15 +30,13 @@ public class UserDetailService implements UserDetailsService {
 
     if (!cache.containsKey(username)) {
 
-      try (IDocumentSession session = ravenBean.getSession()) {
-        User user = session.load(User.class, username);
-        if (user == null) {
-          log.warn("username '{}' not found", username);
-          return INVALID;
-        } else {
-          log.debug("found user = {}", user);
-          cache.put(username, user);
-        }
+      User user = session.load(User.class, username);
+      if (user == null) {
+        log.warn("username '{}' not found", username);
+        return INVALID;
+      } else {
+        log.debug("found user = {}", user);
+        cache.put(username, user);
       }
     }
 
