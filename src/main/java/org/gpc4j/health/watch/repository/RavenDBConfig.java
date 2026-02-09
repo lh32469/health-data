@@ -7,10 +7,13 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.ravendb.client.documents.DocumentStore;
 import net.ravendb.client.documents.IDocumentStore;
+import net.ravendb.client.documents.session.IDocumentSession;
+import net.ravendb.client.http.ServerNode;
 import org.gpc4j.health.watch.db.CustomDoubleSerializer;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.context.annotation.RequestScope;
 
 import java.util.List;
 
@@ -46,6 +49,17 @@ public class RavenDBConfig {
 
     store.initialize();
     return store;
+  }
+
+  @Bean(destroyMethod = "close")
+  @RequestScope
+  public IDocumentSession session(IDocumentStore store) {
+    IDocumentSession session = store.openSession();
+    if (log.isDebugEnabled()) {
+      ServerNode currentNode = session.advanced().getCurrentSessionNode();
+      log.debug("Read from node: " + currentNode.getClusterTag());
+    }
+    return session;
   }
 
 }

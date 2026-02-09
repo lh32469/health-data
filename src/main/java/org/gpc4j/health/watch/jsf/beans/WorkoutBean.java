@@ -3,7 +3,6 @@ package org.gpc4j.health.watch.jsf.beans;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.ravendb.client.documents.session.IDocumentSession;
-import org.gpc4j.health.watch.db.RavenBean;
 import org.gpc4j.health.watch.db.dto.WorkoutYear;
 import org.gpc4j.health.watch.security.UserProvider;
 import org.gpc4j.health.watch.xml.Workout;
@@ -46,8 +45,6 @@ public class WorkoutBean implements Constants {
   static final String[] MONTHS = new DateFormatSymbols().getMonths();
 
   @Autowired
-  RavenBean ravenBean;
-
   IDocumentSession session;
 
   @Autowired
@@ -106,7 +103,6 @@ public class WorkoutBean implements Constants {
     }
 
     workout = cookieBean.getWorkout();
-    session = ravenBean.getSession();
     workoutYears = new LinkedList<>();
 
     yearsGraph = new LineChartModel();

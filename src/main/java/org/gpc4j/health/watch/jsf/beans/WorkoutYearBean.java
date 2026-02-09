@@ -2,7 +2,6 @@ package org.gpc4j.health.watch.jsf.beans;
 
 import lombok.extern.slf4j.Slf4j;
 import net.ravendb.client.documents.session.IDocumentSession;
-import org.gpc4j.health.watch.db.RavenBean;
 import org.gpc4j.health.watch.db.dto.WorkoutMonth;
 import org.gpc4j.health.watch.security.UserProvider;
 import org.gpc4j.health.watch.xml.Workout;
@@ -35,7 +34,7 @@ import java.util.stream.Collectors;
 public class WorkoutYearBean implements Constants {
 
   @Autowired
-  RavenBean ravenBean;
+  IDocumentSession session;
 
   @Autowired
   private UserProvider userProvider;
@@ -74,8 +73,6 @@ public class WorkoutYearBean implements Constants {
 
     String workoutType = cookieBean.getWorkout();
     log.debug("year = {}, workoutType = {}", year, workoutType);
-
-    IDocumentSession session = ravenBean.getSession();
 
     // Get all the Workouts for this year for current User
     List<Workout> workouts = session.query(Workout.class)
