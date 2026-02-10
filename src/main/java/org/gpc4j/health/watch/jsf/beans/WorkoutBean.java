@@ -196,12 +196,6 @@ public class WorkoutBean implements Constants {
     }
   }
 
-  @PreDestroy
-  public void preDestroy() {
-    log.trace(this.toString());
-    session.close();
-  }
-
   public List<WorkoutYear> getYears() {
     return workoutYears;
   }
