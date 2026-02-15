@@ -89,7 +89,7 @@ public class Workout {
               getStatistic("HKQuantityTypeIdentifierDistanceSwimming");
 
           if (swimming.isPresent() && "YD".equalsIgnoreCase(swimming.get().unit)) {
-            return Math.round(Integer.parseInt(swimming.get().sum) / 1760.0 * 100) / 100.0;
+            return Math.round(Double.parseDouble(swimming.get().sum) / 1760.0 * 100) / 100.0;
           } else {
             return 0.0;
           }
