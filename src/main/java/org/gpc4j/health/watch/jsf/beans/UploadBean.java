@@ -178,7 +178,8 @@ public class UploadBean {
 
     Set<Record> unique = new HashSet<>(data.getRecords());
     if (unique.size() != data.getRecords().size()) {
-      throw new IllegalStateException("Duplicate Records: " + user);
+      log.warn("Total Records = {}", data.getRecords().size());
+      log.warn("Total unique Records = {}", unique.size());
     }
 
 //    // Save HeartRateReadings
