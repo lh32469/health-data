@@ -46,10 +46,18 @@ pipeline {
 
     stage("Deploy") {
       steps {
-        // Deploy application
-        deploy(project, branch)
 
-        ingress(project, branch)
+        // Deploy application
+        deploy(
+            project: project,
+            branch: branch
+         )
+
+        ingress(
+            project: project,
+            branch: branch
+        )
+
       }
     }
 
