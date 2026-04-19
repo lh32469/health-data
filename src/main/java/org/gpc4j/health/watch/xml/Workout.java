@@ -182,7 +182,7 @@ public class Workout {
   public String getDurationF() {
     int minutes = (int) Math.floor(duration);
     int seconds = (int) ((duration - minutes) * 60);
-    return String.format("%02d:%2d ", minutes, seconds);
+    return String.format("%02d:%02d ", minutes, seconds);
   }
 
 }
