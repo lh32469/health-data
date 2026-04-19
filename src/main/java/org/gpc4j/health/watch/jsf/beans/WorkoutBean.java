@@ -29,6 +29,7 @@ import java.io.IOException;
 import java.text.DateFormatSymbols;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.LinkedList;
@@ -66,6 +67,27 @@ public class WorkoutBean implements Constants {
    * Type of workout (Swimming/Walking) for Titles, Labels, etc..
    */
   private String workout;
+
+  /**
+   * Previous distance last year at this time.
+   */
+  private double previousYearDistance;
+
+  /**
+   * Represents the total distance of workouts completed in the current calendar year.
+   * This value is typically used for tracking progress and analyzing workout trends over time.
+   */
+  private double currentYearDistance;
+
+  /**
+   * Represents the difference in distance between workouts of the current
+   * year and the previous year.
+   *
+   * This field is calculated to provide a comparison of yearly workout
+   * progress or changes in distance, helping to track performance metrics
+   * over time.
+   */
+  private double deltaYearDistance;
 
   /**
    * Default JSF Template for desktop browsers.
@@ -163,6 +185,8 @@ public class WorkoutBean implements Constants {
 
       if (year == LocalDate.now().getYear()) {
 
+        currentYearDistance = total;
+
         LineChartSeries projected = new LineChartSeries();
         projected.setLabel(year + " Projected");
         projected.setMarkerStyle("plus");
@@ -191,6 +215,22 @@ public class WorkoutBean implements Constants {
 
     });
 
+    // Get Previous distance last year at this time
+    int lastYear = LocalDate.now().getYear() - 1;
+    LocalDateTime now = LocalDateTime.now();
+    previousYearDistance = workouts.stream()
+            .filter(workout -> workout.getStartDate().startsWith(lastYear + "-"))
+        .filter(workout -> {
+          String startDate = workout.getStartDate();
+          LocalDateTime previous = ZonedDateTime.parse(startDate, DTF).toLocalDateTime();
+          return previous.getDayOfYear() <= now.getDayOfYear();
+        })
+        .map(Workout::getTotalDistance)
+        .reduce(0.0, Double::sum);
+
+
+    deltaYearDistance =  currentYearDistance - previousYearDistance;
+
     if (!workouts.isEmpty()) {
       selectedYear = workoutYears.get(0);
     }
@@ -200,6 +240,13 @@ public class WorkoutBean implements Constants {
     return workoutYears;
   }
 
+  public double getPreviousYearDistance() {
+    return previousYearDistance;
+  }
+
+  public double getDeltaYearDistance() {
+    return deltaYearDistance;
+  }
 
   public List<String> getMonthHeaders() {
     return MONTH_HEADERS;

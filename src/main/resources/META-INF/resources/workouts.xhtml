@@ -24,7 +24,17 @@
                    stripedRows="true">
 
         <f:facet name="header">
-          #{workoutBean.workout} Distance per Year by Month
+          #{workoutBean.workout} Distance per Year
+
+          by Month (Previous year at this time:
+          <h:outputText value="#{workoutBean.previousYearDistance}">
+            <f:convertNumber type="number" minFractionDigits="2" pattern="#0.00"/>
+          </h:outputText>
+
+          (<h:outputText value="#{workoutBean.deltaYearDistance}">
+            <f:convertNumber type="number" minFractionDigits="2" pattern="#0.00"/>
+          </h:outputText>))
+
         </f:facet>
 
         <p:ajax event="rowSelect"
