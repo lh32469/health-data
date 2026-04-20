@@ -61,32 +61,14 @@ public class WorkoutDayBean implements Constants {
   List<Workout> workouts;
 
   /**
-   * Totals  for the day.
-   */
-  private double totalMiles;
-  private double calories;
-
-  /**
    * The Chart/Graph for laps.
    */
   @Getter
   LineChartModel segmentGraph;
 
-  @Getter
-  LineChartModel heartRateGraph;
-
   @PostConstruct
   public void postConstruct() {
     log.debug(this.toString());
-
-    // Initialize a blank Scatter chart model for the page bottom
-    heartRateGraph = initHeartRateGraph();
-
-    LineChartSeries zone1 = addZone(heartRateGraph, "Zone 1");
-    LineChartSeries zone2 = addZone(heartRateGraph, "Zone 2");
-    LineChartSeries zone3 = addZone(heartRateGraph, "Zone 3");
-    LineChartSeries zone4 = addZone(heartRateGraph, "Zone 4");
-    LineChartSeries zone5 = addZone(heartRateGraph, "Zone 5");
 
     ExternalContext externalContext =
         FacesContext.getCurrentInstance().getExternalContext();
@@ -105,90 +87,59 @@ public class WorkoutDayBean implements Constants {
                                    WORKOUT_MAP.get(cookieBean.getWorkout()))
                       .toList();
 
-    totalMiles = workouts.stream()
-                         .mapToDouble(Workout::getTotalDistance)
-                         .sum();
+  }
 
-    calories = workouts.stream()
-                       .mapToDouble(Workout::getTotalEnergyBurned)
-                       .sum();
+  public LineChartModel buildSegmentGraph(Workout workout) {
 
-    log.info("{}-{}-{} = {}", year, month, day, workouts.size());
+    LineChartModel graph = new LineChartModel();
+    graph.setTitle("Segments/Sets");
+    graph.setLegendPosition("s");
 
-    segmentGraph = new LineChartModel();
-    segmentGraph.setTitle("Segments/Sets");
-    segmentGraph.setLegendPosition("s");
-
-    Axis yAxis = segmentGraph.getAxis(AxisType.Y);
+    Axis yAxis = graph.getAxis(AxisType.Y);
     yAxis.setLabel("Seconds per Length");
     yAxis.setTickInterval("10");
 
-    Axis xAxis = segmentGraph.getAxis(AxisType.X);
+    Axis xAxis = graph.getAxis(AxisType.X);
     xAxis.setMin(0);
     xAxis.setLabel("Lengths");
 
-    for (Workout workout : workouts) {
-      int index = 1;
-      int events = 0;  // Number of Events/Laps per Segment
-      String segmentStartTime = null;
-      String segmentDuration = null;
-      LineChartSeries segment = null;
-      for (WorkoutEvent event : workout.getWorkoutEvents()) {
-        log.trace("event = {}", event);
+    int index = 1;
+    int events = 0;
+    String segmentStartTime = null;
+    String segmentDuration = null;
+    LineChartSeries segment = null;
 
-        switch (event.getType()) {
-          case PAUSE_WORKOUT:
-          case RESUME_WORKOUT:
-            log.debug("Skipping {}", event);
-            continue;
-
-          case SEGMENT:
-            if (Objects.isNull(segment) || !segment.getData().isEmpty()) {
-              log.debug("New Segment = {}", event);
-              segmentStartTime = LocalDateTime
-                  .parse(event.getDate(), DTF)
-                  .format(DateTimeFormatter.ISO_TIME);
-              segmentDuration = event.getDurationF();
-              events = 0;
-              segment = new LineChartSeries();
-              segment.setShowMarker(false);
-              segmentGraph.addSeries(segment);
-            }
-            break;
-
-          default:
-            events++;
-            // TODO: Make event.duration a double
-            segment.set(index, 60 * event.getDuration());
-            segment.setLabel(segmentStartTime + "; "
-                                 + events + "@"
-                                 + segmentDuration);
-
-            int rate = event.getHeartRate();
-
-            if (rate > 0) {
-              if (rate > 144) {
-                zone5.set(index, rate);
-              } else if (rate > 135) {
-                zone4.set(index, rate);
-              } else if (rate > 125) {
-                zone3.set(index, rate);
-              } else if (rate > 116) {
-                zone2.set(index, rate);
-              } else {
-                zone1.set(index, rate);
-              }
-            }
-            index++;
-        }
-
+    for (WorkoutEvent event : workout.getWorkoutEvents()) {
+      log.trace("event = {}", event);
+      switch (event.getType()) {
+        case PAUSE_WORKOUT:
+        case RESUME_WORKOUT:
+          log.debug("Skipping {}", event);
+          continue;
+        case SEGMENT:
+          if (Objects.isNull(segment) || !segment.getData().isEmpty()) {
+            log.debug("New Segment = {}", event);
+            segmentStartTime = LocalDateTime.parse(event.getDate(), DTF)
+                                            .format(DateTimeFormatter.ISO_TIME);
+            segmentDuration = event.getDurationF();
+            events = 0;
+            segment = new LineChartSeries();
+            segment.setShowMarker(false);
+            graph.addSeries(segment);
+          }
+          break;
+        default:
+          events++;
+          segment.set(index, 60 * event.getDuration());
+          segment.setLabel(segmentStartTime + "; " + events + "@" + segmentDuration);
+          index++;
       }
-
     }
 
+    return graph;
   }
 
-  private LineChartModel initHeartRateGraph() {
+  public LineChartModel buildHeartRateGraph(Workout workout) {
 
     LineChartModel graph = new LineChartModel();
     graph.setTitle("Heart Rate");
@@ -208,7 +159,38 @@ public class WorkoutDayBean implements Constants {
 
     Axis xAxis = graph.getAxis(AxisType.X);
     xAxis.setMin(0);
-    xAxis.setLabel("Lengths");
+
+    LineChartSeries zone1 = addZone(graph, "Zone 1");
+    LineChartSeries zone2 = addZone(graph, "Zone 2");
+    LineChartSeries zone3 = addZone(graph, "Zone 3");
+    LineChartSeries zone4 = addZone(graph, "Zone 4");
+    LineChartSeries zone5 = addZone(graph, "Zone 5");
+
+    int index = 1;
+    for (WorkoutEvent event : workout.getWorkoutEvents()) {
+      switch (event.getType()) {
+        case PAUSE_WORKOUT:
+        case RESUME_WORKOUT:
+        case SEGMENT:
+          continue;
+        default:
+          int rate = event.getHeartRate();
+          if (rate > 0) {
+            if (rate > 144) {
+              zone5.set(index, rate);
+            } else if (rate > 135) {
+              zone4.set(index, rate);
+            } else if (rate > 125) {
+              zone3.set(index, rate);
+            } else if (rate > 116) {
+              zone2.set(index, rate);
+            } else {
+              zone1.set(index, rate);
+            }
+          }
+          index++;
+      }
+    }
 
     return graph;
   }

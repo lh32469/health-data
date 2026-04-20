@@ -48,24 +48,32 @@
 
       </p:dataTable>
 
-      <p:chart id="segmentGraph"
-               type="line"
-               model="#{workoutDayBean.segmentGraph}"
-               style="width:100%;height:600px;border: 20px">
-        <p:ajax event="itemSelect"
-                listener="#{workoutDayBean.itemSelectListener}"
-                update="growl"/>
-      </p:chart>
+      <p:accordionPanel var="workout"
+                        value="#{workoutDayBean.workouts}">
 
-      <p:chart id="heartRateGraph"
-               type="line"
-               model="#{workoutDayBean.heartRateGraph}"
-               style="width: 100%; height: 600px;"
-               responsive="true">
-        <p:ajax event="itemSelect"
-                listener="#{workoutDayBean.itemSelectListener}"
-                update="growl"/>
-      </p:chart>
+        <p:tab title="#{workout.durationF} |
+                      #{workout.totalDistance} mi |
+                      #{workout.totalEnergyBurned} cal">
+
+          <p:chart type="line"
+                   model="#{workoutDayBean.buildSegmentGraph(workout)}"
+                   style="width:100%;height:600px;">
+            <p:ajax event="itemSelect"
+                    listener="#{workoutDayBean.itemSelectListener}"
+                    update=":iForm:growl"/>
+          </p:chart>
+
+          <p:chart type="line"
+                   model="#{workoutDayBean.buildHeartRateGraph(workout)}"
+                   style="width:100%;height:600px;">
+            <p:ajax event="itemSelect"
+                    listener="#{workoutDayBean.itemSelectListener}"
+                    update=":iForm:growl"/>
+          </p:chart>
+
+        </p:tab>
+
+      </p:accordionPanel>
 
     </p:panelGrid>
   </ui:define>
