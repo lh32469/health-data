@@ -27,6 +27,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
@@ -155,7 +156,6 @@ public class WorkoutDayBean implements Constants {
     yAxis.setLabel("Heart Rate");
     yAxis.setTickInterval("10");
     yAxis.setMin(100);
-    yAxis.setMax(160);
 
     Axis xAxis = graph.getAxis(AxisType.X);
     xAxis.setMin(0);
@@ -167,6 +167,7 @@ public class WorkoutDayBean implements Constants {
     LineChartSeries zone5 = addZone(graph, "Zone 5");
 
     int index = 1;
+    int maxRate = 0;
     for (WorkoutEvent event : workout.getWorkoutEvents()) {
       switch (event.getType()) {
         case PAUSE_WORKOUT:
@@ -176,6 +177,7 @@ public class WorkoutDayBean implements Constants {
         default:
           int rate = event.getHeartRate();
           if (rate > 0) {
+            maxRate = Math.max(maxRate, rate);
             if (rate > 144) {
               zone5.set(index, rate);
             } else if (rate > 135) {
@@ -191,6 +193,8 @@ public class WorkoutDayBean implements Constants {
           index++;
       }
     }
+
+    yAxis.setMax(maxRate + 5);
 
     return graph;
   }
