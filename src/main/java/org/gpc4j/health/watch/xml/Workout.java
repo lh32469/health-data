@@ -12,6 +12,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import static org.gpc4j.health.watch.jsf.beans.Constants.DTF;
@@ -67,6 +68,14 @@ public class Workout {
     }
     Collections.sort(workoutEvents);
     return workoutEvents;
+  }
+
+  public List<WorkoutStatistics> getWorkoutStatistics() {
+    if (Objects.isNull(workoutStatistics)) {
+      log.info("No WorkoutStatistics for: {}", this);
+      return Collections.emptyList();
+    }
+    return workoutStatistics;
   }
 
   @JsonIgnore
@@ -138,10 +147,11 @@ public class Workout {
   }
 
   Optional<WorkoutStatistics> getStatistic(final String statisticName) {
-    Optional<WorkoutStatistics> statistics = workoutStatistics.stream()
-                                                              .filter(stat -> statisticName.equals(
-                                                                  stat.type))
-                                                              .findAny();
+    Optional<WorkoutStatistics> statistics =
+        getWorkoutStatistics().stream()
+                              .filter(stat -> statisticName.equals(
+                                  stat.type))
+                              .findAny();
 
     if (statistics.isEmpty()) {
       log.error("No " + statisticName + " for " + workoutActivityType +
