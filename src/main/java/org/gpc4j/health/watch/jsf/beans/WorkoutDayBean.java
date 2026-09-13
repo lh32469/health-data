@@ -130,10 +130,22 @@ public class WorkoutDayBean implements Constants {
           }
           break;
         default:
-          events++;
-          segment.set(index, 60 * event.getDuration());
-          segment.setLabel(segmentStartTime + "; " + events + "@" + segmentDuration);
-          index++;
+          if (Objects.isNull(segment)) {
+            // No Segments, just Laps
+            segment = new LineChartSeries();
+            segment.setShowMarker(false);
+            String startTime = LocalDateTime.parse(event.getDate(), DTF)
+                                            .format(DateTimeFormatter.ISO_TIME);
+//            segment.setLabel(startTime + "; "
+//                                 + workout.getWorkoutEvents().size()
+//                                 + " Laps");
+            graph.addSeries(segment);
+          } else {
+            events++;
+            segment.set(index, 60 * event.getDuration());
+            segment.setLabel(segmentStartTime + "; " + events + "@" + segmentDuration);
+            index++;
+          }
       }
     }
 

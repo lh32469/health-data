@@ -63,7 +63,7 @@ public class Workout {
 
   public List<WorkoutEvent> getWorkoutEvents() {
     if (null == workoutEvents) {
-      log.info("No WorkoutEvents for: {}", this);
+      log.info("No WorkoutEvents for: {}", this.startDate);
       return Collections.emptyList();
     }
     Collections.sort(workoutEvents);
@@ -72,7 +72,7 @@ public class Workout {
 
   public List<WorkoutStatistics> getWorkoutStatistics() {
     if (Objects.isNull(workoutStatistics)) {
-      log.info("No WorkoutStatistics for: {}", this);
+      log.info("No WorkoutStatistics for: {}", this.startDate);
       return Collections.emptyList();
     }
     return workoutStatistics;
@@ -100,7 +100,9 @@ public class Workout {
           if (swimming.isPresent() && "YD".equalsIgnoreCase(swimming.get().unit)) {
             return Math.round(Double.parseDouble(swimming.get().sum) / 1760.0 * 100) / 100.0;
           } else {
-            return 0.0;
+            log.info("HKQuantityTypeIdentifierDistanceSwimming not found for: {}",
+                     this.startDate);
+            return getTotalDistanceSwimming();
           }
 
         case WALKING_WORKOUT:
@@ -160,31 +162,34 @@ public class Workout {
     return statistics;
   }
 
-  //  double getTotalDistanceSwimming() {
-//    String lapLength = metadataEntry.stream()
-//        .filter(entry -> entry.getKey().equals("HKLapLength"))
-//        .findAny()
-//        .get()
-//        .getValue();
-//    double value = Double.parseDouble(lapLength.split(" ")[0].trim());
-//    String units = lapLength.split(" ")[1].trim();
-//
-//    // Count total laps
-//    long laps = workoutEvents.stream()
-//        .filter(event -> event.getType().equals("HKWorkoutEventTypeLap"))
-//        .count();
-//
-//    double conversion = 1.0;
-//
-//    if ("M".equalsIgnoreCase(units)) {
-//      // Convert meters to miles
-//      conversion = 0.000621371;
-//    }
-//
-//    double distance = Math.round(value * laps * 100 * conversion) / 100.0;
-//    log.info("{} laps @ {} = {} miles", laps, lapLength, distance);
-//    return distance;
-//  }
+  double getTotalDistanceSwimming() {
+    String lapLength = metadataEntry.stream()
+                                    .filter(entry -> entry.getKey().equals("HKLapLength"))
+                                    .findAny()
+                                    .get()
+                                    .getValue();
+    double value = Double.parseDouble(lapLength.split(" ")[0].trim());
+    String units = lapLength.split(" ")[1].trim();
+    log.debug("Pool = {} {}", value, units);
+
+    // Count total laps
+    long laps = workoutEvents.stream()
+                             .filter(event -> event.getType()
+                                                   .equals("HKWorkoutEventTypeLap"))
+                             .count();
+
+    // Convert meters to miles
+    double conversion = 0.000621371;
+
+    if ("YD".equalsIgnoreCase(units)) {
+      // Convert yards to miles
+      conversion = 0.000568182;
+    }
+
+    double distance = Math.round(value * laps * 100 * conversion) / 100.0;
+    log.info("{} laps @ {} = {} miles", laps, lapLength, distance);
+    return distance;
+  }
 
   /**
    * Get Duration formatted to min:sec
