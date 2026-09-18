@@ -173,7 +173,7 @@ public class Workout {
     log.debug("Pool = {} {}", value, units);
 
     // Count total laps
-    long laps = workoutEvents.stream()
+    long laps = getWorkoutEvents().stream()
                              .filter(event -> event.getType()
                                                    .equals("HKWorkoutEventTypeLap"))
                              .count();
